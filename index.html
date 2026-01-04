@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#f3e5ce">
+    <meta name="description" content="Character Sheet for Stars & Sorcery OSR RPG">
+    <title>Stars & Sorcery: Character Sheet</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+
+    <style>
+        /* === 1. SISTEMA DE DISEÑO & VARIABLES === */
+        :root {
+            --bg-paper: #f3e5ce; 
+            --bg-light: #fffef8; 
+            --ink-main: #1a1a1a; 
+            --ink-red: #8b0000; 
+            --ink-accent: #4a3b2a; 
+            --ink-blue: #003366;
+            
+            --shadow-soft: 4px 4px 0px rgba(74, 59, 42, 0.15); 
+            --border-thick: 2px solid var(--ink-main);
+            
+            --font-title: 'IM Fell English SC', serif; 
+            --font-body: 'Crimson Text', serif; 
+            --font-mono: 'Courier Prime', monospace;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: var(--font-body); 
+            background-color: var(--bg-paper); 
+            color: var(--ink-main);
+            padding: 20px; 
+            margin: 0;
+            background-image: radial-gradient(#d6c6a8 1px, transparent 1px);
+            background-size: 20px 20px; 
+            font-size: 16px; 
+            line-height: 1.5;
+        }
+
+        /* === 2. TIPOGRAFÍA Y ESTRUCTURA === */
+        .main-title {
+            font-family: var(--font-title); color: var(--ink-red); font-size: clamp(2.5rem, 5vw, 3.5rem); text-align: center;
+            margin: 0 auto 30px auto; max-width: 900px; border-bottom: 3px double var(--ink-red);
+            letter-spacing: 2px; line-height: 1; padding-bottom: 15px; text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+        }
+
+        h1, h2, h3 { font-family: var(--font-title); font-weight: 400; color: var(--ink-main); margin: 0; }
+        h2 { color: var(--ink-red); font-size: 1.6em; border-bottom: 1px solid var(--ink-accent); padding-bottom: 5px; margin-bottom: 15px; letter-spacing: 0.5px; }
+        h3 { font-size: 1.1em; text-decoration: underline; text-decoration-color: var(--ink-accent); text-underline-offset: 3px; margin-bottom: 8px; color: var(--ink-accent); }
+
+        .container { max-width: 1150px; margin: auto; display: grid; grid-template-columns: 320px 1fr; gap: 30px; align-items: start; }
+
+        .section, .sidebar-box {
+            background: var(--bg-light); border: var(--border-thick); padding: 20px; margin-bottom: 25px; 
+            box-shadow: var(--shadow-soft); position: relative;
+        }
+        
+        .section::before {
+            content: "❖"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+            background: var(--bg-light); padding: 0 10px; font-size: 1.2em; color: var(--ink-accent);
+            line-height: 1; border-radius: 50%;
+        }
+
+        .sidebar-box::before { display: none; }
+
+        .sidebar {
+            position: sticky; top: 20px; max-height: calc(100vh - 40px);
+            overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;
+            background: transparent; border: none; padding: 0; box-shadow: none;
+            display: flex; flex-direction: column; gap: 0; z-index: 100;
+        }
+        .sidebar::-webkit-scrollbar { display: none; }
+        
+        .sidebar-box {
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        /* === 3. RETRATO === */
+        .portrait-frame {
+            width: 276px; max-width: 100%; height: 380px; margin: 0 auto 15px auto;
+            border: 4px double var(--ink-main); border-radius: 2px;
+            overflow: hidden; background: #e8dcc5; cursor: pointer;
+            position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            transition: border-color 0.2s;
+        }
+        .portrait-frame:hover { border-color: var(--ink-red); }
+        .portrait-frame img { width: 100%; height: 100%; object-fit: cover; display: block; filter: sepia(0.2); }
+        .portrait-label {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(26, 26, 26, 0.85); color: #f3e5ce; font-size: 0.75em;
+            text-align: center; padding: 6px; font-family: var(--font-mono); letter-spacing: 1px;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none; text-transform: uppercase;
+        }
+        .portrait-frame:hover .portrait-label { opacity: 1; }
+
+        /* === 4. INPUTS GENERALES === */
+        label { font-family: var(--font-title); color: var(--ink-accent); font-size: 1.1em; display: block; margin-top: 15px; margin-bottom: 5px;}
+        
+        input[type="text"], input[type="number"], select, textarea {
+            background: transparent; border: none; border-bottom: 2px dashed #ccc;
+            font-family: var(--font-mono); font-weight: 700; color: var(--ink-main);
+            padding: 8px 5px; width: 100%; font-size: 1.15em; transition: 0.2s; border-radius: 0;
+            text-overflow: ellipsis; white-space: nowrap; overflow: hidden; 
+        }
+
+        .stat-edit-input {
+            border: 2px solid var(--ink-main) !important;
+            text-align: center; font-family: var(--font-title); font-size: 1.8em !important;
+            padding: 5px !important; background: rgba(255,255,255,0.5) !important;
+        }
+        .stat-edit-input:focus { border-color: var(--ink-red) !important; background: #fff !important; }
+
+        input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+        select {
+            padding-right: 20px; cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234a3b2a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat; background-position: right 0 top 50%; background-size: .5em auto;
+            border-bottom: 2px solid var(--ink-accent); font-family: var(--font-body);
+        }
+
+        textarea { 
+            resize: vertical; min-height: 5em; overflow: hidden; white-space: normal;
+            font-size: 0.95em; color: #444; font-style: italic; line-height: 1.4;
+            margin-top: 8px; border: 1px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.5); padding: 10px;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--ink-red); background: rgba(139, 0, 0, 0.03); }
+
+        /* === 5. CHECKBOXES & RADIOS === */
+        input[type="radio"], input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none; width: 18px; height: 18px;
+            border: 2px solid var(--ink-main); background-color: var(--bg-light);
+            cursor: pointer; display: inline-block; vertical-align: middle; margin-right: 8px;
+            position: relative; top: -1px; transition: all 0.2s ease;
+        }
+        input[type="radio"] { border-radius: 50%; }
+        input[type="checkbox"] { border-radius: 2px; }
+        input[type="radio"]:hover, input[type="checkbox"]:hover { border-color: var(--ink-red); background-color: rgba(139, 0, 0, 0.05); }
+        input[type="radio"]:checked, input[type="checkbox"]:checked { background-color: var(--ink-red); border-color: var(--ink-red); }
+        input[type="checkbox"]::after {
+            content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px;
+            border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        input[type="checkbox"]:checked::after { transform: rotate(45deg) scale(1); }
+        input[type="radio"]::after {
+            content: ''; position: absolute; top: 4px; left: 4px; width: 6px; height: 6px;
+            background: #fff; border-radius: 50%; transform: scale(0); transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        input[type="radio"]:checked::after { transform: scale(1); }
+
+        /* === 6. GRIDS Y STATS === */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .stats-grid, .stats-output-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+        
+        .skill-area { border: 1px solid #ccc; padding: 15px; background: rgba(255,255,255,0.4); max-height: 250px; overflow-y: auto; scrollbar-width: thin; }
+        .skill-opt { cursor: pointer; display: block; margin-bottom: 8px; font-size: 1em; }
+        .skill-opt:hover { background-color: rgba(0,0,0,0.02); }
+
+        .skill-tag {
+            display: inline-block; padding: 4px 10px; margin: 4px;
+            border: 2px solid var(--ink-main); border-radius: 20px;
+            font-family: var(--font-mono); font-size: 0.9em; font-weight: bold;
+            background: #fff; color: var(--ink-main);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+        .skill-tag.grade-1 { border-color: var(--ink-red); color: var(--ink-red); background: #fff5f5; }
+
+        .stat-box-dark {
+            border: 2px solid var(--ink-main); background: #333; color: #fff;
+            padding: 8px; font-family: var(--font-mono); text-align: center; font-size: 0.9em;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+        
+        /* === 7. FIGHT CLUB LAYOUT === */
+        .fc-stat-grid { display: flex; flex-direction: column; gap: 10px; }
+        .fc-row { display: grid; gap: 10px; }
+        .fc-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .fc-row.cols-2 { grid-template-columns: 1fr 1fr; }
+
+        .fc-box {
+            background: var(--bg-light); border: 2px solid var(--ink-main);
+            box-shadow: 3px 3px 0 rgba(74, 59, 42, 0.1); display: flex; flex-direction: column;
+            text-align: center; overflow: hidden; transition: transform 0.1s;
+        }
+        .fc-box.clickable:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(74, 59, 42, 0.1); }
+        .fc-box.clickable:hover { border-color: var(--ink-red); cursor: pointer; }
+        
+        .fc-label {
+            background: transparent; color: var(--ink-accent); font-family: var(--font-title);
+            font-size: 0.85em; letter-spacing: 1px; padding: 6px 0 3px 0;
+            text-transform: uppercase; border-bottom: 1px solid var(--ink-accent);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .fc-box.clickable:hover .fc-label { color: var(--ink-red); border-bottom-color: var(--ink-red); }
+        .fc-label.red { color: var(--ink-red); border-bottom-color: var(--ink-red); }
+        .fc-label.blue { color: var(--ink-blue); border-bottom-color: var(--ink-blue); }
+
+        .fc-value-container {
+            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 8px; font-family: var(--font-mono); font-weight: 700; font-size: 1.3em;
+            color: var(--ink-main);
+        }
+        .fc-sub { font-size: 0.6em; color: #777; font-weight: normal; margin-top: -2px; }
+
+        .fc-input {
+            border: none !important; background: transparent; text-align: right;
+            font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit;
+            padding: 0; margin: 0; width: 1.8ch; 
+        }
+        .fc-input:focus { outline: none; background: rgba(0,0,0,0.05); }
+        
+        .fc-pv-display { 
+            font-family: 'IM Fell English SC', serif; font-size: 1.8em; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; 
+            gap: 4px; color: var(--ink-main); line-height: 1;
+        }
+        #cur_pv { font-family: 'IM Fell English SC', serif; font-size: 1em; width: 4ch; text-align: right; }
+        .fc-max { font-family: inherit; font-size: inherit; font-weight: inherit; color: var(--ink-red); }
+        .fc-slash { color: var(--ink-red); opacity: 0.6; font-size: 0.9em; margin-bottom: 2px; }
+
+        .fc-res-display {
+            font-family: var(--font-mono); font-size: 1.2em; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; gap: 2px;
+        }
+        .blue-res, .blue-res .fc-input, .blue-res .fc-slash, .blue-res .fc-max { color: var(--ink-blue) !important; }
+
+        .fc-load-bar-bg { height: 4px; background: rgba(0,0,0,0.1); width: 100%; margin-top: 5px; }
+        .fc-load-bar-fill { height: 100%; background: var(--ink-main); width: 0%; transition: width 0.3s; }
+
+
+        /* === 8. BOTONES === */
+        .action-bar { display: grid; grid-template-columns: 1fr 1fr 50px; gap: 10px; width: 100%; }
+        
+        .btn {
+            font-family: var(--font-title); font-size: 1em; padding: 12px 0; width: 100%; cursor: pointer;
+            text-align: center; text-transform: uppercase; letter-spacing: 1px; transition: all 0.15s ease;
+            box-sizing: border-box; background: #fff; border: 2px solid var(--ink-main); color: var(--ink-main);
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-weight: bold;
+        }
+        .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px rgba(0,0,0,0.15); }
+        .btn:hover { background: var(--ink-red); color: #fff; border-color: var(--ink-red); }
+        .btn-clear { background: #f4f4f4; border: 2px dashed var(--ink-main); color: var(--ink-main); box-shadow: none; }
+        .btn-clear:hover { background: var(--ink-main); color: #fff; border-color: var(--ink-main); }
+        
+        .btn-confirm { background: var(--ink-main); color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; font-family: var(--font-title); font-size: 1.1em; margin-top: 15px; letter-spacing: 1px; flex-shrink: 0; text-transform: uppercase; }
+        .btn-confirm:hover { background: var(--ink-accent); }
+        
+        .btn-edit { font-size: 0.75em; padding: 6px 15px; background: transparent; border: 1px solid var(--ink-main); cursor: pointer; display: block; margin: 15px auto 0 auto; font-family: var(--font-mono); text-transform: uppercase; transition: 0.2s; font-weight: bold; letter-spacing: 1px; }
+        .btn-edit:hover { background: var(--ink-main); color: #fff; }
+        
+        .btn-settings { font-size: 1.2em; padding: 0; background: var(--ink-main); color: #fff; border: none; font-family: var(--font-mono); }
+        .btn-settings:hover { background: var(--ink-accent); }
+        
+        /* === 9. MODALES === */
+        dialog.modal-osr { 
+            background: var(--bg-paper); color: var(--ink-main); border: 4px solid var(--ink-main); border-radius: 4px;
+            width: 95%; max-width: 900px; padding: 0; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: fixed; inset: 0; margin: auto; max-height: 90vh; display: none; flex-direction: column; z-index: 1000; overflow: hidden;
+        }
+        dialog.modal-osr[open] { display: flex; animation: modalPop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
+        @keyframes modalPop { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+        .modal-header { 
+            background: var(--ink-main); color: var(--bg-paper); padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; 
+            border-bottom: 2px solid var(--ink-accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .modal-body { padding: 25px; overflow-y: auto; flex-grow: 1; }
+        .btn-close { background: transparent; border: none; color: #fff; font-size: 1.8em; cursor: pointer; line-height: 1; transition: transform 0.2s, color 0.2s; }
+        .btn-close:hover { color: var(--ink-red); transform: rotate(90deg); }
+
+        .char-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ccc; padding: 10px 5px; background: rgba(255,255,255,0.5); margin-bottom: 5px; }
+        .btn-mini { padding: 5px 10px; font-size: 0.8em; cursor: pointer; text-transform: uppercase; font-family: var(--font-mono); margin-left: 5px; border: 1px solid var(--ink-main); }
+        .btn-load { background: #e0f7fa; color: #006064; }
+        .btn-del { background: #ffebee; color: #c62828; }
+
+        #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { 
+            background: var(--ink-main); color: #fff; padding: 12px 24px; border-radius: 4px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3); font-family: var(--font-mono); 
+            display: flex; align-items: center; gap: 12px; animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid #555; min-width: 250px; justify-content: center;
+        }
+        .toast.crit { background: var(--ink-red); border-color: #ffaaaa; }
+        .toast-die { font-size: 1.5em; font-weight: bold; }
+        .toast-content { display: flex; flex-direction: column; align-items: flex-start; }
+        .toast-label { font-size: 0.8em; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Gestor Talentos */
+        #talent_modal { max-width: 950px; height: 85vh; }
+        .talent-manager-layout { display: grid; grid-template-columns: 240px 1fr; gap: 0; height: 100%; overflow: hidden; padding: 0; }
+        .tm-sidebar { background: #e8dcc5; border-right: 2px solid var(--ink-main); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .cat-btn { display: block; width: 100%; text-align: left; padding: 10px 15px; background: #fff; border: 1px solid var(--ink-accent); cursor: pointer; font-family: var(--font-title); font-size: 1.1em; transition:0.2s; box-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
+        .cat-btn:hover { transform: translateX(5px); border-color: var(--ink-red); color: var(--ink-red); }
+        .cat-btn.active { background: var(--ink-main); color: #fff; border-color: var(--ink-main); transform: translateX(10px); box-shadow: none; }
+        .tm-content { padding: 20px; overflow-y: auto; background: var(--bg-light); }
+        .talent-card { background: #fff; border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; box-shadow: 2px 2px 0 rgba(0,0,0,0.1); display: flex; align-items: flex-start; gap: 15px; transition: all 0.2s; cursor: pointer; }
+        .talent-card:hover { border-color: var(--ink-accent); background: #fdfdfd; }
+        .talent-card.selected { background-color: #f0fff4; border: 2px solid #2e7d32; box-shadow: 4px 4px 0 rgba(46, 125, 50, 0.2); transform: scale(1.01); }
+        .talent-info h4 { margin: 0 0 5px 0; font-size: 1.25em; color: var(--ink-accent); text-transform: uppercase; border-bottom: 1px dashed #ccc; padding-bottom:3px; }
+
+        /* === ESTILOS DEL INVENTARIO (SECCIÓN VII) === */
+        .inv-list { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+        .inv-item-row { 
+            display: grid; grid-template-columns: 90px 1fr 50px 30px; gap: 5px; align-items: center; 
+            background: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 2px;
+        }
+        .inv-summary-row {
+            display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 6px 0; font-size: 1.05em;
+        }
+        .inv-name { border: none; background: transparent; font-family: var(--font-body); font-size: 1.05em; width: 100%; border-bottom: 1px dotted #ccc; }
+        .inv-slots { border: 1px solid #ccc; text-align: center; font-family: var(--font-mono); font-weight: bold; width: 100%; padding: 4px; background: #fff; }
+        .inv-btn-del { background: transparent; border: none; color: #999; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1; }
+        .inv-btn-del:hover { color: var(--ink-red); }
+        .coin-pouch { background: #fffbe6; border: 1px solid #e0c097; padding: 5px 10px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px; }
+        
+        .inv-type-select {
+            border: none; background: transparent; font-size: 0.8em; font-family: var(--font-mono);
+            text-transform: uppercase; color: var(--ink-accent); text-align: left; cursor: pointer; appearance: none;
+            font-weight: bold;
+        }
+
+        /* --- CORRECCIÓN LAYOUT SECCION VI --- */
+        .combat-info-card {
+            display: flex; justify-content: space-between; align-items: center; 
+            background: #fff; border: 1px solid #ccc; padding: 10px; margin-top: 5px; border-radius: 4px;
+        }
+
+        /* --- EDITOR DE BASE DE DATOS --- */
+        #db_editor_modal { height: 90vh; max-width: 1000px; }
+        .db-editor-layout { display: grid; grid-template-columns: 200px 1fr; height: 100%; overflow: hidden; }
+        .db-sidebar { background: #e8dcc5; padding: 15px; border-right: 2px solid var(--ink-main); }
+        .db-content { padding: 20px; overflow-y: auto; background: var(--bg-light); }
+        .db-list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #ddd; background: #fff; margin-bottom: 4px; }
+        .db-form-group { margin-bottom: 15px; background: #f9f9f9; padding: 10px; border: 1px solid #ddd; }
+        .grade-entry { margin-top: 10px; border-left: 3px solid var(--ink-red); padding-left: 10px; }
+
+        /* Media Queries */
+        @media (max-width: 800px) {
+            .container { grid-template-columns: 1fr; }
+            .sidebar { position: relative; top: 0; max-height: none; overflow: visible; padding: 0px; z-index: 1;}
+            .stats-grid, .stats-output-grid { grid-template-columns: repeat(3, 1fr); }
+            #crop_modal { height: 90vh; }
+            .crop-layout { flex-direction: column; display: flex; height: 100%; }
+            .crop-workspace { flex: 1; display:flex; justify-content:center; align-items:center; background:#222; overflow:hidden; position:relative; }
+            .crop-sidebar { width: 100%; padding: 15px; background:#333; color:#fff; display:flex; flex-direction:row; align-items:center; justify-content:space-between; flex-shrink: 0; }
+            .crop-btn-save { width: auto; padding: 8px 15px; margin: 0; }
+            .talent-manager-layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; gap: 10px; }
+            .tm-sidebar { border-right: none; border-bottom: 2px solid #ccc; padding-bottom: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-right: 0; flex-direction: row; }
+            .cat-btn { width: auto; flex-grow: 1; margin-bottom: 0; padding: 8px 10px; font-size: 0.9em; text-align: center; }
+            dialog.modal-osr { width: 100%; height: 100%; max-height: 100%; border-radius: 0; border: none; }
+            .db-editor-layout { grid-template-columns: 1fr; }
+        }
+        @media print {
+            body { background: white; color: black; padding: 0; font-size: 12pt; }
+            .container { display: block; }
+            .sidebar, .section, .sidebar-box { box-shadow: none; border: 1px solid #000; margin-bottom: 20px; page-break-inside: avoid; background: white; }
+            .action-bar, .btn-confirm, .btn-edit, .btn-settings, .skill-opt input, .portrait-label, #db-status-overlay { display: none !important; }
+            .portrait-frame { border: 2px solid #000; height: 250px; width: 180px; float: right; margin: 0 0 20px 20px; }
+            .main-title { font-size: 2em; border-bottom: 1px solid #000; }
+            input, select, textarea { border-bottom: 1px solid #ccc; font-weight: normal; }
+            .stat-box-dark { border: 1px solid #000; background: white; color: black; }
+            .section::before { display: none; }
+            #main_content { display: block; }
+        }
+        
+        .crop-layout { display: flex; height: 100%; width: 100%; }
+        .crop-workspace { flex-grow: 1; background: #2a2a2a; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .crop-sidebar { width: 260px; flex-shrink: 0; background: #333; border-left: 1px solid #444; padding: 20px; display: flex; flex-direction: column; gap: 25px; color: #eee; }
+        .crop-container { width: 276px; height: 380px; flex-shrink: 0; border: 2px solid var(--ink-red); box-shadow: 0 0 0 1000px rgba(0,0,0,0.85); position: relative; overflow: hidden; background: #000; touch-action: none; z-index: 10; }
+        .crop-image { position: absolute; top: 0; left: 0; transform-origin: top left; cursor: grab; }
+        .crop-btn-save { width: 100%; padding: 15px; font-size: 1.1em; background: var(--ink-red); color: white; border: none; cursor: pointer; font-family: var(--font-title); letter-spacing: 1px; border-radius: 4px; }
+        .zoom-slider { width: 100%; accent-color: var(--ink-red); }
+
+        #personal_summary_view .portrait-frame:hover { border-color: var(--ink-main); }
+        #personal_summary_view .portrait-frame:hover .portrait-label { display: none; }
+
+        .attr-picker { font-size: 0.85em; font-family: var(--font-mono); border: 1px solid #ddd; background: #f9f9f9; padding: 2px; }
+
+    </style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<h1 class="main-title">Stars & Sorcery</h1>
+
+<div class="container">
+    <aside class="sidebar">
+        <input type="file" id="img_input" accept="image/*" style="display:none" onchange="app.startCrop(this)">
+        <input type="file" id="json_char_input" accept=".json" style="display:none" onchange="app.loadJSON(this)">
+        <input type="file" id="json_rules_input" accept=".json" style="display:none" onchange="app.loadRulesFile(this)">
+        
+        <div class="sidebar-box">
+            <div id="personal_section_container">
+                <div id="personal_edit_view">
+                    <div class="portrait-frame" onclick="document.getElementById('img_input').click()">
+                        <img id="char_img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%234a3b2a'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Retrato">
+                        <span class="portrait-label">CAMBIAR RETRATO</span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Nombre del Aventurero</label>
+                        <input type="text" id="char_name" placeholder="Ej: Valerius el Audaz" style="font-family: 'IM Fell English SC'; font-size: 1.4em;">
+                        <div style="display:flex; gap:15px; margin-top:10px;">
+                            <div><label style="margin-top:5px; font-size:0.9em;">Nivel</label><input type="number" id="char_lvl" value="1" min="1" max="10" style="font-size:1.1em;"></div>
+                            <div><label style="margin-top:5px; font-size:0.9em;">XP</label><input type="number" id="char_xp" value="0" min="0" style="font-size:1.1em;"></div>
+                        </div>
+                        <textarea id="char_concept" placeholder="Biografía breve, concepto o notas del personaje..."></textarea>
+                    </div>
+                    <button class="btn-confirm" style="margin-top:10px; padding:8px; font-size:1em;" onclick="app.togglePersonal(false)">Confirmar</button>
+                </div>
+                <div id="personal_summary_view" style="display:none; text-align:center;">
+                    <div class="portrait-frame" style="cursor:default; border-color:var(--ink-main); height:auto; max-height:380px;">
+                        <img id="char_img_summary" src="" style="filter:none;">
+                    </div>
+                    <h2 id="summary_name" style="color:var(--ink-red); margin-top:10px; font-size:1.8em; line-height:1.1;"></h2>
+                    <div style="font-family:var(--font-mono); font-size:0.9em; margin-bottom:10px; color:var(--ink-accent); font-weight:bold;">
+                        NIVEL <span id="summary_lvl">1</span> &bull; XP <span id="summary_xp">0</span>
+                    </div>
+                    <div id="summary_concept" style="font-style:italic; color:#444; font-size:0.95em; margin-bottom:15px; white-space: pre-wrap;"></div>
+                    <button class="btn-edit" onclick="app.togglePersonal(true)">✏️ Modificar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-box">
+             <div class="action-bar">
+                <button class="btn" onclick="app.randomize()" title="Generar personaje aleatorio">ALEATORIO</button>
+                <button class="btn btn-clear" onclick="app.clear()" title="Borrar datos actuales">REINICIAR</button>
+                <button class="btn btn-settings" onclick="document.getElementById('settings_modal').showModal()" title="Ajustes">⚙️</button>
+            </div>
+        </div>
+
+        <div class="sidebar-box" style="padding: 10px;">
+            <div id="sidebar_stats_section">
+                <div id="db-status-overlay" style="color:red; font-weight:bold; text-align:center; padding:10px;">REGLAS NO CARGADAS</div>
+                <div class="fc-stat-grid">
+                    <div class="fc-box fc-pv-box">
+                        <div class="fc-label red">Puntos de Vida</div>
+                        <div class="fc-value-container">
+                            <div class="fc-pv-display">
+                                <input type="number" id="cur_pv" value="0" class="fc-input">
+                                <span class="fc-slash">/</span>
+                                <span id="max_pv" class="fc-max">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fc-row cols-3">
+                        <div class="fc-box">
+                            <div class="fc-label">CA</div>
+                            <div class="fc-value-container"><span id="res_ca">10</span></div>
+                        </div>
+                        <div class="fc-box clickable" onclick="app.rollCheck('Iniciativa', parseInt(document.getElementById('res_ini').innerText))">
+                            <div class="fc-label">INI</div>
+                            <div class="fc-value-container"><span id="res_ini">+0</span></div>
+                        </div>
+                        <div class="fc-box">
+                            <div class="fc-label">Carne</div>
+                            <div class="fc-value-container"><span id="res_carne">0</span></div>
+                        </div>
+                    </div>
+                    <div class="fc-row cols-2">
+                        <div class="fc-box clickable" onclick="app.rollCheck('Ataque Mágico', parseInt(document.getElementById('res_atq_mag').innerText))">
+                            <div class="fc-label">Atq. Magico</div>
+                            <div class="fc-value-container"><span id="res_atq_mag">+2</span></div>
+                        </div>
+                        <div class="fc-box">
+                            <div class="fc-label">Filo</div>
+                            <div class="fc-value-container" style="font-size:1em;"><span id="res_filo_val">Físico</span></div>
+                        </div>
+                    </div>
+                    <div class="fc-row cols-2">
+                        <div class="fc-box">
+                            <div class="fc-label red">Adrenalina</div>
+                            <div class="fc-value-container">
+                                <div class="fc-res-display">
+                                    <input type="number" id="cur_adr" value="0" class="fc-input">
+                                    <span class="fc-slash">/</span>
+                                    <span id="max_adr" class="fc-max">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fc-box">
+                            <div class="fc-label blue">Ingenio</div>
+                            <div class="fc-value-container">
+                                <div class="fc-res-display blue-res">
+                                    <input type="number" id="cur_ing" value="0" class="fc-input">
+                                    <span class="fc-slash">/</span>
+                                    <span id="max_ing" class="fc-max">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fc-box" style="padding: 10px 10px 5px 10px; display:block; text-align:left;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-title); font-size:0.8em; text-transform:uppercase;">
+                            <span>Carga</span>
+                            <span id="res_carga" style="font-weight:bold;">0 / 0</span>
+                        </div>
+                        <div class="fc-load-bar-bg">
+                            <div id="carga_bar" class="fc-load-bar-fill"></div>
+                        </div>
+                        <p id="carga_warn" style="display:none; color:var(--ink-red); text-align:center; font-weight:bold; font-size:0.8em; margin:5px 0 0 0;">¡SOBRECARGA!</p>
+                        
+                        <details style="margin-top:8px;">
+                            <summary style="cursor:pointer; font-size:0.75em; color:var(--ink-accent); outline:none; font-family:var(--font-mono); letter-spacing:1px;">NOTAS RÁPIDAS</summary>
+                            <textarea id="char_notes" style="min-height:80px; font-size:0.85em; border:1px solid #ddd; background:#fffdf5; width:100%; margin-top:5px;" placeholder="Apuntes..."></textarea>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main id="main_content" class="main-content" style="opacity:0.5; pointer-events:none;">
+        <div class="section">
+            <h2>I. Los Seis Pilares (8-18)</h2>
+            <div id="stats_edit_view">
+                <div class="stats-grid">
+                    <div><label title="Fuerza">FUE</label><input type="number" id="base_FUE" value="8" min="3" max="18" onchange="app.calc()" class="stat-edit-input"></div>
+                    <div><label title="Destreza">DES</label><input type="number" id="base_DES" value="8" min="3" max="18" onchange="app.calc()" class="stat-edit-input"></div>
+                    <div><label title="Constitución">CON</label><input type="number" id="base_CON" value="8" min="3" max="18" onchange="app.calc()" class="stat-edit-input"></div>
+                    <div><label title="Inteligencia">INT</label><input type="number" id="base_INT" value="8" min="3" max="18" onchange="app.calc()" class="stat-edit-input"></div>
+                    <div><label title="Sabiduría">SAB</label><input type="number" id="base_SAB" value="8" min="3" max="18" onchange="app.calc()" class="stat-edit-input"></div>
+                    <div><label title="Carisma">CAR</label><input type="number" id="base_CAR" value="8" min="3" max="18" onchange="app.calc()" class="stat-edit-input"></div>
+                </div>
+                <div id="stats_final_display" class="stats-output-grid" style="margin-top:20px;"></div>
+                <button class="btn-confirm" onclick="app.toggleSection('stats', false)">Confirmar</button>
+            </div>
+            <div id="stats_summary_view" class="summary-view" style="display:none; background:transparent; padding:0; border:none; box-shadow:none;">
+                <div id="stats_summary_text" class="stats-output-grid"></div>
+                <button class="btn-edit" onclick="app.toggleSection('stats', true)">✏️ Modificar</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>II. Identidad y Origen</h2>
+            <div id="identity_edit_view">
+                <div class="grid-2">
+                    <div>
+                        <label>Linaje (Raza)</label>
+                        <select id="sel_desc" onchange="app.updateOptions()"></select>
+                        <div id="desc_info" class="bonus-desc" style="font-size:0.9em; color:#555; margin-top:5px; font-style:italic;"></div>
+                    </div>
+                    <div>
+                        <label>Arquetipo (Clase)</label>
+                        <select id="sel_arq" onchange="app.updateOptions()"></select>
+                        <div id="arq_info" class="bonus-desc" style="font-size:0.9em; color:#555; margin-top:5px; font-style:italic;"></div>
+                        <label style="margin-top:15px; font-size:0.95em;">Selección de Filo (Edge)</label>
+                        <select id="sel_filo" onchange="app.calc()"></select>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label>Trasfondo</label>
+                    <select id="sel_bg" onchange="app.updateOptions()"></select>
+                    <div id="bg_info" class="bonus-desc" style="font-size:0.9em; color:#555; margin-top:5px; font-style:italic;"></div>
+                </div>
+                <button class="btn-confirm" onclick="app.toggleSection('identity', false)">Confirmar</button>
+            </div>
+            <div id="identity_summary_view" class="summary-view" style="display:none; text-align:center;">
+                <div id="identity_summary_text" class="summary-text" style="font-size:1.4em; font-family:var(--font-title); color:var(--ink-accent);"></div>
+                <button class="btn-edit" onclick="app.toggleSection('identity', true)">✏️ Modificar</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>III. Tiradas de Salvación</h2>
+            <div id="saves_edit_view">
+                <div class="grid-2">
+                    <div>
+                        <h3>Comunes</h3>
+                        <label class="skill-opt"><input type="radio" name="save_common" value="DES" onchange="app.calc()"> Destreza (DES)</label>
+                        <label class="skill-opt"><input type="radio" name="save_common" value="CON" onchange="app.calc()"> Constitución (CON)</label>
+                        <label class="skill-opt"><input type="radio" name="save_common" value="SAB" onchange="app.calc()"> Sabiduría (SAB)</label>
+                    </div>
+                    <div>
+                        <h3>Poco Comunes</h3>
+                        <label class="skill-opt"><input type="radio" name="save_uncommon" value="FUE" onchange="app.calc()"> Fuerza (FUE)</label>
+                        <label class="skill-opt"><input type="radio" name="save_uncommon" value="INT" onchange="app.calc()"> Intelecto (INT)</label>
+                        <label class="skill-opt"><input type="radio" name="save_uncommon" value="CAR" onchange="app.calc()"> Carisma (CAR)</label>
+                    </div>
+                </div>
+                <div id="saves_display" style="margin-top: 20px; border-top: 2px double var(--ink-main); padding-top: 10px; display: grid; grid-template-columns: repeat(6, 1fr); text-align: center; font-family: var(--font-mono); font-weight: bold; font-size: 1.1em;"></div>
+                <button class="btn-confirm" onclick="app.toggleSection('saves', false)">Confirmar</button>
+            </div>
+            <div id="saves_summary_view" class="summary-view" style="display:none; background:transparent; padding:0; border:none; box-shadow:none;">
+                <div id="saves_summary_text" class="stats-output-grid"></div>
+                <button class="btn-edit" onclick="app.toggleSection('saves', true)">✏️ Modificar</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>IV. Habilidades y Maestría</h2>
+            <div id="skills_edit_view">
+                <div class="grid-2">
+                    <div>
+                        <h3>Por Arquetipo (Elige <span id="limit_arq">2</span>)</h3>
+                        <div id="skills_arq" class="skill-area"></div>
+                    </div>
+                    <div>
+                        <h3>Por Trasfondo (Elige 2)</h3>
+                        <div id="skills_bg" class="skill-area"></div>
+                    </div>
+                </div>
+                <button class="btn-confirm" onclick="app.toggleSection('skills', false)">Confirmar</button>
+            </div>
+            <div id="skills_summary_view" style="display:none; text-align:center;">
+                <div id="final_skills_list" style="display:flex; flex-wrap:wrap; justify-content:center; gap:5px;"></div>
+                <button class="btn-edit" onclick="app.toggleSection('skills', true)">✏️ Modificar</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>V. Talentos (Elige 3)</h2>
+            <div style="text-align:center; margin-bottom:10px;">
+                <div style="font-family:var(--font-mono); margin-bottom:10px;">
+                    Seleccionados: <span id="talent_count_main" style="font-weight:bold; color:var(--ink-red);">0</span>/3
+                </div>
+                <button class="btn" style="max-width:300px; margin:auto;" onclick="app.openTalentManager()">Abrir Gestor de Talentos</button>
+            </div>
+            <div id="talents_summary_view" class="summary-view" style="display:none;">
+                <label style="text-align:center; color:var(--ink-red); margin-bottom:15px; display:block; font-weight:bold;">TALENTOS ACTIVOS</label>
+                <div id="talents_summary_list" style="display:grid; gap:10px;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>VI. Equipo de Combate</h2>
+            <div id="combat_edit_view">
+                <div class="grid-2">
+                    <div>
+                        <label>Armadura</label>
+                        <select id="sel_armor" onchange="app.calc()"></select>
+                        <div id="armor_info_card" class="combat-info-card">
+                            <span>CA Base</span> <span class="combat-val" id="armor_base_val">-</span>
+                        </div>
+                        <div id="armor_desc" style="font-size:0.8em; margin-top:3px; color:#555;"></div>
+                    </div>
+                    <div>
+                        <label>Escudo & Extras</label>
+                        <select id="sel_shield" onchange="app.calc()"></select>
+                        <select id="sel_magic_bonus" onchange="app.calc()" style="margin-top:5px; font-size:0.9em; color:var(--ink-blue);">
+                            <option value="0">Bono Mágico: N/A</option>
+                            <option value="1">Bono Mágico: +1 CA</option>
+                            <option value="2">Bono Mágico: +2 CA</option>
+                            <option value="3">Bono Mágico: +3 CA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; margin-top: 20px;">
+                    <div>
+                        <label style="border-bottom:1px solid #ddd;">Arma Principal</label>
+                        <select id="sel_weapon" onchange="app.onWeaponChange('w1')"></select>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.8em; margin-top:0;">Usar:</label>
+                        <select id="w1_attr" class="attr-picker" onchange="app.calc()">
+                            <option value="FUE">FUE</option>
+                            <option value="DES">DES</option>
+                            <option value="CON">CON</option>
+                            <option value="INT">INT</option>
+                            <option value="SAB">SAB</option>
+                            <option value="CAR">CAR</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="weapon1_card" class="combat-info-card">
+                    <div>
+                        <span style="font-size:0.8em; text-transform:uppercase;">Ataque</span><br>
+                        <span class="combat-val" id="w1_atk_val">-</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="font-size:0.8em; text-transform:uppercase;">Daño</span><br>
+                        <span class="combat-val" id="w1_dmg_val">-</span>
+                    </div>
+                </div>
+                <div id="w1_alert" class="combat-alert" style="text-align:center; color:red; font-size:0.9em;"></div>
+
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; margin-top: 15px;">
+                    <div>
+                        <label style="border-bottom:1px solid #ddd;">Arma Secundaria</label>
+                        <select id="sel_weapon_sec" onchange="app.onWeaponChange('w2')"></select>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.8em; margin-top:0;">Usar:</label>
+                        <select id="w2_attr" class="attr-picker" onchange="app.calc()">
+                            <option value="FUE">FUE</option>
+                            <option value="DES">DES</option>
+                            <option value="CON">CON</option>
+                            <option value="INT">INT</option>
+                            <option value="SAB">SAB</option>
+                            <option value="CAR">CAR</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="weapon2_card" class="combat-info-card">
+                    <div>
+                        <span style="font-size:0.8em; text-transform:uppercase;">Ataque</span><br>
+                        <span class="combat-val" id="w2_atk_val">-</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="font-size:0.8em; text-transform:uppercase;">Daño</span><br>
+                        <span class="combat-val" id="w2_dmg_val">-</span>
+                    </div>
+                </div>
+                <div id="w2_alert" class="combat-alert" style="text-align:center; color:red; font-size:0.9em;"></div>
+
+                <button class="btn-confirm" onclick="app.toggleSection('combat', false)">Confirmar</button>
+            </div>
+            
+            <div id="combat_summary_view" class="summary-view" style="display:none; background:transparent; padding:0; border:none; box-shadow:none;">
+                <div class="fc-stat-grid">
+                    <div class="fc-row cols-3">
+                        <div class="fc-box" id="sum_ac_box">
+                            <div class="fc-label">CA</div>
+                            <div class="fc-value-container"><span id="sum_ac">10</span></div>
+                        </div>
+                        <div class="fc-box" id="sum_armor_box">
+                            <div class="fc-label">Armadura</div>
+                            <div class="fc-value-container" style="font-size:1em; font-family:var(--font-body); font-style:italic;"><span id="sum_armor_name">-</span></div>
+                            <span class="fc-sub" id="sum_armor_type" style="padding-bottom:5px;">Normal</span>
+                        </div>
+                        <div class="fc-box" id="sum_shield_box">
+                            <div class="fc-label">Escudo</div>
+                            <div class="fc-value-container" style="font-size:1em; font-family:var(--font-body);"><span id="sum_shield">-</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="fc-box clickable" style="margin-bottom:10px;" id="sum_wep1_box" onclick="app.rollWeaponAtk(1)">
+                        <div class="fc-label">Arma Principal (Atacar)</div>
+                        <div style="padding:10px;">
+                            <div style="font-weight:bold; font-size:1.1em; color:var(--ink-main);" id="sum_wep1_name">-</div>
+                            <div style="font-family:var(--font-mono); color:var(--ink-accent);" id="sum_wep1_stats">-</div>
+                        </div>
+                    </div>
+                    <div class="fc-box clickable" id="sum_wep2_box" onclick="app.rollWeaponAtk(2)">
+                        <div class="fc-label">Arma Secundaria (Atacar)</div>
+                        <div style="padding:10px;">
+                            <div style="font-weight:bold; font-size:1.1em; color:var(--ink-main);" id="sum_wep2_name">-</div>
+                            <div style="font-family:var(--font-mono); color:var(--ink-accent);" id="sum_wep2_stats">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-edit" onclick="app.toggleSection('combat', true)">✏️ Modificar</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>VII. Equipo y Tesoro</h2>
+            
+            <div id="equipment_edit_view">
+                <div style="background:#eee; padding:10px; border-bottom:1px solid #ccc; display:flex; gap:10px; flex-wrap:wrap; align-items:end; margin-bottom:15px; border-radius:4px;">
+                    <div style="flex-grow:1;">
+                        <label style="font-size:0.8em; margin:0;">Añadir de Base de Datos</label>
+                        <select id="inv_db_category" onchange="app.updateDbSelect()" style="font-size:0.9em; margin-bottom:5px;">
+                            <option value="weapons">Armas</option>
+                            <option value="armors">Armaduras</option>
+                            <option value="shields">Escudos</option>
+                            <option value="misc">Equipo Aventura</option>
+                        </select>
+                        <select id="inv_db_item" style="font-size:0.9em;"></select>
+                    </div>
+                    <button class="btn-mini" style="background:var(--ink-main); color:#fff; height:35px;" onclick="app.addFromDB()">+ AÑADIR</button>
+                </div>
+
+                <div class="coin-pouch" style="margin-bottom:10px;">
+                    <label style="margin:0 5px 0 0; font-size:0.9em;">Monedas de Oro (GP):</label>
+                    <input type="number" id="gold_coins_edit" value="0" min="0" onchange="app.syncGold('edit')" style="width:100px; text-align:right; border:none; border-bottom:1px solid #999;">
+                </div>
+
+                <div id="inv_backpack_list" class="inv-list"></div>
+                
+                <div style="margin-top:15px; text-align:center;">
+                    <button class="btn-edit" style="width:auto; display:inline-block; margin-bottom:15px;" onclick="app.addCustomItem()">+ Crear Item Personalizado</button>
+                </div>
+
+                <button class="btn-confirm" onclick="app.toggleSection('equipment', false)">Confirmar</button>
+            </div>
+
+            <div id="equipment_summary_view" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#f4f4f4; padding:10px; border-radius:4px; margin-bottom:10px;">
+                    <div style="font-weight:bold;">Tesoro Total:</div>
+                    <div style="font-family:var(--font-mono); color:var(--ink-accent);"><span id="gold_coins_display">0</span> GP</div>
+                </div>
+                
+                <div id="inv_summary_list" class="inv-list"></div>
+                
+                <div style="margin-top:15px; padding-top:10px; border-top:2px solid var(--ink-main); display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-family:var(--font-title);">Carga Total</span>
+                    <span id="load_summary_display" style="font-family:var(--font-mono); font-weight:bold;">0 / 10</span>
+                </div>
+
+                <button class="btn-edit" onclick="app.toggleSection('equipment', true)">✏️ Modificar</button>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<dialog id="settings_modal" class="modal-osr">
+    <div class="modal-header">
+        <h2>Ajustes y Datos</h2>
+        <button type="button" class="btn-close" onclick="document.getElementById('settings_modal').close()">✖</button>
+    </div>
+    <div class="modal-body">
+        <div class="settings-section">
+            <h3>Reglas del Juego</h3>
+            <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
+                <button class="btn btn-modal btn-rules" onclick="document.getElementById('json_rules_input').click()">Importar Reglas (JSON)</button>
+                <button class="btn btn-modal" onclick="app.openDatabaseEditor()" style="background:var(--ink-blue); color:#fff; border-color:var(--ink-blue);">⚙️ EDITOR DE BASE DE DATOS</button>
+            </div>
+            <p style="font-size:0.8em; color:#666; margin-top:10px;">Modifica talentos, linajes, armas y armaduras de forma personalizada.</p>
+        </div>
+        <div class="settings-section" style="margin-top:20px;">
+            <h3>Persistencia Local</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <button class="btn" onclick="app.saveChar()">Guardar</button>
+                <button class="btn" onclick="app.openLoadMenu()">Cargar</button>
+            </div>
+        </div>
+        <div class="settings-section" style="margin-top:20px;">
+            <h3>Archivos (JSON)</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <button class="btn" onclick="app.exportJSON()">Exportar PJ</button>
+                <button class="btn" onclick="app.triggerLoadJSON()">Importar PJ</button>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="db_editor_modal" class="modal-osr">
+    <div class="modal-header" style="background:var(--ink-blue);">
+        <h2>Editor de Base de Datos</h2>
+        <button type="button" class="btn-close" onclick="document.getElementById('db_editor_modal').close()">✖</button>
+    </div>
+    <div class="modal-body db-editor-layout">
+        <div class="db-sidebar">
+            <button class="cat-btn" onclick="app.dbEditCategory('descriptors')">Linajes</button>
+            <button class="cat-btn" onclick="app.dbEditCategory('archetypes')">Arquetipos</button>
+            <button class="cat-btn" onclick="app.dbEditCategory('talents')">Talentos</button>
+            <button class="cat-btn" onclick="app.dbEditCategory('weapons')">Armas</button>
+            <button class="cat-btn" onclick="app.dbEditCategory('armors')">Armaduras</button>
+            <button class="cat-btn" onclick="app.dbEditCategory('spells')">Poderes/Hechizos</button>
+            <hr>
+            <button class="btn btn-mini" onclick="app.exportRulesDB()" style="margin-top:20px; width:100%; height:auto; padding:10px;">EXPORTAR TODO (JSON)</button>
+        </div>
+        <div class="db-content">
+            <div id="db_list_container">
+                <p>Selecciona una categoría para empezar a editar.</p>
+            </div>
+            <div id="db_form_container" style="display:none; margin-top:20px; border-top:2px solid var(--ink-main); padding-top:20px;">
+                </div>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="talent_modal" class="modal-osr">
+    <div class="modal-header">
+        <h2>Gestor de Talentos</h2>
+        <button type="button" class="btn-close" onclick="app.closeTalentManager()">✖</button>
+    </div>
+    <div class="modal-body talent-manager-layout">
+        <div class="tm-sidebar" id="tm_categories"></div>
+        <div class="tm-content" id="tm_list">
+            <p style="text-align:center; color:#666; margin-top:50px;">Selecciona una categoría.</p>
+        </div>
+    </div>
+    <div style="padding:10px; background:#e8dcc5; border-top:2px solid var(--ink-main); display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" class="btn-del" style="background:transparent; border:1px solid var(--ink-red); color:var(--ink-red); padding:5px 15px; cursor:pointer;" onclick="app.clearTalents()">LIMPIAR</button>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <span style="font-family:var(--font-mono); font-weight:bold;">Seleccionados: <span id="talent_count_modal">0</span>/3</span>
+            <button type="button" class="btn-confirm" style="width:auto; margin:0; padding:5px 20px;" onclick="app.closeTalentManager()">CONFIRMAR</button>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="char_manager" class="modal-osr">
+    <div class="modal-header">
+        <h2>Libro de Héroes</h2>
+        <button type="button" class="btn-close" onclick="document.getElementById('char_manager').close()">✖</button>
+    </div>
+    <div id="char_list" class="modal-body"></div>
+</dialog>
+
+<dialog id="crop_modal" class="modal-osr">
+    <div class="modal-header" style="background:#000; border-bottom:1px solid #444;">
+        <h2 style="color:#eee;">Ajustar Retrato</h2>
+        <button type="button" class="btn-close" onclick="document.getElementById('crop_modal').close()">✖</button>
+    </div>
+    <div class="modal-body" style="padding:0; height:100%;">
+        <div class="crop-layout">
+            <div class="crop-workspace">
+                <div class="crop-container" id="crop_container" onmousedown="app.startDrag(event)" ontouchstart="app.startDrag(event)">
+                    <img id="crop_preview" class="crop-image" draggable="false">
+                </div>
+            </div>
+            <div class="crop-sidebar">
+                <p style="font-size:0.9em; color:#bbb; line-height:1.4;">Arrastra la imagen dentro del marco rojo.</p>
+                <div>
+                    <label style="color:#fff; display:block; margin-bottom:8px;">Zoom</label>
+                    <input type="range" id="crop_zoom" class="zoom-slider" step="0.01" oninput="app.updateCropView()">
+                </div>
+                <button type="button" class="crop-btn-save" onclick="app.applyCrop()">GUARDAR RECORTE</button>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<script>
+// --- DATOS INICIALES ---
+const defaultRules = {
+    descriptors: {
+        "humano": { name: "Humano", bonus: "+1 Dos Atributos", mods: {}, grant: ["Un Idioma extra", "Habilidad a elección"], txt: "Versátil y ambicioso." },
+        "enano": { name: "Enano", bonus: "+2 CON, +1 FUE", mods: {CON:2, FUE:1}, grant: ["Visión Oscura"], txt: "Robusto y testarudo." },
+        "elfo": { name: "Elfo", bonus: "+2 DES, +1 SAB", mods: {DES:2, SAB:1}, grant: ["Proeza Física", "Visión Oscura"], txt: "Místico y grácil." },
+        "medioelfo": { name: "Medio Elfo", bonus: "+1 Dos Atributos", mods: {}, grant: ["Visión Oscura"], txt: "Intermediario entre mundos." },
+        "infernal": { name: "Infernal", bonus: "+2 CAR, +1 INT/DES", mods: {CAR:2, INT:1}, grant: ["Visión Oscura", "Resistencia Fuego"], txt: "Marcado por el pacto." },
+        "sintetico": { name: "Sintético", bonus: "+1 CON", mods: {CON:1}, grant: ["Inmune Veneno"], txt: "Lógico y resistente." },
+        "aesir": { name: "Aesir", bonus: "+2 CAR, +1 SAB", mods: {CAR:2, SAB:1}, grant: ["Resistencia Miedo"], txt: "Heredero divino." },
+        "mutante": { name: "Mutante", bonus: "+2 Libre, +1 CON", mods: {CON:1}, grant: ["Resistencia Veneno"], txt: "ADN inestable." },
+        "medioorco": { name: "Medio Orco", bonus: "+2 FUE, +1 CON", mods: {FUE:2, CON:1}, grant: ["Implacable"], txt: "Furia y fuerza." },
+        "draconido": { name: "Dracónido", bonus: "+2 FUE, +1 CAR", mods: {FUE:2, CAR:1}, grant: ["Resistencia Elemental"], txt: "Orgullo ancestral." }
+    },
+    archetypes: {
+        "luchador": { name: "Luchador (Audaz)", pv: 8, adr: 6, ing: 2, ca: 1, limit: 2, skills: ["Proeza Física", "Intimidación", "Percepción", "Supervivencia"], edges: ["Físico", "Mental"], txt: "Vanguardia resistente." },
+        "experto": { name: "Experto (Sutil)", pv: 6, adr: 4, ing: 4, ca: 0, limit: 2, skills: ["Sigilo", "Engaño", "Investigación", "Percepción", "Tecnología"], edges: ["Flexible"], txt: "Especialista técnico." },
+        "adepto": { name: "Adepto (Sagaz)", pv: 4, adr: 0, ing: 10, ca: 0, limit: 4, skills: ["Arcano", "Historia", "Medicina", "Naturaleza", "Perspicacia", "Religión"], edges: ["Mental", "Físico"], txt: "Canalizador de la Fuente." }
+    },
+    backgrounds: {
+        "soldado": { name: "Soldado", skills: ["Proeza Física", "Intimidación", "Tecnología"] },
+        "picaro": { name: "Pícaro", skills: ["Sigilo", "Engaño", "Conocimiento Calle"] },
+        "acolito": { name: "Acólito", skills: ["Religión", "Perspicacia", "Historia"] },
+        "erudito": { name: "Erudito", skills: ["Arcano", "Investigación", "Naturaleza"] },
+        "salvaje": { name: "Salvaje", skills: ["Supervivencia", "Percepción", "Naturaleza"] },
+        "artesano": { name: "Artesano", skills: ["Tecnología", "Artesanía", "Investigación"] },
+        "forastero": { name: "Forastero", skills: ["Supervivencia", "Sigilo", "Engaño"] },
+        "noble": { name: "Noble", skills: ["Influencia", "Historia", "Engaño"] },
+        "mercenario": { name: "Mercenario", skills: ["Intimidación", "Percepción", "Proeza Física"] }
+    },
+    weapons: {
+        "daga": { name: "Daga", dmg: "1d4", slots: 1, cat: "simple", stat: "FIN" },
+        "espada_corta": { name: "Espada Corta", dmg: "1d6", slots: 1, cat: "marcial", stat: "FIN" },
+        "espada_larga": { name: "Espada Larga", dmg: "1d8", slots: 2, cat: "marcial", stat: "FUE" },
+        "hacha": { name: "Hacha de Batalla", dmg: "1d8", slots: 2, cat: "marcial", stat: "FUE" },
+        "espadon": { name: "Espadón", dmg: "2d6", slots: 3, cat: "marcial", stat: "FUE" },
+        "arco_corto": { name: "Arco Corto", dmg: "1d6", slots: 2, cat: "simple", stat: "DES" },
+        "ballesta": { name: "Ballesta Ligera", dmg: "1d8", slots: 2, cat: "simple", stat: "DES" },
+        "baston": { name: "Bastón", dmg: "1d6", slots: 2, cat: "simple", stat: "FUE" },
+        "maza": { name: "Maza", dmg: "1d6", slots: 2, cat: "simple", stat: "FUE" }
+    },
+    armors: {
+        "pieles": { name: "Pieles (Ligera)", ca: 12, type: "light", slots: 1 },
+        "cuero": { name: "Cuero Tachonado (Ligera)", ca: 12, type: "light", slots: 1 },
+        "malla": { name: "Cota de Malla (Pesada)", ca: 16, type: "heavy", slots: 3 },
+        "placas": { name: "Armadura de Placas (Pesada)", ca: 18, type: "heavy", slots: 3 },
+        "coraza": { name: "Coraza (Media)", ca: 14, type: "medium", slots: 2 }
+    },
+    talents: {
+        "acero": [
+            { name: "Maestro del Escudo", desc: "Usa reacción para golpear con escudo.", grades: [{g:1, d:"Usa reacción para golpear con escudo."}] },
+            { name: "Tirador Preciso", desc: "Gasta Adrenalina para daño extra a distancia.", grades: [{g:1, d:"Gasta Adrenalina para daño extra a distancia."}] },
+            { name: "Duelista Táctico", desc: "Gasta Adrenalina para imponer desventaja al enemigo.", grades: [{g:1, d:"Gasta Adrenalina para imponer desventaja al enemigo."}] }
+        ],
+        "adrenalina": [
+            { name: "Defensor Implacable", desc: "Impone desventaja a ataques contra aliados.", grades: [{g:1, d:"Impone desventaja a aliados."}] },
+            { name: "Furia", desc: "+2 Daño y resistente a Miedo.", grades: [{g:1, d:"+2 Daño"}] },
+            { name: "Defensa Natural", desc: "CA = 10 + DES + CON sin armadura.", id: "def_nat", grades: [{g:1, d:"Bono CA"}] }
+        ],
+        "astucia": [
+            { name: "Ataque Furtivo", desc: "+1d6 Daño si tienes ventaja o aliado cerca.", grades: [{g:1, d:"+1d6"}] },
+            { name: "Marca de Cacería", desc: "Ventaja rastrear y +1d6 daño.", grades: [{g:1, d:"Ventaja"}] }
+        ],
+        "sobrenatural": [
+            { name: "Despertar Sobrenatural", desc: "Acceso a magia. +6 Ingenio.", id: "despertar", grades: [{g:1, d:"+6 Ing"}] },
+            { name: "Canalización Divina", desc: "Curar o espantar no-muertos.", grades: [{g:1, d:"Curar"}] }
+        ],
+        "general": [
+            { name: "Alerta", desc: "+5 Iniciativa. No puedes ser sorprendido.", id: "alerta", grades: [{g:1, d:"+5 Ini"}] },
+            { name: "Atleta", desc: "+1 FUE o DES. Levantarse cuesta 5 pies.", id: "atleta", grades: [{g:1, d:"+1 Atrib"}] }
+        ]
+    },
+    spells: {},
+    shields: {
+        'rodela': { name: 'Escudo (Rodela)', slots: 1, bonus: 1 },
+        'basic': { name: 'Escudo (Básico)', slots: 1, bonus: 2 },
+        'tower': { name: 'Escudo (Torre)', slots: 2, bonus: 3 }
+    }
+};
+
+const app = {
+    DB: {}, 
+    inventory: [], 
+    gold: 0,
+    cropState: { img: null, x: 0, y: 0, zoom: 1, isDragging: false, lastX: 0, lastY: 0 },
+    activeTalentCategory: null,
+    currentEditorCat: '',
+
+    init: function() {
+        const savedRules = localStorage.getItem('sands_game_rules');
+        if (savedRules) {
+            try { 
+                this.DB = JSON.parse(savedRules); 
+            } catch(e) { 
+                console.error("Reglas guardadas corruptas, usando defaults.");
+                this.DB = JSON.parse(JSON.stringify(defaultRules)); 
+            }
+        } else {
+            this.DB = JSON.parse(JSON.stringify(defaultRules));
+        }
+        
+        if(this.DB.descriptors) this.unlockApp();
+
+        const concept = document.getElementById('char_concept');
+        if(concept) concept.addEventListener('input', function() { app.autoResize('char_concept'); });
+        
+        window.addEventListener('mouseup', () => app.endDrag());
+        window.addEventListener('touchend', () => app.endDrag());
+        window.addEventListener('mousemove', (e) => app.doDrag(e));
+        window.addEventListener('touchmove', (e) => app.doDrag(e), { passive: false });
+    },
+
+    loadRulesFile: function(input) {
+        if (!input.files || !input.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const rules = JSON.parse(e.target.result);
+                if(!rules.descriptors || !rules.archetypes || !rules.weapons) throw new Error("Formato inválido");
+                app.DB = rules;
+                app.saveRulesToLocal();
+                app.unlockApp();
+                document.getElementById('settings_modal').close();
+                app.showToast("Reglas cargadas correctamente", "Sistema");
+            } catch (err) { app.showToast("Error en archivo JSON", "Error"); }
+        };
+        reader.readAsText(input.files[0]);
+        input.value = "";
+    },
+
+    saveRulesToLocal: function() {
+        try { localStorage.setItem('sands_game_rules', JSON.stringify(this.DB)); } catch(e){ console.error("Error guardando reglas", e); }
+    },
+
+    unlockApp: function() {
+        if (!this.DB || !this.DB.descriptors) return; 
+        
+        document.getElementById('main_content').style.opacity = '1';
+        document.getElementById('main_content').style.pointerEvents = 'auto';
+        document.getElementById('db-status-overlay').style.display = 'none';
+        
+        this.fillSelect('sel_desc', this.DB.descriptors);
+        this.fillSelect('sel_arq', this.DB.archetypes);
+        this.fillSelect('sel_bg', this.DB.backgrounds);
+        
+        this.updateDbSelect();
+        this.syncCombatOptions();
+        
+        this.initTalentManager();
+        this.updateOptions(true);
+    },
+
+    /* === EDITOR DE BASE DE DATOS === */
+    openDatabaseEditor: function() {
+        document.getElementById('settings_modal').close();
+        document.getElementById('db_editor_modal').showModal();
+        this.dbEditCategory('descriptors');
+    },
+
+    dbEditCategory: function(cat) {
+        this.currentEditorCat = cat;
+        const listContainer = document.getElementById('db_list_container');
+        const formContainer = document.getElementById('db_form_container');
+        formContainer.style.display = 'none';
+        
+        // Blindaje contra nulos
+        const source = this.DB[cat] || {};
+        
+        listContainer.innerHTML = `<h3>Editando: ${cat.toUpperCase()}</h3><button class="btn btn-mini" onclick="app.dbEditEntry('new')">+ AÑADIR NUEVO</button><br><br>`;
+        
+        if (cat === 'talents') {
+            // Caso especial: Talentos es un objeto de arrays
+            Object.keys(source).forEach(subCat => {
+                const subHeader = document.createElement('h4');
+                subHeader.innerText = subCat.toUpperCase();
+                subHeader.style.background = "#ddd";
+                subHeader.style.padding = "5px";
+                listContainer.appendChild(subHeader);
+                
+                source[subCat].forEach((item, idx) => {
+                    this.renderDbItem(listContainer, item.name, `${subCat}|${idx}`);
+                });
+            });
+        } else {
+            // Resto de categorías (Linajes, armas, etc)
+            Object.keys(source).forEach(key => {
+                this.renderDbItem(listContainer, source[key].name || key, key);
+            });
+        }
+    },
+
+    renderDbItem: function(container, name, key) {
+        const div = document.createElement('div');
+        div.className = 'db-list-item';
+        div.innerHTML = `<span>${name}</span>
+            <div>
+                <button class="btn-mini btn-load" onclick="app.dbEditEntry('${key}')">EDITAR</button>
+                <button class="btn-mini btn-del" onclick="app.dbDeleteEntry('${key}')">BORRAR</button>
+            </div>`;
+        container.appendChild(div);
+    },
+
+    dbEditEntry: function(key) {
+        const cat = this.currentEditorCat;
+        const formContainer = document.getElementById('db_form_container');
+        formContainer.style.display = 'block';
+        formContainer.innerHTML = '';
+        
+        let item = {};
+        if (key !== 'new') {
+            if (key.includes('|')) {
+                const [subCat, idx] = key.split('|');
+                item = this.DB[cat][subCat][idx];
+            } else {
+                item = this.DB[cat][key];
+            }
+        }
+
+        let html = `<h4>${key === 'new' ? 'Añadir' : 'Editar'} Entrada</h4>`;
+        
+        if (cat === 'talents') {
+            html += `<label>Categoría (Ej: acero, sombra...)</label><input type="text" id="edit_subcat" value="${key === 'new' ? 'general' : key.split('|')[0]}">
+                     <label>Nombre del Talento</label><input type="text" id="edit_name" value="${item.name || ''}">
+                     <label>ID Especial (Solo para lógica interna: alerta, atleta, despertar...)</label><input type="text" id="edit_special_id" value="${item.id || ''}">
+                     <label>Descripción General</label><textarea id="edit_desc">${item.desc || ''}</textarea>
+                     <div id="grades_container">
+                        <h5>Grados y Efectos</h5>
+                        ${(item.grades || [{g:1, d:""}]).map((g,i) => `
+                            <div class="grade-entry">
+                                <b>Grado ${g.g}</b>: <input type="text" class="grade-desc" data-grade="${g.g}" value="${g.d}" placeholder="Descripción del efecto en este grado">
+                            </div>
+                        `).join('')}
+                     </div>
+                     <button class="btn-mini" onclick="app.addGradeField()">+ Añadir Grado</button>`;
+        } 
+        else {
+            // Otros formularios simplificados (Linajes, Armas, etc)
+            html += `<label>ID / Key (unica)</label><input type="text" id="edit_id" value="${key === 'new' ? '' : key}" ${key !== 'new' ? 'disabled' : ''}>
+                     <label>Nombre</label><input type="text" id="edit_name" value="${item.name || ''}">
+                     <label>Texto / Descripción / Daño</label><textarea id="edit_txt">${item.txt || item.dmg || item.ca || ''}</textarea>`;
+        }
+
+        html += `<div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn btn-confirm" style="margin:0" onclick="app.dbSaveEntry('${key}')">GUARDAR CAMBIOS</button>
+                    <button class="btn btn-clear" style="margin:0" onclick="document.getElementById('db_form_container').style.display='none'">CANCELAR</button>
+                 </div>`;
+        
+        formContainer.innerHTML = html;
+        formContainer.scrollIntoView({ behavior: 'smooth' });
+    },
+
+    addGradeField: function() {
+        const container = document.getElementById('grades_container');
+        const num = container.querySelectorAll('.grade-entry').length + 1;
+        const div = document.createElement('div');
+        div.className = 'grade-entry';
+        div.innerHTML = `<b>Grado ${num}</b>: <input type="text" class="grade-desc" data-grade="${num}" value="">`;
+        container.appendChild(div);
+    },
+
+    dbSaveEntry: function(key) {
+        const cat = this.currentEditorCat;
+        
+        if (cat === 'talents') {
+            const subCat = document.getElementById('edit_subcat').value.toLowerCase().trim();
+            const grades = Array.from(document.querySelectorAll('.grade-desc')).map(el => ({
+                g: parseInt(el.dataset.grade),
+                d: el.value
+            }));
+            const newTalent = {
+                name: document.getElementById('edit_name').value,
+                desc: document.getElementById('edit_desc').value,
+                id: document.getElementById('edit_special_id').value,
+                grades: grades
+            };
+
+            if (!this.DB.talents[subCat]) this.DB.talents[subCat] = [];
+            
+            if (key !== 'new' && key.includes('|')) {
+                const [oldSub, oldIdx] = key.split('|');
+                this.DB.talents[oldSub].splice(oldIdx, 1);
+            }
+            this.DB.talents[subCat].push(newTalent);
+        } else {
+            const id = document.getElementById('edit_id').value;
+            const name = document.getElementById('edit_name').value;
+            const txt = document.getElementById('edit_txt').value;
+            
+            if(!this.DB[cat]) this.DB[cat] = {};
+            this.DB[cat][id] = { name: name, txt: txt };
+        }
+
+        this.saveRulesToLocal();
+        this.unlockApp();
+        this.dbEditCategory(cat);
+        this.showToast("Base de Datos Actualizada");
+    },
+
+    dbDeleteEntry: function(key) {
+        if (!confirm("¿Borrar permanentemente?")) return;
+        const cat = this.currentEditorCat;
+        if (key.includes('|')) {
+            const [sub, idx] = key.split('|');
+            this.DB[cat][sub].splice(idx, 1);
+        } else {
+            delete this.DB[cat][key];
+        }
+        this.saveRulesToLocal();
+        this.unlockApp();
+        this.dbEditCategory(cat);
+    },
+
+    exportRulesDB: function() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.DB, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "SANDS_Reglas_Personalizadas.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    },
+
+    /* === GESTOR DE INVENTARIO === */
+    updateDbSelect: function() {
+        const cat = document.getElementById('inv_db_category').value;
+        const itemSelect = document.getElementById('inv_db_item');
+        itemSelect.innerHTML = "";
+        
+        let source = {};
+        if (cat === 'misc') {
+            source = {
+                'rope': { name: 'Cuerda (15m)', slots: 1 },
+                'torch': { name: 'Antorchas (5)', slots: 1 },
+                'rations': { name: 'Raciones (3)', slots: 1 },
+                'bedroll': { name: 'Saco de dormir', slots: 1 },
+                'spellbook': { name: 'Libro de Conjuros', slots: 1 },
+                'wand': { name: 'Varita', slots: 1 },
+                'scepter': { name: 'Cetro', slots: 1 }
+            };
+        } else if (cat === 'shields') {
+             source = this.DB.shields || defaultRules.shields;
+        } else {
+            source = this.DB[cat] || {};
+        }
+
+        for (const key in source) {
+            const item = source[key];
+            const opt = document.createElement('option');
+            opt.value = key;
+            
+            let details = "";
+            if (cat === 'weapons') details = ` [${item.dmg || '-'}]`;
+            if (cat === 'armors') details = ` [AC ${item.ca || '-'}]`;
+            if (cat === 'shields') details = ` [AC +${item.bonus || 0}]`;
+            
+            opt.innerText = `${item.name}${details} (+${item.slots} Carga)`;
+            itemSelect.appendChild(opt);
+        }
+    },
+
+    addFromDB: function() {
+        const cat = document.getElementById('inv_db_category').value;
+        const key = document.getElementById('inv_db_item').value;
+        let itemData = null;
+
+        if (cat === 'misc') {
+             const miscDB = { 
+                'rope': {name:'Cuerda', slots:1}, 
+                'torch': {name:'Antorchas', slots:1}, 
+                'rations': {name:'Raciones', slots:1}, 
+                'bedroll': {name:'Saco', slots:1},
+                'spellbook': {name:'Libro de Conjuros', slots:1},
+                'wand': {name:'Varita', slots:1},
+                'scepter': {name:'Cetro', slots:1}
+            };
+            itemData = miscDB[key];
+        } else if (cat === 'shields') {
+             itemData = (this.DB.shields && this.DB.shields[key]) ? this.DB.shields[key] : defaultRules.shields[key];
+        } else {
+            if (this.DB[cat]) itemData = this.DB[cat][key];
+        }
+
+        if(itemData) {
+            let nameWithStats = itemData.name;
+            if (cat === 'weapons' && itemData.dmg) nameWithStats += ` [${itemData.dmg}]`;
+            if (cat === 'armors' && itemData.ca) nameWithStats += ` [AC ${itemData.ca}]`;
+            if (cat === 'shields' && itemData.bonus) nameWithStats += ` [AC +${itemData.bonus}]`;
+            
+            this.inventory.push({
+                uid: Date.now() + Math.random(),
+                name: nameWithStats,
+                slots: itemData.slots,
+                type: cat,
+                dbKey: key
+            });
+            this.renderInventory();
+            this.syncCombatOptions(); 
+        }
+    },
+
+    addCustomItem: function() {
+        this.inventory.push({
+            uid: Date.now() + Math.random(),
+            name: "Objeto Nuevo",
+            slots: 1,
+            type: "misc",
+            dbKey: null
+        });
+        this.renderInventory();
+    },
+
+    removeInvItem: function(index) {
+        this.inventory.splice(index, 1);
+        this.renderInventory();
+        this.syncCombatOptions(); 
+    },
+
+    updateInvItem: function(index, field, value) {
+        if(field === 'slots') value = parseInt(value) || 0;
+        this.inventory[index][field] = value;
+        if(field === 'name' || field === 'type') this.syncCombatOptions(); 
+        this.renderInventory(); 
+    },
+
+    syncGold: function(source) {
+        if (source === 'edit') this.gold = parseInt(document.getElementById('gold_coins_edit').value) || 0;
+        this.renderInventory();
+    },
+
+    renderInventory: function() {
+        const list = document.getElementById('inv_backpack_list');
+        if (list) {
+            list.innerHTML = "";
+            this.inventory.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = 'inv-item-row';
+                
+                const typeOptions = [
+                    {val:'misc', label:'ITEM'},
+                    {val:'weapons', label:'ARMA'},
+                    {val:'armors', label:'PROT'},
+                    {val:'shields', label:'ESCU'}
+                ];
+                
+                let typeSelectHTML = `<select class="inv-type-select" onchange="app.updateInvItem(${index}, 'type', this.value)">`;
+                typeOptions.forEach(opt => {
+                    typeSelectHTML += `<option value="${opt.val}" ${item.type === opt.val ? 'selected' : ''}>${opt.label}</option>`;
+                });
+                typeSelectHTML += `</select>`;
+
+                row.innerHTML = `
+                    ${typeSelectHTML}
+                    <input type="text" class="inv-name" value="${item.name}" onchange="app.updateInvItem(${index}, 'name', this.value)">
+                    <input type="number" class="inv-slots" value="${item.slots}" min="0" max="10" onchange="app.updateInvItem(${index}, 'slots', this.value)">
+                    <button class="inv-btn-del" onclick="app.removeInvItem(${index})">&times;</button>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        const sumList = document.getElementById('inv_summary_list');
+        if(sumList) {
+            sumList.innerHTML = "";
+            if (this.inventory.length === 0) {
+                sumList.innerHTML = "<div style='font-style:italic; color:#777; text-align:center;'>Mochila vacía.</div>";
+            } else {
+                this.inventory.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'inv-summary-row';
+                    row.innerHTML = `<span>${item.name}</span><span style="font-family:var(--font-mono); font-weight:bold;">${item.slots}</span>`;
+                    sumList.appendChild(row);
+                });
+            }
+        }
+
+        const goldDisplay = document.getElementById('gold_coins_display');
+        if(goldDisplay) goldDisplay.innerText = this.gold;
+        const goldEdit = document.getElementById('gold_coins_edit');
+        if(goldEdit && document.activeElement !== goldEdit) goldEdit.value = this.gold;
+
+        this.calc(); 
+    },
+
+    calcInventory: function() {
+        let totalLoad = this.inventory.reduce((sum, item) => sum + (item.slots || 0), 0);
+        const maxLoad = parseInt(document.getElementById('base_FUE').value) || 10;
+        return { current: totalLoad, max: maxLoad };
+    },
+
+    syncCombatOptions: function() {
+        const curArmor = document.getElementById('sel_armor').value;
+        const curShield = document.getElementById('sel_shield').value;
+        const curW1 = document.getElementById('sel_weapon').value;
+        const curW2 = document.getElementById('sel_weapon_sec').value;
+
+        const fill = (id, typeFilter, defaultVal, defaultText) => {
+            const select = document.getElementById(id);
+            if(!select) return;
+            select.innerHTML = `<option value="${defaultVal}">${defaultText}</option>`;
+            
+            const items = this.inventory.filter(i => i.type === typeFilter);
+            items.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.uid; 
+                
+                let extraInfo = "";
+                if (!item.name.includes('[')) {
+                     if (typeFilter === 'weapons') {
+                        let dmg = "1d6";
+                        if(item.dbKey && app.DB.weapons && app.DB.weapons[item.dbKey]) dmg = app.DB.weapons[item.dbKey].dmg;
+                        extraInfo = ` [${dmg}]`;
+                    } else if (typeFilter === 'armors') {
+                        let ac = 10;
+                        if(item.dbKey && app.DB.armors && app.DB.armors[item.dbKey]) ac = app.DB.armors[item.dbKey].ca;
+                        extraInfo = ` [AC ${ac}]`;
+                    }
+                }
+
+                opt.innerText = `${item.name}${extraInfo} (+${item.slots} Carga)`;
+                select.appendChild(opt);
+            });
+        };
+
+        fill('sel_armor', 'armors', 'none', 'Sin Armadura');
+        fill('sel_shield', 'shields', 'none', 'Sin Escudo');
+        fill('sel_weapon', 'weapons', 'unarmed', 'Desarmado');
+        fill('sel_weapon_sec', 'weapons', 'unarmed', 'Desarmado');
+
+        const setVal = (id, val) => {
+            const sel = document.getElementById(id);
+            if (sel.querySelector(`option[value="${val}"]`)) sel.value = val;
+            else sel.value = sel.options[0].value;
+        };
+
+        setVal('sel_armor', curArmor);
+        setVal('sel_shield', curShield);
+        setVal('sel_weapon', curW1);
+        setVal('sel_weapon_sec', curW2);
+    },
+
+    togglePersonal: function(showEdit) {
+        if (!showEdit) {
+            const imgParams = document.getElementById('char_img').src;
+            const name = document.getElementById('char_name').value || "Aventurero Desconocido";
+            const lvl = document.getElementById('char_lvl').value;
+            const xp = document.getElementById('char_xp').value;
+            const concept = document.getElementById('char_concept').value || "Sin biografía.";
+            document.getElementById('char_img_summary').src = imgParams;
+            document.getElementById('summary_name').innerText = name;
+            document.getElementById('summary_lvl').innerText = lvl;
+            document.getElementById('summary_xp').innerText = xp;
+            document.getElementById('summary_concept').innerText = concept;
+        }
+        const editView = document.getElementById('personal_edit_view');
+        const summaryView = document.getElementById('personal_summary_view');
+        if(editView) editView.style.display = showEdit ? 'block' : 'none';
+        if(summaryView) summaryView.style.display = showEdit ? 'none' : 'block';
+        if(!showEdit && window.innerWidth < 800) { document.querySelector('.sidebar').scrollIntoView({behavior: 'smooth'}); }
+    },
+
+    rollCheck: function(label, mod) {
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        const total = d20 + mod;
+        let critClass = "";
+        if (d20 === 20) critClass = "crit"; else if (d20 === 1) critClass = "fail"; 
+        const content = `<div class="toast-die">${total}</div><div class="toast-content"><span class="toast-label">${label}</span><span style="font-size:0.8em">d20 (${d20}) ${mod >= 0 ? '+' : ''}${mod}</span></div>`;
+        this.showToastHtml(content, critClass);
+    },
+    rollStat: function(statName, val) {
+        const mod = this.getMod(val);
+        this.rollCheck(statName, mod);
+    },
+    rollWeaponAtk: function(wNum) {
+        const name = document.getElementById(`sum_wep${wNum}_name`).innerText;
+        if (name === "-" || name === "Desarmado") {
+            this.rollCheck("Ataque Desarmado", this.getMod(parseInt(document.getElementById('base_FUE').value)));
+            return;
+        }
+        const statsStr = document.getElementById(`sum_wep${wNum}_stats`).innerText; // "+5 / 1d8 +2"
+        const atkBonus = parseInt(statsStr.split('/')[0]) || 0;
+        this.rollCheck(`Ataque: ${name}`, atkBonus);
+    },
+    showToast: function(msg, label="Info") { this.showToastHtml(`<div class="toast-content"><span class="toast-label">${label}</span><span>${msg}</span></div>`); },
+    showToastHtml: function(htmlContent, extraClass = "") {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${extraClass}`;
+        toast.innerHTML = htmlContent;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(20px)'; setTimeout(() => toast.remove(), 300); }, 3000);
+    },
+
+    initTalentManager: function() {
+        if (!this.DB.talents) return;
+        const catContainer = document.getElementById('tm_categories');
+        catContainer.innerHTML = "";
+        Object.keys(this.DB.talents).forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = 'cat-btn'; btn.type = 'button';
+            btn.innerText = key.charAt(0).toUpperCase() + key.slice(1);
+            btn.onclick = () => app.showTalentCategory(key, btn);
+            catContainer.appendChild(btn);
+        });
+    },
+    openTalentManager: function() {
+        if (!this.DB.talents) return;
+        document.getElementById('talent_modal').showModal();
+        if (!this.activeTalentCategory && this.DB.talents) {
+            const firstKey = Object.keys(this.DB.talents)[0];
+            const firstBtn = document.querySelector('.cat-btn');
+            if(firstKey) this.showTalentCategory(firstKey, firstBtn);
+        } else if (this.activeTalentCategory) {
+            const activeBtn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.innerText.toLowerCase() === this.activeTalentCategory.toLowerCase());
+            this.showTalentCategory(this.activeTalentCategory, activeBtn);
+        }
+        this.updateTalentCountDisplay();
+    },
+    closeTalentManager: function() {
+        document.getElementById('talent_modal').close();
+        this.showTalentSummary(); this.updateTalentCountDisplay(); this.calc(); 
+    },
+    showTalentCategory: function(key, btnElement) {
+        this.activeTalentCategory = key;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        if(btnElement) btnElement.classList.add('active');
+        const listContainer = document.getElementById('tm_list');
+        listContainer.innerHTML = "";
+        const talents = this.DB.talents[key];
+        if (!talents) return;
+        talents.forEach(t => {
+            const card = document.createElement('div');
+            const isChecked = document.querySelector(`input[name="chk_talents_hidden"][value="${t.name}"]`) ? true : false;
+            card.className = `talent-card ${isChecked ? 'selected' : ''}`;
+            let extraAttr = t.id ? `data-id="${t.id}"` : "";
+            
+            // Mostrar grados si existen
+            let gradesHTML = "";
+            if (t.grades && t.grades.length > 0) {
+                gradesHTML = `<div style="font-size:0.8em; margin-top:5px; color:var(--ink-red);">Grados disponibles: ${t.grades.length}</div>`;
+            }
+
+            card.innerHTML = `<input type="checkbox" value="${t.name}" ${extraAttr} data-desc="${t.desc}" ${isChecked ? "checked" : ""} onchange="app.toggleTalent(this, '${t.name}', '${t.id || ''}')"><div class="talent-info"><h4>${t.name}</h4><div class="talent-desc">${t.desc}</div>${gradesHTML}</div>`;
+            listContainer.appendChild(card);
+            card.onclick = (e) => { if(e.target.type !== 'checkbox' && e.target.type !== 'radio') { const chk = card.querySelector('input[type="checkbox"]'); chk.checked = !chk.checked; app.toggleTalent(chk, t.name, t.id); } };
+        });
+    },
+    toggleTalent: function(checkbox, name, id) {
+        let hiddenInput = document.querySelector(`input[name="chk_talents_hidden"][value="${name}"]`);
+        const card = checkbox.closest('.talent-card');
+        if (checkbox.checked) {
+            const currentCount = document.querySelectorAll('input[name="chk_talents_hidden"]').length;
+            if (currentCount >= 3) { alert("Solo puedes elegir 3 talentos."); checkbox.checked = false; return; }
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input'); hiddenInput.type = 'hidden'; hiddenInput.name = 'chk_talents_hidden'; hiddenInput.value = name;
+                hiddenInput.setAttribute('data-desc', checkbox.getAttribute('data-desc'));
+                if(id) hiddenInput.setAttribute('data-id', id);
+                document.body.appendChild(hiddenInput);
+            }
+            card.classList.add('selected');
+        } else {
+            if (hiddenInput) hiddenInput.remove();
+            card.classList.remove('selected');
+        }
+        this.updateTalentCountDisplay(); this.calc();
+    },
+    clearTalents: function() {
+        if(!confirm("¿Borrar talentos seleccionados?")) return;
+        document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el => el.remove());
+        const container = document.getElementById('tm_list');
+        if(container) {
+            container.querySelectorAll('input[type="checkbox"]').forEach(c => {
+                c.checked = false; c.closest('.talent-card').classList.remove('selected');
+            });
+        }
+        this.updateTalentCountDisplay(); this.calc();
+    },
+    updateTalentCountDisplay: function() {
+        const count = document.querySelectorAll('input[name="chk_talents_hidden"]').length;
+        document.getElementById('talent_count_main').innerText = count;
+        document.getElementById('talent_count_modal').innerText = count;
+    },
+    showTalentSummary: function() {
+        const checked = Array.from(document.querySelectorAll('input[name="chk_talents_hidden"]')); 
+        const listDiv = document.getElementById('talents_summary_list'); listDiv.innerHTML = "";
+        if (checked.length > 0) {
+            document.getElementById('talents_summary_view').style.display = 'block';
+            checked.forEach(chk => { 
+                const div = document.createElement('div'); div.className = 'talent-final-item'; 
+                div.style.borderBottom = "1px solid #ddd"; div.style.paddingBottom = "5px";
+                div.innerHTML = `<strong>${chk.value}</strong><br><span style="font-size:0.9em; color:#555;">${chk.getAttribute('data-desc')}</span>`; 
+                listDiv.appendChild(div); 
+            });
+        } else { document.getElementById('talents_summary_view').style.display = 'none'; }
+    },
+    autoResize: function(id) { const el = document.getElementById(id); if(el){ el.style.height = 'auto'; el.style.height = (el.scrollHeight) + 'px'; } },
+    fillSelect: function(id, data) { const s = document.getElementById(id); s.innerHTML = '<option value="" disabled selected>-- Seleccionar --</option>'; for(let k in data) { let o = document.createElement('option'); o.value = k; o.innerText = data[k].name; s.appendChild(o); } },
+    
+    /* --- CROPPER --- */
+    startCrop: function(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                app.cropState.img = new Image();
+                app.cropState.img.onload = function() {
+                    const containerW = 276; const containerH = 380;
+                    const scaleW = containerW / app.cropState.img.naturalWidth;
+                    const scaleH = containerH / app.cropState.img.naturalHeight;
+                    const baseScale = Math.max(scaleW, scaleH);
+                    app.cropState.zoom = baseScale;
+                    app.cropState.x = (containerW - (app.cropState.img.naturalWidth * baseScale)) / 2;
+                    app.cropState.y = (containerH - (app.cropState.img.naturalHeight * baseScale)) / 2;
+                    const slider = document.getElementById('crop_zoom');
+                    slider.min = baseScale * 0.1; slider.max = baseScale * 5; slider.step = 0.01; slider.value = baseScale;
+                    document.getElementById('crop_preview').src = app.cropState.img.src;
+                    document.getElementById('crop_modal').showModal();
+                    app.updateCropView();
+                }
+                app.cropState.img.onerror = function() { app.showToast("Imagen no válida", "Error"); };
+                app.cropState.img.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+        input.value = ""; 
+    },
+    updateCropView: function() {
+        const zoom = document.getElementById('crop_zoom').value;
+        app.cropState.zoom = parseFloat(zoom);
+        const img = document.getElementById('crop_preview');
+        img.style.transform = `translate3d(${app.cropState.x}px, ${app.cropState.y}px, 0) scale(${app.cropState.zoom})`;
+    },
+    startDrag: function(e) {
+        app.cropState.isDragging = true;
+        app.cropState.lastX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        app.cropState.lastY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        if (!e.type.includes('mouse')) e.preventDefault();
+    },
+    doDrag: function(e) {
+        if (!app.cropState.isDragging) return;
+        const cx = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        const cy = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        const dx = cx - app.cropState.lastX; const dy = cy - app.cropState.lastY;
+        app.cropState.x += dx; app.cropState.y += dy;
+        app.cropState.lastX = cx; app.cropState.lastY = cy;
+        app.updateCropView();
+        if (!e.type.includes('mouse')) e.preventDefault();
+    },
+    endDrag: function() { app.cropState.isDragging = false; },
+    applyCrop: function() {
+        if (!app.cropState.img) return;
+        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+        const containerW = 276; const containerH = 380;
+        const targetW = containerW * 2; const targetH = containerH * 2;
+        canvas.width = targetW; canvas.height = targetH;
+        ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0,0,targetW, targetH);
+        ctx.translate(app.cropState.x * 2, app.cropState.y * 2);
+        ctx.scale(app.cropState.zoom * 2, app.cropState.zoom * 2);
+        ctx.drawImage(app.cropState.img, 0, 0);
+        document.getElementById('char_img').src = canvas.toDataURL('image/jpeg', 0.95);
+        document.getElementById('crop_modal').close();
+    },
+
+    updateOptions: function(resetCheckboxes = false) {
+        if (!this.DB.archetypes) return;
+        const arqKey = document.getElementById('sel_arq').value; 
+        const bgKey = document.getElementById('sel_bg').value; 
+        const descKey = document.getElementById('sel_desc').value;
+        const descData = this.DB.descriptors[descKey];
+        const arqData = this.DB.archetypes[arqKey];
+        const bgData = this.DB.backgrounds[bgKey];
+
+        document.getElementById('desc_info').innerText = descData ? (descData.bonus + ". " + descData.txt) : "";
+        document.getElementById('arq_info').innerText = arqData ? arqData.txt : ""; 
+        document.getElementById('bg_info').innerText = bgData ? "Otorga 2 Habilidades y Kit." : "";
+        
+        const filoSelect = document.getElementById('sel_filo'); 
+        const currentEdge = filoSelect.value; 
+        filoSelect.innerHTML = '<option value="" disabled selected>-- Seleccionar --</option>';
+        if (arqData && arqData.edges) {
+            arqData.edges.forEach(edge => { let opt = document.createElement('option'); opt.value = edge; opt.innerText = edge; filoSelect.appendChild(opt); });
+            if(arqData.edges.includes(currentEdge)) filoSelect.value = currentEdge;
+        }
+        
+        this.renderCheckboxes('skills_arq', 'chk_arq', arqData ? arqData.skills : [], arqData ? arqData.limit : 0);
+        this.renderCheckboxes('skills_bg', 'chk_bg', bgData ? bgData.skills : [], 2);
+        document.getElementById('limit_arq').innerText = arqData ? arqData.limit : "0";
+        this.calc();
+    },
+    renderCheckboxes: function(containerId, name, skills, limit) {
+        const div = document.getElementById(containerId); div.innerHTML = "";
+        skills.forEach(s => { const lbl = document.createElement('label'); lbl.className = 'skill-opt'; lbl.innerHTML = `<input type="checkbox" name="${name}" value="${s}" onchange="app.checkLimit('${name}', ${limit}); app.calc()"> ${s}`; div.appendChild(lbl); });
+    },
+    checkLimit: function(name, limit) { const checked = document.querySelectorAll(`input[name="${name}"]:checked`); if(checked.length > limit) { alert(`Solo puedes elegir ${limit}.`); event.target.checked = false; } },
+    toggleSection: function(section, showEdit) { 
+        document.getElementById(`${section}_edit_view`).style.display = showEdit ? 'block' : 'none'; 
+        document.getElementById(`${section}_summary_view`).style.display = showEdit ? 'none' : 'block';
+        if (section === 'equipment') {
+            if(showEdit) this.updateDbSelect();
+            this.renderInventory();
+        }
+    },
+    getMod: function(val) { if(val <= 3) return -3; if(val <= 6) return -2; if(val <= 9) return -1; if(val <= 12) return 0; if(val <= 14) return 1; if(val <= 16) return 2; return 3; },
+
+    onWeaponChange: function(prefix) {
+        const selW = document.getElementById(prefix === 'w1' ? 'sel_weapon' : 'sel_weapon_sec').value;
+        const item = this.inventory.find(i => i.uid == selW);
+        let defaultAttr = "FUE";
+
+        if (item && item.dbKey && this.DB.weapons[item.dbKey]) {
+            const wData = this.DB.weapons[item.dbKey];
+            if (wData.stat === 'DES') defaultAttr = 'DES';
+            if (wData.stat === 'FIN') {
+                const fue = parseInt(document.getElementById('base_FUE').value) || 8;
+                const des = parseInt(document.getElementById('base_DES').value) || 8;
+                defaultAttr = des > fue ? 'DES' : 'FUE';
+            }
+        } else if (selW === "unarmed") {
+            defaultAttr = "FUE";
+        }
+
+        document.getElementById(`${prefix}_attr`).value = defaultAttr;
+        this.calc();
+    },
+
+    _calcOneWeapon: function(valKey, stats, arqKey, prefix, alertId) {
+        const item = this.inventory.find(i => i.uid == valKey); 
+        let weapon = { name:"Desarmado", dmg:"1", stat:"FUE", slots:0, cat:"simple", prop:"", req:0 };
+        
+        if (item) {
+            if (item.dbKey && this.DB.weapons && this.DB.weapons[item.dbKey]) {
+                weapon = this.DB.weapons[item.dbKey];
+            } else {
+                weapon.name = item.name;
+                weapon.dmg = "1d6"; 
+                weapon.slots = item.slots;
+                if (weapon.name.toLowerCase().includes("guantelete")) weapon.cat = 'simple';
+            }
+        }
+
+        // Selección de Atributo MANUAL
+        const chosenAttr = document.getElementById(`${prefix}_attr`).value;
+        let atkStatVal = stats[chosenAttr]; 
+
+        let attrMod = this.getMod(atkStatVal); 
+        
+        let isProf = false; 
+        let meetsReq = (weapon.req === 0) || (stats.FUE >= weapon.req || stats.DES >= weapon.req); 
+        
+        if (arqKey === "luchador") { isProf = true; meetsReq = true; }
+        else if (arqKey === "experto") { 
+            if (weapon.cat === "simple" || weapon.cat === "marcial") isProf = true; 
+        } 
+        else { if (weapon.cat === "simple") isProf = true; }
+        if (valKey === 'unarmed') isProf = true;
+
+        let totalAtk = attrMod + (isProf ? 2 : 0); 
+        if(!meetsReq && isProf) totalAtk -= 2; 
+        
+        let dmgMod = this.getMod(stats[chosenAttr]); 
+        let dmgSign = dmgMod > 0 ? "+" + dmgMod : (dmgMod < 0 ? dmgMod : ""); 
+        let finalDmg = `${weapon.dmg} ${dmgSign}`;
+
+        const atkEl = document.getElementById(`${prefix}_atk_val`);
+        if(atkEl) {
+            atkEl.innerText = (totalAtk >= 0 ? "+" : "") + totalAtk;
+            atkEl.style.color = totalAtk >= 0 ? "var(--ink-accent)" : "var(--ink-red)";
+        }
+        const dmgEl = document.getElementById(`${prefix}_dmg_val`);
+        if(dmgEl) dmgEl.innerText = finalDmg;
+
+        const alertEl = document.getElementById(alertId);
+        if(alertEl) alertEl.innerText = !meetsReq ? "⚠️ Faltan requisitos" : "";
+
+        return { slots: weapon.slots, summaryName: weapon.name, summaryStats: `${totalAtk >= 0 ? '+' : ''}${totalAtk} / ${finalDmg}` };
+    },
+
+    calc: function() {
+        if (!this.DB.descriptors) return;
+        const stats = { FUE: parseInt(document.getElementById('base_FUE').value)||8, DES: parseInt(document.getElementById('base_DES').value)||8, CON: parseInt(document.getElementById('base_CON').value)||8, INT: parseInt(document.getElementById('base_INT').value)||8, SAB: parseInt(document.getElementById('base_SAB').value)||8, CAR: parseInt(document.getElementById('base_CAR').value)||8 };
+        const descKey = document.getElementById('sel_desc').value;
+        const descData = this.DB.descriptors ? this.DB.descriptors[descKey] : null;
+        
+        if (descData?.mods) { 
+            for(let modKey in descData.mods) {
+                if (stats[modKey] !== undefined) stats[modKey] += descData.mods[modKey];
+            } 
+        }
+        
+        const atletaHidden = document.querySelector('input[name="chk_talents_hidden"][data-id="atleta"]');
+        if(atletaHidden) { stats["FUE"] += 1; } 
+
+        let statHTML = "", summaryHTML = "";
+        for(let k in stats) { 
+            let mod = this.getMod(stats[k]); 
+            statHTML += `<div class="stat-box-dark">${k}: <b>${stats[k]}</b> (${mod>=0?'+':''}${mod})</div>`; 
+            
+            summaryHTML += `
+            <div class="fc-box clickable" onclick="app.rollStat('${k}', ${stats[k]})" title="Tirar ${k}">
+                <div class="fc-label">${k}</div>
+                <div class="fc-value-container" style="gap: 2px;"> <span style="font-size:1.4em; line-height:1; color:var(--ink-main);">${mod>=0?'+':''}${mod}</span>
+                    <span style="font-size:1.15em; color:var(--ink-main); font-weight:bold; border-top:1px solid #ccc; width:60%;">${stats[k]}</span>
+                </div>
+            </div>`; 
+        }
+        document.getElementById('stats_final_display').innerHTML = statHTML; 
+        document.getElementById('stats_summary_text').innerHTML = summaryHTML;
+
+        const profBonus = 2; const selCommon = document.querySelector('input[name="save_common"]:checked')?.value; const selUncommon = document.querySelector('input[name="save_uncommon"]:checked')?.value;
+        let savesHTML = "", savesSummary = "";
+        ["FUE", "DES", "CON", "INT", "SAB", "CAR"].forEach(stat => {
+            let baseMod = this.getMod(stats[stat]); let isProf = (stat === selCommon || stat === selUncommon); let total = baseMod + (isProf ? profBonus : 0); let style = isProf ? "color:var(--ink-red); text-decoration:underline;" : "color:var(--ink-main);";
+            savesHTML += `<div style="${style}"><div style="font-size:0.7em;">${stat}</div>${total>=0?'+':''}${total}</div>`;
+            
+            let labelClass = isProf ? "fc-label red" : "fc-label";
+            savesSummary += `
+            <div class="fc-box clickable" onclick="app.rollCheck('${stat}', ${total})">
+                <div class="${labelClass}">${stat}</div>
+                <div class="fc-value-container">
+                    <span>${total>=0?'+':''}${total}</span>
+                </div>
+            </div>`;
+        });
+        document.getElementById('saves_display').innerHTML = savesHTML; document.getElementById('saves_summary_text').innerHTML = savesSummary;
+
+        const skillCounts = {}; if(descData && descData.grant) descData.grant.forEach(s => skillCounts[s] = (skillCounts[s]||0) + 1);
+        ['chk_arq', 'chk_bg'].forEach(grp => { document.querySelectorAll(`input[name="${grp}"]:checked`).forEach(chk => { skillCounts[chk.value] = (skillCounts[chk.value]||0) + 1; }); });
+        const finalDiv = document.getElementById('final_skills_list'); finalDiv.innerHTML = "";
+        for(let s in skillCounts) { let grade = skillCounts[s] >= 2 ? 1 : 0; let tag = document.createElement('span'); tag.className = `skill-tag ${grade===1 ? 'grade-1' : ''}`; tag.innerText = `${s} [G${grade}]`; finalDiv.appendChild(tag); }
+
+        const arqKey = document.getElementById('sel_arq').value; const arqData = this.DB.archetypes ? this.DB.archetypes[arqKey] : null;
+        const bgKey = document.getElementById('sel_bg').value; const bgData = this.DB.backgrounds ? this.DB.backgrounds[bgKey] : null;
+        document.getElementById('identity_summary_text').innerHTML = `<b>${descData ? descData.name : "---"}</b> | <b>${arqData ? arqData.name : "---"}</b> | <b>${bgData ? bgData.name : "---"}</b>`;
+
+        if (!arqData) return; 
+
+        const loadData = this.calcInventory();
+        loadData.max = stats.FUE; 
+        
+        const cargaEl = document.getElementById('res_carga');
+        cargaEl.innerText = loadData.current + " / " + loadData.max;
+        const summaryDisplay = document.getElementById('load_summary_display');
+        if (summaryDisplay) summaryDisplay.innerText = loadData.current + " / " + loadData.max;
+        
+        const bar = document.getElementById('carga_bar');
+        const pct = Math.min((loadData.current / loadData.max) * 100, 100);
+        bar.style.width = pct + "%";
+        const warn = document.getElementById('carga_warn');
+        if (loadData.current > loadData.max) {
+            cargaEl.style.color = "var(--ink-red)"; bar.style.background = "var(--ink-red)"; warn.style.display = "block";
+        } else {
+            cargaEl.style.color = "var(--ink-main)"; bar.style.background = "var(--ink-main)"; warn.style.display = "none";
+        }
+
+        const armKey = document.getElementById('sel_armor').value;
+        let armor = { name:"-", ca:10, type:"none", slots:0 };
+        const equipArm = this.inventory.find(i => i.uid == armKey);
+        if(equipArm) {
+            if (equipArm.dbKey && this.DB.armors && this.DB.armors[equipArm.dbKey]) armor = this.DB.armors[equipArm.dbKey];
+            else { armor.name = equipArm.name; armor.slots = equipArm.slots; } 
+        }
+
+        const shieldKey = document.getElementById('sel_shield').value;
+        let shield = { name:"", bonus:0, slots:0 };
+        const equipShield = this.inventory.find(i => i.uid == shieldKey);
+        if(equipShield) {
+            if (equipShield.dbKey && this.DB.shields && this.DB.shields[equipShield.dbKey]) shield = this.DB.shields[equipShield.dbKey];
+            else if (defaultRules.shields[equipShield.dbKey]) shield = defaultRules.shields[equipShield.dbKey];
+        }
+
+        let modDes = this.getMod(stats.DES); let ca = armor.ca; 
+        let defNatural = document.querySelector('input[name="chk_talents_hidden"][data-id="def_nat"]');
+        if (armor.type === 'none' && defNatural) { ca = 10 + modDes + this.getMod(stats.CON); } else { if (armor.type === 'light' || armor.type === 'none') ca += modDes; if (armor.type === 'medium') ca += Math.min(modDes, 2); }
+        
+        ca += shield.bonus; 
+        ca += arqData.ca; 
+        ca += parseInt(document.getElementById('sel_magic_bonus').value) || 0;
+
+        document.getElementById('armor_base_val').innerText = ca;
+        document.getElementById('armor_desc').innerText = `Slots: ${armor.slots}`;
+
+        const wep1 = this._calcOneWeapon(document.getElementById('sel_weapon').value, stats, arqKey, 'w1', 'w1_alert');
+        const wep2 = this._calcOneWeapon(document.getElementById('sel_weapon_sec').value, stats, arqKey, 'w2', 'w2_alert');
+
+        document.getElementById('sum_ac').innerText = ca; 
+        document.getElementById('sum_armor_name').innerText = armor.name || "Sin Armadura";
+        const typeMap = { light: "Ligera", medium: "Media", heavy: "Pesada", none: "Ropa/Piel" };
+        document.getElementById('sum_armor_type').innerText = typeMap[armor.type] || "Normal";
+        document.getElementById('sum_shield').innerText = shield.name || "Ninguno";
+        
+        document.getElementById('sum_wep1_name').innerText = wep1.summaryName; document.getElementById('sum_wep1_stats').innerText = wep1.summaryStats;
+        document.getElementById('sum_wep2_name').innerText = wep2.summaryName; document.getElementById('sum_wep2_stats').innerText = wep2.summaryStats;
+
+        const pv = arqData.pv + stats.CON; const flesh = stats.CON;
+        let bonusIng = 0; let bonusIni = 0;
+        document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(input => {
+            const id = input.getAttribute('data-id'); const name = input.value;
+            if (id === 'despertar' || name === "Despertar Sobrenatural") bonusIng = 6;
+            if (id === 'alerta') bonusIni = 5;
+        });
+        const maxFis = Math.max(stats.FUE, stats.DES); const maxMen = Math.max(stats.INT, stats.SAB, stats.CAR); 
+        const adr = maxFis + 1 + arqData.adr; const ing = maxMen + 1 + arqData.ing + bonusIng; 
+        let magicAtkMod = Math.max(this.getMod(stats.INT), this.getMod(stats.SAB), this.getMod(stats.CAR)) + 2;
+
+        document.getElementById('max_pv').innerText = pv; document.getElementById('res_carne').innerText = flesh;
+        document.getElementById('max_adr').innerText = adr; document.getElementById('max_ing').innerText = ing;
+        document.getElementById('res_ca').innerText = ca; document.getElementById('res_ini').innerText = (modDes + bonusIni >= 0 ? "+" : "") + (modDes + bonusIni);
+        document.getElementById('res_atq_mag').innerText = (magicAtkMod >= 0 ? "+" : "") + magicAtkMod; document.getElementById('res_filo_val').innerText = document.getElementById('sel_filo').value;
+    },
+
+    randomize: function() {
+        if (!this.DB.descriptors) return;
+        ['base_FUE','base_DES','base_CON','base_INT','base_SAB','base_CAR'].forEach(id => { document.getElementById(id).value = Math.floor(Math.random()*6)+Math.floor(Math.random()*6)+Math.floor(Math.random()*6)+3; });
+        const getRandomKey = (obj) => { const keys = Object.keys(obj); return keys[Math.floor(Math.random() * keys.length)]; };
+        document.getElementById('sel_desc').value = getRandomKey(this.DB.descriptors);
+        document.getElementById('sel_arq').value = getRandomKey(this.DB.archetypes);
+        document.getElementById('sel_bg').value = getRandomKey(this.DB.backgrounds);
+        
+        this.inventory = [];
+        const armKeys = Object.keys(this.DB.armors); 
+        const rndArm = armKeys[Math.floor(Math.random() * armKeys.length)];
+        const armItem = { uid: Date.now(), name: this.DB.armors[rndArm].name, slots: this.DB.armors[rndArm].slots, type: 'armors', dbKey: rndArm };
+        armItem.name += ` [AC ${this.DB.armors[rndArm].ca}]`;
+        this.inventory.push(armItem);
+        
+        const wepKeys = Object.keys(this.DB.weapons); 
+        const rndWep = wepKeys[Math.floor(Math.random() * wepKeys.length)];
+        const wepItem = { uid: Date.now()+1, name: this.DB.weapons[rndWep].name, slots: this.DB.weapons[rndWep].slots, type: 'weapons', dbKey: rndWep };
+        wepItem.name += ` [${this.DB.weapons[rndWep].dmg}]`;
+        this.inventory.push(wepItem);
+        
+        this.inventory.push({ uid: Date.now()+2, name: "Raciones (3)", slots: 1, type: "misc", dbKey: "rations" });
+        this.inventory.push({ uid: Date.now()+3, name: "Antorchas (5)", slots: 1, type: "misc", dbKey: "torch" });
+        
+        this.gold = Math.floor(Math.random() * 20) + 10;
+        
+        this.syncCombatOptions();
+        document.getElementById('sel_armor').value = armItem.uid;
+        document.getElementById('sel_weapon').value = wepItem.uid;
+        document.getElementById('sel_shield').value = "none";
+        document.getElementById('sel_weapon_sec').value = "unarmed";
+        document.getElementById('sel_magic_bonus').value = "0";
+
+        this.onWeaponChange('w1');
+        this.onWeaponChange('w2');
+        
+        this.updateOptions(true); 
+        const filoSelect = document.getElementById('sel_filo');
+        if(filoSelect.options.length > 1) filoSelect.selectedIndex = Math.floor(Math.random() * (filoSelect.options.length - 1)) + 1;
+
+        const randRadio = (name) => { const r = Array.from(document.querySelectorAll(`input[name="${name}"]`)); r.forEach(x=>x.checked=false); r[Math.floor(Math.random()*r.length)].checked=true; };
+        randRadio('save_common'); randRadio('save_uncommon');
+        const randChecks = (name, limit) => { const b = Array.from(document.querySelectorAll(`input[name="${name}"]`)); b.forEach(x=>x.checked=false); b.sort(()=>Math.random()-0.5); b.slice(0,limit).forEach(x=>x.checked=true); };
+        const arqLimit = this.DB.archetypes[document.getElementById('sel_arq').value].limit;
+        randChecks('chk_arq', arqLimit); randChecks('chk_bg', 2); 
+        
+        document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el => el.remove());
+        const allTalents = [];
+        if(this.DB.talents) Object.values(this.DB.talents).forEach(arr => arr.forEach(t => allTalents.push(t)));
+        allTalents.sort(() => Math.random() - 0.5).slice(0,3).forEach(t => {
+            const hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = 'chk_talents_hidden'; hidden.value = t.name; 
+            hidden.setAttribute('data-desc', t.desc);
+            if(t.id) hidden.setAttribute('data-id', t.id);
+            document.body.appendChild(hidden);
+        });
+        
+        this.updateTalentCountDisplay(); this.showTalentSummary();
+        this.togglePersonal(false);
+        ['skills', 'stats', 'identity', 'saves', 'combat', 'equipment'].forEach(s => this.toggleSection(s, false));
+        this.calc();
+        
+        document.getElementById('cur_pv').value = document.getElementById('max_pv').innerText;
+        document.getElementById('cur_adr').value = document.getElementById('max_adr').innerText;
+        document.getElementById('cur_ing').value = document.getElementById('max_ing').innerText;
+
+        app.showToast("Personaje generado al azar", "Random");
+    },
+
+    clear: function() {
+        ['base_FUE','base_DES','base_CON','base_INT','base_SAB','base_CAR'].forEach(id => { document.getElementById(id).value = 8; });
+        document.getElementById('char_name').value = ""; document.getElementById('char_concept').value = "";
+        document.getElementById('char_lvl').value = "1"; document.getElementById('char_xp').value = "0";
+        document.getElementById('char_notes').value = "";
+        
+        document.getElementById('cur_pv').value = 0; document.getElementById('cur_adr').value = 0; document.getElementById('cur_ing').value = 0;
+
+        this.inventory = [];
+        this.gold = 0;
+        this.syncCombatOptions();
+        document.getElementById('sel_magic_bonus').value = "0";
+
+        const checks = document.querySelectorAll('input[type="checkbox"], input[type="radio"]'); checks.forEach(c => c.checked = false);
+        document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el => el.remove());
+        document.getElementById('char_img').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%234a3b2a'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
+        
+        this.autoResize('char_concept'); this.showTalentSummary(); this.updateTalentCountDisplay();
+        this.togglePersonal(true);
+        ['skills', 'stats', 'identity', 'saves', 'combat', 'equipment'].forEach(s => this.toggleSection(s, true));
+        this.updateOptions(true); 
+    },
+
+    saveChar: function() {
+        const charName = document.getElementById('char_name').value.trim(); if (!charName) { app.showToast("¡Falta el Nombre!", "Error"); return; }
+        let roster = JSON.parse(localStorage.getItem('sands_roster') || "{}"); if (roster[charName] && !confirm(`¿Sobrescribir a "${charName}"?`)) return;
+        const saveData = this.gatherCharData();
+        roster[charName] = saveData; 
+        try { localStorage.setItem('sands_roster', JSON.stringify(roster)); app.showToast("PJ Guardado"); } catch (e) { alert("¡Memoria llena!"); }
+    },
+
+    openLoadMenu: function() {
+        const roster = JSON.parse(localStorage.getItem('sands_roster') || "{}"); const listDiv = document.getElementById('char_list'); listDiv.innerHTML = "";
+        Object.keys(roster).forEach(name => { 
+            const row = document.createElement('div'); row.className = 'char-row'; 
+            row.innerHTML = `<span class="char-info" style="font-weight:bold; font-family:var(--font-title); font-size:1.2em;">${name}</span><div class="char-actions"><button class="btn-mini btn-load" onclick="app.loadSpecificChar('${name}')">CARGAR</button><button class="btn-mini btn-del" onclick="app.deleteChar('${name}')">BORRAR</button></div>`; 
+            listDiv.appendChild(row); 
+        });
+        document.getElementById('char_manager').showModal();
+    },
+
+    loadSpecificChar: function(name) {
+        const roster = JSON.parse(localStorage.getItem('sands_roster') || "{}"); const data = roster[name]; if (!data) return;
+        this.applyCharData(data); document.getElementById('char_manager').close(); app.showToast(`Cargado: ${name}`);
+    },
+
+    deleteChar: function(name) { if(confirm(`¿Borrar a "${name}"?`)) { let roster = JSON.parse(localStorage.getItem('sands_roster') || "{}"); delete roster[name]; localStorage.setItem('sands_roster', JSON.stringify(roster)); this.openLoadMenu(); } },
+
+    gatherCharData: function() {
+        const data = { 
+            inputs: {}, selects: {}, checks: [], hidden_talents: [], 
+            portrait: document.getElementById('char_img').src, 
+            concept: document.getElementById('char_concept').value, 
+            notes: document.getElementById('char_notes').value,
+            inventory: this.inventory, 
+            gold: this.gold
+        };
+        document.querySelectorAll('input[type="text"]:not(.inv-name), input[type="number"]:not(.inv-slots):not(#gold_coins_edit)').forEach(el => data.inputs[el.id] = el.value);
+        document.querySelectorAll('select:not(#inv_db_category):not(#inv_db_item):not(.inv-type-select)').forEach(el => data.selects[el.id] = el.value);
+        document.querySelectorAll('input[type="checkbox"]:not([type="hidden"]):checked, input[type="radio"]:not([name="atleta_bonus_tm"]):checked').forEach(el => { data.checks.push({ name: el.name, value: el.value, id: el.id }); });
+        document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el => data.hidden_talents.push({value: el.value, id: el.getAttribute('data-id')}));
+        return data;
+    },
+
+    applyCharData: function(data) {
+        this.inventory = data.inventory || [];
+        this.gold = data.gold !== undefined ? data.gold : 0;
+        this.syncCombatOptions();
+        for (let id in data.inputs) { const el = document.getElementById(id); if (el) el.value = data.inputs[id]; }
+        for (let id in data.selects) { const el = document.getElementById(id); if (el) el.value = data.selects[id]; }
+        if (data.portrait) document.getElementById('char_img').src = data.portrait; 
+        if (data.concept) document.getElementById('char_concept').value = data.concept;
+        if (data.notes) document.getElementById('char_notes').value = data.notes;
+        this.updateOptions(false);
+        document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(el => el.checked = false);
+        document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el => el.remove());
+        if(data.checks) data.checks.forEach(item => { let el = document.getElementById(item.id); if (!el) el = document.querySelector(`input[name="${item.name}"][value="${item.value}"]`); if (el) el.checked = true; });
+        if(data.hidden_talents) data.hidden_talents.forEach(t => {
+            const hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = 'chk_talents_hidden'; hidden.value = t.value; 
+            if(t.id) hidden.setAttribute('data-id', t.id);
+            let desc = "";
+            if(app.DB.talents) { Object.values(app.DB.talents).forEach(group => { const found = group.find(x => x.name === t.value); if(found) desc = found.desc; }); }
+            hidden.setAttribute('data-desc', desc);
+            document.body.appendChild(hidden);
+        });
+        this.autoResize('char_concept'); this.showTalentSummary(); this.updateTalentCountDisplay();
+        this.togglePersonal(false); 
+        ['skills', 'stats', 'identity', 'saves', 'combat', 'equipment'].forEach(s => this.toggleSection(s, false));
+        this.calc();
+    },
+
+    exportJSON: function() {
+        const charName = document.getElementById('char_name').value.trim() || "aventurero";
+        const data = this.gatherCharData();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr); downloadAnchor.setAttribute("download", charName.replace(/ /g, "_") + ".json");
+        document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
+    },
+
+    triggerLoadJSON: function() { document.getElementById('json_char_input').click(); },
+    loadJSON: function(input) {
+        if (!input.files || !input.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = function(e) { try { app.applyCharData(JSON.parse(e.target.result)); app.showToast("Importado correctamente"); } catch(err) { app.showToast("Error JSON", "Error"); } };
+        reader.readAsText(input.files[0]); input.value = "";
+    }
+};
+
+window.onload = function() { app.init(); };
+</script>
+
+</body>
+</html>
