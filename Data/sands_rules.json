@@ -143,7 +143,7 @@
     ],
     "Fuente: Herencia": [
       { "name": "Metamagia", "desc": "Alteración de estructura vital.", "grades": [{ "g": 1, "d": "Eliges opción gastando Adrenalina: Poder Acelerado (1 PA), Potenciado (Daño Máximo), Extendido o Gemelo." }] },
-      { "name": "Foco Elemental", "desc": "Sangre sintonizada.", "grades": [{ "g": 1, "d": "Tus poderes de un tipo ignoran Resistencia y puedes repetir los '1' en dados de daño." }] }]
+      { "name": "Foco Elemental", "desc": "Sangre sintonizada.", "grades": [{ "g": 1, "d": "Tus poderes de un tipo ignoran Resistencia y puedes repetir los '1' en dados de daño." }] }
     ],
     "Fuente: Naturaleza": [
       {"name": "Cambiaformas Bestial", "desc": "Tu código genético se vuelve fluido. Requiere: Despertar Sobrenatural (Naturaleza), SAB 13+.","grades": [ { "g": 1, "d": "Mímesis Biológica: 2 PA y 6 Ing. Te transformas en bestia conocida (1h). Adoptas sus Físicos/PV, mantienes Mentales." }, { "g": 2, "d": "Adaptación Extrema (Nivel 5+): Permite formas con nado/vuelo. Estando transformado: 1 PA y 8 Ing para regenerar 2d8 PV." }, { "g": 3, "d": "Avatar Primordial (Nivel 9+): Al transformar, gasta 8 Adrenalina extra. Ganas Resistencia Elemental y ataques +1d6 daño elemental." }] },
@@ -175,5 +175,3 @@
     "torre": { "name": "Escudo (Torre)", "slots": 2, "bonus": 3 }
   }
 }
-
-
