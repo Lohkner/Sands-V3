@@ -92,7 +92,7 @@
       { "name": "Francotirador de Conjuros", "desc": "Precisión arcana.", "grades": [{ "g": 1, "d": "Aprendes un Truco ofensivo. Ataques con poderes obtienen Crítico con 19-2 natural." }] },
       { "name": "Conjurador de Combate", "desc": "Lanzamiento bajo presión.", "grades": [{ "g": 1, "d": "Ventaja para mantener Concentración. Lanza con manos ocupadas. Usa poder (2 PA o menos) en ataques op." }] }
     ],
-    "Talentos Híbridos": [
+    "Senda Híbrida": [
       { "name": "Juramento Sagrado", "desc": "Voluntad vinculada a entidad.", "grades": [{ "g": 1, "d": "Castigo Sagrado: 1 PA y 4 Ing para +2d8 daño extra (Radiante/Necrótico)." }, { "g": 2, "d": "Aura Protección: 1 PA y 6 Ing. Aliados a 15 pies suman tu CAR a todas las Salvaciones." }] },
       { "name": "Aura de Devoción", "desc": "Presencia que altera la realidad.", "grades": [{ "g": 1, "d": "Activa aura de 15 pies: Terror (Desventaja Moral), Odio (+CAR al daño aliados) o Custodia (Resistencia Mágica)." }, { "g": 2, "d": "Radio aumenta a 30 pies y los efectos se intensifican según el DJ." }] },
       { "name": "Magia de Guerra", "desc": "Entrelazamiento físico-místico.", "grades": [{ "g": 1, "d": "Tras lanzar Truco (1-2 PA), realiza un ataque con arma por solo 1 PA adicional." }, { "g": 2, "d": "Tras lanzar Poder con Ingenio, realiza un ataque con arma por 1 PA." }] },
@@ -108,11 +108,11 @@
       { "name": "Armadura de Poder", "desc": "Carcasa mecánica arcana.", "grades": [{ "g": 1, "d": "Foco Integrado: Vinculas armadura, ignoras requisitos FUE. Lanzar Poder da +1 CA un turno." }, { "g": 2, "d": "Sinergia Plasma: 1 PA y 4 Ing para invocar armadura o ganar Resistencia Elemental un asalto." }, { "g": 3, "d": "+1 CA permanente. 2 PA y 6 Ing dispara rayo (4d6). Dañar permite ataque CC por 1 PA." }] },
       { "name": "Maestría Alquímica", "desc": "Ciencia de reactivos y mutaciones.", "grades": [{ "g": 1, "d": "Alquimia Menor: Conoces 6 recetas. Preparas 4 dosis por Descanso Largo (0 Slots en cinturón)." }, { "g": 2, "d": "Fórmulas Potenciadas: Conoces 8 recetas, preparas 6 dosis. CD veneno +2, elixires +50% efectividad." }] }
     ],
-    "Sifones y Restricciones": [
+    "Alteración y Restricción": [
       { "name": "Carencia Mística", "desc": "Cuerpo que absorbe energía mística.", "grades": [{ "g": 1, "d": "Resistencia Daño Mágico/Psíquico. Adrenalina en Percepción/Proeza da +4. Indetectable por medios mágicos. +10 Adrenalina." }] },
       { "name": "Flujo Armónico", "desc": "Transvase de energías física/mental.", "grades": [{ "g": 1, "d": "Equilibrio: Una vez x encuentro (0 PA), sacrifica 6 puntos de una reserva para recuperar mitad en la otra." }, { "g": 2, "d": "Sinergia Perfecta: Transvase es 1 a 1 (máximo 6) una vez por Descanso Corto." }] }
     ],
-    "Leyes del Axioma (Sobrenatural)": [
+    "Senda Sobrenatural": [
       { "name": "Despertar Sobrenatural", "id": "despertar", "desc": "Conexión con frecuencias de poder.", "grades": [{ "g": 1, "d": "Eliges Fuente (Divinidad/Pacto/Innata/Erudición/Naturaleza/Psiónica). +6 Ingenio Máx. 2 Trucos y 1 Poder N1." }] },
       { "name": "Galería de Entidades", "desc": "Captura de esencia de derrotados.", "grades": [{ "g": 1, "d": "Captura entidades sobrenaturales (Salv. CAR). Almacenas un número igual a Competencia." }, { "g": 2, "d": "Almacena más entidades e invoca dos a la vez. Consumir esencia recupera 1d10 Ingenio." }, { "g": 3, "d": "Ventaja capturando. Acción definitiva (3 PA): sacrifica todas para ataque de 1d10 por cada una." }] },
       { "name": "Conjuración de Sombras", "desc": "Invoca sirvientes Eidolones.", "grades": [{ "g": 1, "d": "Invocas Eidolones (2 PA y 6 Ing). Debes derrotar nuevos Eidolones en combate ritual para dominarlos." }, { "g": 2, "d": "Mantienes dos activos. La sombra sirve como inventario (4 slots)." }, { "g": 3, "d": "Invocas tres. Acceso a legendarios. Gasta 8 Ing para reducir movimiento enemigo en área de 30 pies." }] },
@@ -127,6 +127,14 @@
       { "name": "Dominio de la Vida", "desc": "Bio-restauración celular.", "grades": [{ "g": 1, "d": "Curaciones restauran +2 adicionales por nivel del poder." }, { "g": 2, "d": "2 PA y 8 Ing sanas 5xNivel divididos entre aliados a 30 pies." }, { "g": 3, "d": "Todos tus dados de curación obtienen el resultado máximo automáticamente." }] },
       { "name": "Dominio del Engaño", "desc": "Maestría en la ilusión y la duplicidad", "grades": [{ "g": 1, "d": "Bendición del Embaucador: Tocas a un aliado para darle Ventaja en todas las tiradas de Sigilo por 1 hora." }, { "g": 2, "d": "Duplicado Ilusorio (Nivel 5+): Por 2 PA y 8 de Ingenio, creas un duplicado. Puedes lanzar poderes desde su posición." }, { "g": 3, "d": "Maestro de Espejismos (Nivel 9+): Al usar Duplicado Ilusorio, creas hasta cuatro copias en lugar de una." }] }
     ],
+    "Fuente: Erudición": [
+      { "name": "Arcanista Erudito", "desc": "Tu conocimiento está anclado en un soporte físico: tu Libro de Datos/Conjuros. Requiere: Despertar Sobrenatural (Erudición).", "grades": [ { "g": 1, "d": "El Gran Archivo: Libro con 4 poderes Nv1. Preparas INT + Competencia. Aprendes Encontrar Familiar (siempre preparado)." }, { "g": 2, "d": "Recuperación de Datos (Nivel 5+): 1/DL, tras Descanso Corto, gastas 8 Ing para recuperar Ing igual a Nivel/2." }, { "g": 3, "d": "Secuencias Prioritarias (Nivel 9+): Eliges un poder Nv1 y uno Nv2. Siempre preparados, coste 1 Ing." }]},
+      { "name": "Especialista Arcano","desc": "Te enfocas en una 'Escuela' o protocolo de realidad específico. Requiere: Arcanista Erudito.", "grades": [{ "g": 1, "d": "Coste transcribir mitad. Elige uno: Abjuración (Escudo PV extras), Adivinación (2d20 sustituibles/día), Conjuración (TP 15 pies por 1PA/2Ing), Evocación (Áreas no dañan aliados) o Nigromancia (Siervos +PV/Daño)." }] },
+      { "name": "Infusión Arcana","desc": "Hackeas objetos mundanos para convertirlos en herramientas de poder (El Artífice). Requiere: INT 15+.",  "grades": [ { "g": 1, "d": "Maestro de Infusiones: Imbuyes objetos (bonos +1/elemental). Mantienes activos 1+(Nivel/2). Se refrescan tras DL." }] },
+      { "name": "Genialidad Táctica", "desc": "Tu cerebro procesa el combate como una sucesión de variables. Requiere: INT 15+, Investigación G1.", "grades": [{ "g": 1, "d": "Análisis Rápido: Reacción (4 Ing) para sumar mod. INT a salvación o prueba de aliado cercano." }, { "g": 2, "d": "Genialidad Veterana: Una vez por asalto, usas Análisis Rápido sin coste de Ingenio." }] },
+      { "name": "Maestría en Objetos Mágicos", "desc": "Entiendes la arquitectura mística de cualquier artefacto. Requiere: Nivel 5+, INT 15+.", "grades": [ { "g": 1, "d": "Identificas por contacto e ignoras requisitos. Ganas +1 ranura de sintonización (Talento seleccionable hasta 3 veces)." }] },
+      { "name": "Alma del Artífice", "desc": "Tu conexión con tus herramientas refuerza tu propio campo de energía. Requiere: Nivel 7+.", "grades": [ { "g": 1, "d": "Vínculo Protector: Ganas +1 a todas tus Salvaciones por cada objeto mágico sintonizado." }]  }
+    ],
     "Fuente: Pacto": [
       { "name": "Regalo del Patrón", "desc": "Vínculo físico simbólico.", "grades": [{ "g": 1, "d": "Eliges: El Tomo (3 trucos), Las Cadenas (Familiar especial que ataca) o La Corona (+1 CA y Ventaja Influencia)." }] },
       { "name": "Explosión Agonizante", "desc": "Mejora de rayo.", "grades": [{ "g": 1, "d": "Sumas tu modificador de Carisma al daño de cada rayo de tu Explosión Sobrenatural." }] },
@@ -135,8 +143,7 @@
     ],
     "Fuente: Herencia": [
       { "name": "Metamagia", "desc": "Alteración de estructura vital.", "grades": [{ "g": 1, "d": "Eliges opción gastando Adrenalina: Poder Acelerado (1 PA), Potenciado (Daño Máximo), Extendido o Gemelo." }] },
-      { "name": "Foco Elemental", "desc": "Sangre sintonizada.", "grades": [{ "g": 1, "d": "Tus poderes de un tipo ignoran Resistencia y puedes repetir los '1' en dados de daño." }] }
-    ]
+      { "name": "Foco Elemental", "desc": "Sangre sintonizada.", "grades": [{ "g": 1, "d": "Tus poderes de un tipo ignoran Resistencia y puedes repetir los '1' en dados de daño." }] }]
   },
   "weapons": {
     "daga": { "name": "Daga", "dmg": "1d4", "slots": 1, "cat": "simple", "stat": "FIN" },
@@ -163,3 +170,4 @@
     "torre": { "name": "Escudo (Torre)", "slots": 2, "bonus": 3 }
   }
 }
+
