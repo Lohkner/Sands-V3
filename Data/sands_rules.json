@@ -5,12 +5,12 @@
     "elfo": { "name": "Elfo", "bonus": "+2 DES, +1 SAB", "mods": { "DES": 2, "SAB": 1 }, "grant": ["Visión Oscura (90')", "Proeza Física G1"], "txt": "Ecos de una era mística donde tecnología y magia eran uno." },
     "medioelfo": { "name": "Medio Elfo", "bonus": "+1 a dos Atributos", "mods": {}, "grant": ["Visión Oscura (60')", "+2 Reacción"], "txt": "Caminantes entre dos mundos, diplomáticos naturales." },
     "infernal": { "name": "Infernal", "bonus": "+2 CAR, +1 INT o DES", "mods": { "CAR": 2 }, "grant": ["Visión Infernal", "Resistencia Fuego"], "txt": "Marcados por pactos antiguos o linajes exteriores." },
-    "sintetico": { "name": "Sintético", "bonus": "+1 CON", "mods": { "CON": 1 }, "grant": ["Inmune Veneno/Enfermedad", "Red Lógica"], "txt": "Cuerpos artificiales lógicos y resistentes." },
+    "sintetico": { "name": "Sintético", "bonus": "+1 CON, +2 DES o FUE", "mods": { "CON": 1 }, "grant": ["Inmune Veneno/Enfermedad", "Red Lógica"], "txt": "Cuerpos artificiales lógicos y resistentes." },
     "aesir": { "name": "Aesir", "bonus": "+2 CAR, +1 SAB/CON", "mods": { "CAR": 2 }, "grant": ["Ventaja vs Miedo", "Sello Divino"], "txt": "Herederos de un propósito divino en el vacío." },
     "mutante": { "name": "Mutante", "bonus": "+2 Libre, +1 CON", "mods": { "CON": 1 }, "grant": ["Resistencia Veneno"], "txt": "ADN inestable nacido de la exposición al vacío." },
     "medioorco": { "name": "Medio Orco", "bonus": "+2 FUE, +1 CON", "mods": { "FUE": 2, "CON": 1 }, "grant": ["Implacable", "Intimidación G1"], "txt": "Fuerza imparable y voluntad forjada en conflicto." },
     "draconido": { "name": "Dracónido", "bonus": "+2 FUE, +1 CAR", "mods": { "FUE": 2, "CAR": 1 }, "grant": ["Resistencia Elemental", "Presencia Imponente"], "txt": "Orgullo ancestral manifestado en escamas y fuego." },
-    "cambiante": { "name": "Cambiante", "bonus": "+2 FUE/DES, +1 CON", "mods": { "CON": 1 }, "grant": ["Garras Naturales", "Instinto Manada"], "txt": "El instinto de la naturaleza reclamando su lugar." }
+    "cambiante": { "name": "Cambiante", "bonus": "+2 FUE o DES, +1 CON", "mods": { "CON": 1 }, "grant": ["Garras Naturales", "Instinto Manada"], "txt": "El instinto de la naturaleza reclamando su lugar." }
   },
   "archetypes": {
     "luchador": { "name": "Audaz (Luchador)", "pv": 8, "adr": 6, "ing": 2, "ca": 1, "limit": 2, "skills": ["Proeza Física", "Intimidación", "Percepción", "Supervivencia"], "edges": ["Físico", "Mental"], "txt": "La vanguardia resistente, maestro del acero." },
@@ -47,7 +47,7 @@
       { "name": "Golpe de Conmoción", "desc": "Trauma interno con armas contundentes.", "grades": [{ "g": 1, "d": "1 PA tras impacto: Aplica Trauma Interno (Ud8). Aliados suman tu FUE al daño contra ese objetivo." }] },
       { "name": "Cadencia de Acero", "desc": "Encadenamiento de golpes (Nivel 5+).", "grades": [{ "g": 1, "d": "Inercia: Si impactas con Arma Media (2 PA), el siguiente ataque cuesta solo 1 PA." }, { "g": 2, "d": "Inercia de Guerra: Si impactas con Arma Pesada (3 PA), gasta 1 NE Adr para ataque extra por 0 PA." }] }
     ],
-    "Senda de la Adrenalina": [
+    "Senda de la Sangre": [
       { "name": "Defensor Implacable", "desc": "Escudo para tus aliados.", "grades": [{ "g": 1, "d": "Guardia Compartida: Reacción para imponer Desventaja al atacante de un aliado a 5 pies." }, { "g": 2, "d": "Sacrificio del Escudo: Reacción y 4 Adr para recibir daño por aliado y realizar contraataque con Ventaja." }] },
       { "name": "Furia", "desc": "Trance marcial destructivo.", "grades": [{ "g": 1, "d": "Furia Primal: 1 PA y 6 Adr para entrar en Furia (1 min). +2 daño CC e Inmune al Miedo." }, { "g": 2, "d": "Furia Incesante: Ventaja en CC. Al matar, recuperas 2 puntos de Adrenalina." }] },
       { "name": "Frenesí Berserker", "desc": "Evolución destructiva de la furia.", "grades": [{ "g": 1, "d": "Frenesí: 1 PA y 8 Adr. Resistencia daño Físico y suma un dado de daño extra a todos los ataques CC." }, { "g": 2, "d": "Ira Implacable: Si caes a 0 PV, gasta Reacción y 4 Adr para quedar a 1 PV. Matar recupera 1d4 Adr." }] },
@@ -70,7 +70,7 @@
       { "name": "Químico de Trinchera", "desc": "Ataques con toxicidad persistente.", "grades": [{ "g": 1, "d": "Pasivo: Armas sutiles/proyectiles aplican Toxicidad (Ud8). Puedes forzar Desventaja en salvación de Shock." }] },
       { "name": "Furtivo Prolongado", "desc": "Doble apertura en la guardia.", "grades": [{ "g": 1, "d": "Gasta 2 NE Ing/Adr para aplicar dados de daño furtivo a un segundo ataque exitoso en el mismo turno." }] }
     ],
-    "Talentos Generales": [
+    "Senda General": [
       { "name": "Afortunado", "desc": "3 Puntos de suerte.", "grades": [{ "g": 1, "d": "Ganas 3 puntos de Suerte por Descanso Largo. Gasta 1 para repetir tirada propia o forzar repetición enemiga." }] },
       { "name": "Alerta", "id": "alerta", "desc": "Reflejos imposibles.", "grades": [{ "g": 1, "d": "+5 a la Iniciativa. Nunca puedes ser sorprendido mientras estés consciente." }] },
       { "name": "Atleta", "id": "atleta", "desc": "Potencia física superior.", "grades": [{ "g": 1, "d": "+1 a FUE o DES. Levantarse cuesta 5 pies. Distancias de salto duplicadas." }] },
@@ -104,11 +104,11 @@
       { "name": "Presencia de Mando", "desc": "Coordinación táctica del caos.", "grades": [{ "g": 1, "d": "Grito Reagrupación: 1 PA y 4 Adr permite a aliado actuar inmediatamente fuera de su turno." }, { "g": 2, "d": "Táctica Enjambre: Tras impacto, gasta 6 Adr para dar Bloqueo Enfrentado gratuito a aliados adyacentes al enemigo." }] },
       { "name": "Vigilancia del Vacío", "desc": "Anticipación y vacío mental.", "grades": [{ "g": 1, "d": "Sin armadura media/pesada, CA base es 10 + DES + SAB. Ganar Bloqueo recupera 2 Ingenio." }] }
     ],
-    "Tecnología y Alquimia": [
+    "Senda de Mercurio": [
       { "name": "Armadura de Poder", "desc": "Carcasa mecánica arcana.", "grades": [{ "g": 1, "d": "Foco Integrado: Vinculas armadura, ignoras requisitos FUE. Lanzar Poder da +1 CA un turno." }, { "g": 2, "d": "Sinergia Plasma: 1 PA y 4 Ing para invocar armadura o ganar Resistencia Elemental un asalto." }, { "g": 3, "d": "+1 CA permanente. 2 PA y 6 Ing dispara rayo (4d6). Dañar permite ataque CC por 1 PA." }] },
       { "name": "Maestría Alquímica", "desc": "Ciencia de reactivos y mutaciones.", "grades": [{ "g": 1, "d": "Alquimia Menor: Conoces 6 recetas. Preparas 4 dosis por Descanso Largo (0 Slots en cinturón)." }, { "g": 2, "d": "Fórmulas Potenciadas: Conoces 8 recetas, preparas 6 dosis. CD veneno +2, elixires +50% efectividad." }] }
     ],
-    "Alteración y Restricción": [
+    "Senda de Alteración": [
       { "name": "Carencia Mística", "desc": "Cuerpo que absorbe energía mística.", "grades": [{ "g": 1, "d": "Resistencia Daño Mágico/Psíquico. Adrenalina en Percepción/Proeza da +4. Indetectable por medios mágicos. +10 Adrenalina." }] },
       { "name": "Flujo Armónico", "desc": "Transvase de energías física/mental.", "grades": [{ "g": 1, "d": "Equilibrio: Una vez x encuentro (0 PA), sacrifica 6 puntos de una reserva para recuperar mitad en la otra." }, { "g": 2, "d": "Sinergia Perfecta: Transvase es 1 a 1 (máximo 6) una vez por Descanso Corto." }] }
     ],
@@ -151,22 +151,30 @@
       { "name": "Vínculo Animal", "desc": "Tu voluntad se entrelaza con un depredador. Requiere: Despertar Sobrenatural (Naturaleza), SAB 13+.", "grades": [ { "g": 1, "d": "Compañero de Caza: Animal leal (NA 1). Misma iniciativa. Escala: +1 a tiradas por cada 2 niveles tuyos." },  { "g": 2, "d": "Instinto de Manada (Nivel 5+): Ataques son mágicos. Reacción del animal para contraatacar a quien te ataque." }, { "g": 3, "d": "Guardián del Espíritu (Nivel 9+): 2 PA y 16 Ing. Fusión espiritual (1 min): PV temp, daño Radiante extra y Resist. física." }] }]
     },
   "weapons": {
+    "baston": { "name": "Bastón", "dmg": "1d6", "slots": 1, "cat": "simple", "stat": "FIN" },
+    "shuriken": { "name": "Shuriken", "dmg": "1d4", "slots": 1, "cat": "simple", "stat": "FIN" },
     "daga": { "name": "Daga", "dmg": "1d4", "slots": 1, "cat": "simple", "stat": "FIN" },
     "espada_corta": { "name": "Espada Corta", "dmg": "1d6", "slots": 1, "cat": "marcial", "stat": "FIN" },
-    "espada_larga": { "name": "Espada Larga", "dmg": "1d8", "slots": 2, "cat": "marcial", "stat": "FUE" },
-    "espadon": { "name": "Espadón", "dmg": "2d6", "slots": 3, "cat": "marcial", "stat": "FUE" },
+    "espada_larga": { "name": "Espada Larga", "dmg": "1d8/1d10", "slots": 2, "cat": "marcial", "stat": "FUE" },
+    "mandoble": { "name": "Mandoble", "dmg": "2d6", "slots": 3, "cat": "marcial", "stat": "FUE" },
     "hacha": { "name": "Hacha de Batalla", "dmg": "1d8", "slots": 2, "cat": "marcial", "stat": "FUE" },
     "arco_corto": { "name": "Arco Corto", "dmg": "1d6", "slots": 2, "cat": "simple", "stat": "DES" },
     "arco_largo": { "name": "Arco Largo", "dmg": "1d8", "slots": 2, "cat": "marcial", "stat": "DES" },
-    "ballesta_l": { "name": "Ballesta Ligera", "dmg": "1d8", "slots": 2, "cat": "simple", "stat": "DES" },
+    "ballesta_l": { "name": "Ballesta Ligera", "dmg": "1d6", "slots": 1, "cat": "simple", "stat": "DES" },
+    "ballesta_p": { "name": "Ballesta Pesada", "dmg": "1d8", "slots": 2, "cat": "marcial", "stat": "DES" },
     "alabarda": { "name": "Alabarda", "dmg": "1d10", "slots": 3, "cat": "marcial", "stat": "FUE" },
-    "lanza": { "name": "Lanza", "dmg": "1d6", "slots": 1, "cat": "simple", "stat": "FUE" }
+    "lanza": { "name": "Lanza", "dmg": "1d6", "slots": 1, "cat": "simple", "stat": "FUE" },
+    "martillo_g": { "name": "Martillo de Guerra", "dmg": "1d8/1d10", "slots": 3, "cat": "marcial", "stat": "FUE" },
+    "martillo_l": { "name": "Martillo Ligero", "dmg": "1d6", "slots": 1, "cat": "marcial", "stat": "FUE" },
+    "ninjato": { "name": "Ninjato", "dmg": "1d6", "slots": 1, "cat": "marcial", "stat": "FIN" },
   },
   "armors": {
-    "pieles": { "name": "Pieles", "ca": 12, "type": "light", "slots": 1 },
+    "pieles": { "name": "Pieles", "ca": 11, "type": "light", "slots": 1 },
     "cuero": { "name": "Cuero", "ca": 12, "type": "light", "slots": 1 },
+    "acolchada": { "name": "Acolchada", "ca": 13, "type": "light", "slots": 1 },
     "coraza": { "name": "Coraza", "ca": 14, "type": "medium", "slots": 2 },
     "malla": { "name": "Cota de Malla", "ca": 16, "type": "heavy", "slots": 3 },
+    "mallas_p": { "name": "Mallas con Placas", "ca": 17, "type": "heavy", "slots": 3 }
     "placas": { "name": "Placas", "ca": 18, "type": "heavy", "slots": 3 }
   },
   "shields": {
@@ -175,3 +183,4 @@
     "torre": { "name": "Escudo (Torre)", "slots": 2, "bonus": 3 }
   }
 }
+
