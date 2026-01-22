@@ -166,7 +166,7 @@
     "lanza": { "name": "Lanza", "dmg": "1d6", "slots": 1, "cat": "simple", "stat": "FUE" },
     "martillo_g": { "name": "Martillo de Guerra", "dmg": "1d8/1d10", "slots": 3, "cat": "marcial", "stat": "FUE" },
     "martillo_l": { "name": "Martillo Ligero", "dmg": "1d6", "slots": 1, "cat": "marcial", "stat": "FUE" },
-    "ninjato": { "name": "Ninjato", "dmg": "1d6", "slots": 1, "cat": "marcial", "stat": "FIN" },
+    "ninjato": { "name": "Ninjato", "dmg": "1d6", "slots": 1, "cat": "marcial", "stat": "FIN" }
   },
   "armors": {
     "pieles": { "name": "Pieles", "ca": 11, "type": "light", "slots": 1 },
@@ -174,7 +174,7 @@
     "acolchada": { "name": "Acolchada", "ca": 13, "type": "light", "slots": 1 },
     "coraza": { "name": "Coraza", "ca": 14, "type": "medium", "slots": 2 },
     "malla": { "name": "Cota de Malla", "ca": 16, "type": "heavy", "slots": 3 },
-    "mallas_p": { "name": "Mallas con Placas", "ca": 17, "type": "heavy", "slots": 3 }
+    "mallas_p": { "name": "Mallas con Placas", "ca": 17, "type": "heavy", "slots": 3 },
     "placas": { "name": "Placas", "ca": 18, "type": "heavy", "slots": 3 }
   },
   "shields": {
@@ -183,4 +183,5 @@
     "torre": { "name": "Escudo (Torre)", "slots": 2, "bonus": 3 }
   }
 }
+
 
