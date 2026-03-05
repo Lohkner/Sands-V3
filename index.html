@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#07060a">
 <title>S&amp;S Companion</title>
 <link rel="icon" type="image/webp" href="Bind_Pact_Weapon.webp">
-<link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">    
+<link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">  
 <style>html,body{background:#07060a!important;color:#d8cce8}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1584,10 +1584,11 @@ const app = {
     const prof = lvl >= 9 ? 5 : lvl >= 7 ? 4 : lvl >= 5 ? 3 : 2;
 
     // Resources — fórmulas según tabla de Arquetipos (Cap.II Paso 3)
-    // PV: (Base Arquetipo + Puntuación CON) × Nivel
+    // PV Nivel 1: base_arquetipo + Puntuación CON
+    // PV Nivel 2+: resultado nivel 1 + MOD_CON por cada nivel adicional
     const conScoreForPV = final.CON || 8;
-    const pvBase = (arq?.pv||6) + conScoreForPV;
-    const maxPv = pvBase * lvl;
+    const pvNivel1 = (arq?.pv||6) + conScoreForPV;
+    const maxPv = pvNivel1 + (mods.CON * Math.max(0, lvl - 1));
     // Adrenalina: max(Puntuación FUE, Puntuación DES) + Nivel + bonus
     const adrScore = Math.max(final.FUE||8, final.DES||8);
     const maxAdr = adrScore + lvl + (arq?.adr_bonus||0);
