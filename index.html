@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" style="background:#07060a;color-scheme:dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#07060a">
 <title>S&amp;S Companion</title>
-<link rel="icon" type="image/webp" href="Bind_Pact_Weapon.webp">
-<link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">
+<style>html,body{background:#07060a!important;color:#d8cce8}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -306,8 +305,9 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 .dice-badge{font-family:var(--fd);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 10px;border-radius:20px;margin-top:2px}
 .dice-badge.crit{background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.4);color:var(--goldb)}
 .dice-badge.fail{background:rgba(176,48,64,.15);border:1px solid rgba(176,48,64,.4);color:var(--blood)}
-.dice-close-hint{font-family:var(--fm);font-size:.55rem;color:var(--border);letter-spacing:.1em;margin-top:6px;text-transform:uppercase;opacity:0;transition:opacity .3s .5s}
-#dice-overlay.active .dice-close-hint.show{opacity:1}
+.dice-close-btn{font-family:var(--fd);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 18px;border-radius:20px;cursor:pointer;margin-top:4px;transition:all .18s;opacity:0;pointer-events:none}
+.dice-close-btn:hover{border-color:var(--gold);color:var(--gold)}
+#dice-overlay.active .dice-close-btn.show{opacity:1;pointer-events:auto}
 /* ══ MISC ══ */
 .dvdr{display:flex;align-items:center;gap:6px;margin:8px 0;color:var(--muted);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;font-family:var(--fd)}
 .dvdr::before,.dvdr::after{content:'';flex:1;height:1px;background:var(--rim)}
@@ -345,7 +345,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
       <span class="dice-total" id="dice-total">—</span>
     </div>
     <span class="dice-badge" id="dice-badge" style="display:none"></span>
-    <span class="dice-close-hint" id="dice-close-hint">toca para cerrar</span>
+    <button class="dice-close-btn" id="dice-close-btn" onclick="app.closeDiceOverlay()">✕ Cerrar</button>
   </div>
 </div>
 <input type="file" id="img_input" accept="image/*" style="display:none" onchange="app.startCrop(this)">
@@ -1630,7 +1630,7 @@ const app = {
     const totalRow= document.getElementById('dice-total-row');
     const totalEl = document.getElementById('dice-total');
     const badgeEl = document.getElementById('dice-badge');
-    const hintEl  = document.getElementById('dice-close-hint');
+    const hintEl  = document.getElementById('dice-close-btn');
 
     // Reset state
     overlay.classList.remove('closing');
@@ -1639,7 +1639,7 @@ const app = {
     totalRow.className = 'dice-total-row';
     totalEl.className = 'dice-total';
     badgeEl.style.display = 'none';
-    hintEl.className = 'dice-close-hint';
+    hintEl.className = 'dice-close-btn';
     detailEl.textContent = '';
     totalEl.textContent = '';
 
@@ -1647,28 +1647,23 @@ const app = {
     numEl.textContent = Math.floor(Math.random()*die)+1;
     overlay.classList.add('active');
 
-    // Rolling animation: rapid random numbers
-    let ticks = 0;
-    const totalTicks = 14;
-    const rollInterval = setInterval(() => {
-      ticks++;
-      const progress = ticks / totalTicks;
-      // Slow down as we approach final
-      const delay = 50 + progress * 180;
+    // Rolling animation: decelerating random numbers
+    const totalTicks = 7;
+    const doTick = (tick) => {
       numEl.classList.remove('rolling');
-      void numEl.offsetWidth; // reflow to restart animation
+      void numEl.offsetWidth;
       numEl.classList.add('rolling');
-      if (ticks < totalTicks) {
+      if (tick < totalTicks) {
         numEl.textContent = Math.floor(Math.random()*die)+1;
+        // Decelerate: starts ~35ms, ends ~110ms
+        setTimeout(() => doTick(tick+1), 35 + tick * 12);
       } else {
-        clearInterval(rollInterval);
         // Final result
         numEl.textContent = finalFace;
         numEl.classList.remove('rolling');
         numEl.classList.add('result-pop');
         if (isCrit) numEl.classList.add('crit-glow');
         if (isFail) numEl.classList.add('fail-glow');
-
         // Show detail + total after pop
         setTimeout(() => {
           detailEl.textContent = detail;
@@ -1680,22 +1675,18 @@ const app = {
           if (isCrit) { badgeEl.textContent='✦ Crítico ✦'; badgeEl.className='dice-badge crit'; badgeEl.style.display=''; }
           if (isFail) { badgeEl.textContent='☠ Fallo Total ☠'; badgeEl.className='dice-badge fail'; badgeEl.style.display=''; }
           hintEl.classList.add('show');
-        }, 280);
-
-        // Auto-close after 3.2s
-        this._diceAutoClose = setTimeout(() => this.closeDiceOverlay(), 3200);
+        }, 160);
+        // Player must close manually — no auto-dismiss
       }
-    }, 55 + ticks * 8);
-
-    // Slow down dynamically
-    this._diceRollInterval = rollInterval;
+    };
+    doTick(0);
   },
 
   closeDiceOverlay() {
-    clearTimeout(this._diceAutoClose);
     const overlay = document.getElementById('dice-overlay');
+    if (!overlay.classList.contains('active')) return;
     overlay.classList.add('closing');
-    setTimeout(() => overlay.classList.remove('active','closing'), 280);
+    setTimeout(() => overlay.classList.remove('active','closing'), 220);
   },
 
   rollWeaponAtk(n) {
@@ -2424,4 +2415,3 @@ window.onload = () => app.init();
 </script>
 </body>
 </html>
-
