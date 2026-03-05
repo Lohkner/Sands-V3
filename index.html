@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#07060a">
 <title>S&amp;S Companion</title>
 <link rel="icon" type="image/webp" href="Bind_Pact_Weapon.webp">
-<link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">  
+<link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">    
 <style>html,body{background:#07060a!important;color:#d8cce8}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +52,7 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .char-ca{display:flex;gap:4px;flex-shrink:0}
 .home-empty{text-align:center;padding:40px 20px;color:var(--muted);font-style:italic;font-size:.88rem}
 /* ══ APP SHELL ══ */
-#app-screen{}
+
 .app-shell{display:flex;flex-direction:column;height:100dvh;max-width:720px;margin:0 auto;width:100%}
 .app-hdr{flex-shrink:0;background:linear-gradient(180deg,rgba(7,6,10,1) 0%,rgba(7,6,10,.88) 100%);padding:8px 14px 6px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--rim);z-index:10}
 .app-hdr-back{background:transparent;border:1px solid var(--border);color:var(--muted);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
@@ -465,7 +465,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             <div class="ph" style="margin-bottom:6px"><span class="pt">Estado</span></div>
             <div style="display:flex;flex-direction:column;gap:5px">
               <div class="frow c3">
-                <div class="fbox"><div class="flbl r">PG</div><div class="fval"><div class="pvw rr"><input type="number" id="cur_pv" value="0" class="fin"><span class="sl">/</span><span id="max_pv" class="mv">0</span></div></div></div>
+                <div class="fbox"><div class="flbl r">PV</div><div class="fval"><div class="pvw rr"><input type="number" id="cur_pv" value="0" class="fin"><span class="sl">/</span><span id="max_pv" class="mv">0</span></div></div></div>
                 <div class="fbox"><div class="flbl gr">Adr</div><div class="fval"><div class="rw rg"><input type="number" id="cur_adr" value="0" class="fin"><span class="sl">/</span><span id="max_adr" class="mv">0</span></div></div></div>
                 <div class="fbox"><div class="flbl b">Ing</div><div class="fval"><div class="rw rb"><input type="number" id="cur_ing" value="0" class="fin"><span class="sl">/</span><span id="max_ing" class="mv">0</span></div></div></div>
               </div>
@@ -596,18 +596,33 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             <div class="ph"><span class="pt">Equipo de Combate</span></div>
             <div id="combat_edit_view">
               <div class="g2">
-                <div><span class="fl">Armadura</span><select id="sel_armor" onchange="app.calc()"></select><div class="ccard"><span class="clbl">CA Base</span><span class="cval" id="armor_base_val">—</span></div><div id="armor_desc" class="infobox"></div></div>
-                <div><span class="fl">Escudo</span><select id="sel_shield" onchange="app.calc()"></select><select id="sel_magic_bonus" onchange="app.calc()" style="margin-top:5px;font-size:.76rem;color:var(--ice)"><option value="0">Bono Mágico: Ninguno</option><option value="1">+1 CA Mágico</option><option value="2">+2 CA Mágico</option><option value="3">+3 CA Mágico</option></select></div>
+                <div><span class="fl">Armadura</span><select id="sel_armor" onchange="app.calc()"></select>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:5px">
+                    <div><span class="fl" style="font-size:.55rem">Mod. CA Prim.</span><select id="ca_mod1" class="ap" onchange="app.calc()"><option value="DES">DES</option><option value="FUE">FUE</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option><option value="NONE">—</option></select></div>
+                    <div><span class="fl" style="font-size:.55rem">Mod. Extra 1</span><select id="ca_mod2" class="ap" onchange="app.calc()"><option value="NONE">—</option><option value="DES">DES</option><option value="FUE">FUE</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option></select></div>
+                    <div><span class="fl" style="font-size:.55rem">Mod. Extra 2</span><select id="ca_mod3" class="ap" onchange="app.calc()"><option value="NONE">—</option><option value="DES">DES</option><option value="FUE">FUE</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option></select></div>
+                  </div>
+                  <div class="ccard"><span class="clbl">CA Base</span><span class="cval" id="armor_base_val">—</span></div>
+                  <div id="armor_desc" class="infobox"></div>
+                </div>
+                <div><span class="fl">Escudo</span><select id="sel_shield" onchange="app.calc()"></select>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px">
+                    <div><span class="fl" style="font-size:.55rem">Bono Mágico</span><select id="sel_magic_bonus" class="ap" onchange="app.calc()"><option value="0">—</option><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option></select></div>
+                    <div><span class="fl" style="font-size:.55rem">Otro Bono</span><select id="sel_ca_other" class="ap" onchange="app.calc()"><option value="0">—</option><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option></select></div>
+                  </div>
+                </div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr auto;gap:6px;align-items:end;margin-top:8px">
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:end;margin-top:8px">
                 <div><span class="fl">Arma Principal</span><select id="sel_weapon" onchange="app.onWeaponChange('w1')"></select></div>
-                <div><span class="fl" style="font-size:.58rem">Atributo</span><select id="w1_attr" class="ap" onchange="app.calc()"><option value="FUE">FUE</option><option value="DES">DES</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option></select></div>
+                <div><span class="fl" style="font-size:.58rem">Mod. Ataque</span><select id="w1_attr" class="ap" onchange="app.calc()"><option value="FUE">FUE</option><option value="DES">DES</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option><option value="NONE">—</option></select></div>
+                <div><span class="fl" style="font-size:.58rem">Mod. Daño</span><select id="w1_dmg_attr" class="ap" onchange="app.calc()"><option value="FUE">FUE</option><option value="DES">DES</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option><option value="NONE">—</option></select></div>
               </div>
               <div class="ccard"><div><span class="clbl">Ataque</span><div class="cval" id="w1_atk_val">—</div></div><div style="text-align:right"><span class="clbl">Daño</span><div class="cval" id="w1_dmg_val">—</div></div></div>
               <div class="calert" id="w1_alert"></div>
-              <div style="display:grid;grid-template-columns:1fr auto;gap:6px;align-items:end;margin-top:6px">
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:end;margin-top:6px">
                 <div><span class="fl">Arma Secundaria</span><select id="sel_weapon_sec" onchange="app.onWeaponChange('w2')"></select></div>
-                <div><span class="fl" style="font-size:.58rem">Atributo</span><select id="w2_attr" class="ap" onchange="app.calc()"><option value="FUE">FUE</option><option value="DES">DES</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option></select></div>
+                <div><span class="fl" style="font-size:.58rem">Mod. Ataque</span><select id="w2_attr" class="ap" onchange="app.calc()"><option value="FUE">FUE</option><option value="DES">DES</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option><option value="NONE">—</option></select></div>
+                <div><span class="fl" style="font-size:.58rem">Mod. Daño</span><select id="w2_dmg_attr" class="ap" onchange="app.calc()"><option value="FUE">FUE</option><option value="DES">DES</option><option value="CON">CON</option><option value="INT">INT</option><option value="SAB">SAB</option><option value="CAR">CAR</option><option value="NONE">—</option></select></div>
               </div>
               <div class="ccard"><div><span class="clbl">Ataque</span><div class="cval" id="w2_atk_val">—</div></div><div style="text-align:right"><span class="clbl">Daño</span><div class="cval" id="w2_dmg_val">—</div></div></div>
               <div class="calert" id="w2_alert"></div>
@@ -752,76 +767,352 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
    DEFAULT RULES DATABASE
 ══════════════════════════════════════════ */
 const DEFAULT_DB = {
+
+  /* ══ DESCRIPTORES (LINAJES) — Manual Cap.II Paso 2 ══
+     Sistema: hasta 4 Puntos de Rasgo (PR).
+     mods: bonificadores aplicados automáticamente al calcular.          */
   descriptors:{
-    "humano":{name:"Humano",txt:"Versátil y adaptable, los humanos prosperar en cualquier arquetipo.",bonus:"+1 a cualquier atributo",grant:["Versatilidad"],mods:{}},
-    "elfo":{name:"Elfo",txt:"Gráciles y de larga vida, poseen una afinidad innata con la magia.",bonus:"+1 DES, +1 INT",grant:["Visión en Penumbra","Resistencia al Sueño"],mods:{DES:1,INT:1}},
-    "enano":{name:"Enano",txt:"Robustos y tenaces, resistentes a venenos y con habilidad para la artesanía.",bonus:"+2 CON, -1 CAR",grant:["Resistencia a Venenos","Visión en Oscuridad"],mods:{CON:2,CAR:-1}},
-    "mediano":{name:"Mediano",txt:"Pequeños pero suertudos, pueden repetir un dado de ataque o salvación una vez por combate.",bonus:"+1 DES, +1 SAB",grant:["Suerte del Mediano","Sigilo Experto"],mods:{DES:1,SAB:1}},
-    "semiorco":{name:"Semiorco",txt:"Fuertes y feroces, pueden sobrevivir a un golpe que los reduciría a 0 PG una vez por día.",bonus:"+2 FUE, -1 INT",grant:["Implacable"],mods:{FUE:2,INT:-1}}
+    "humano":{name:"Humano",pr:4,
+      txt:"Versátiles y adaptables. Distribuyen sus 4 PR libremente: +1 a dos atributos distintos.",
+      bonus:"+1 a dos Atributos a elección (2 PR + 2 PR)",
+      grant:["Versatilidad Humana: +1 a dos atributos de libre elección"],
+      mods:{}},
+    "elfo":{name:"Elfo",pr:4,
+      txt:"Gráciles, de larga vida y con afinidad innata con la naturaleza y la magia.",
+      bonus:"+1 DES, +1 SAB",
+      grant:["Visión en Penumbra 60 pies","Resistencia a Encantos y Sueño Mágico"],
+      mods:{DES:1,SAB:1}},
+    "enano":{name:"Enano",pr:4,
+      txt:"Robustos y tenaces. Forjados bajo tierra. Resistencia excepcional a venenos.",
+      bonus:"+2 CON, −1 CAR",
+      grant:["Visión en Oscuridad 60 pies","Ventaja en Sal. CON vs Venenos","Conocimiento de Piedra (Ventaja Arcano/Historia sobre estructuras subterráneas)"],
+      mods:{CON:2,CAR:-1}},
+    "mediano":{name:"Mediano",pr:4,
+      txt:"Pequeños y extraordinariamente afortunados. 1/combate repiten cualquier dado.",
+      bonus:"+1 DES, +1 SAB",
+      grant:["Suerte del Mediano: 1/combate repetir un dado (toma el segundo)","Ventaja en Sigilo en entornos urbanos"],
+      mods:{DES:1,SAB:1}},
+    "semiorco":{name:"Semiorco",pr:4,
+      txt:"Sangre orca. Resistencia legendaria. 1/día sobreviven con 1 PV cuando caerían.",
+      bonus:"+2 FUE, −1 INT",
+      grant:["Implacable: 1/día sobrevivir con 1 PV","Ventaja en Intimidación"],
+      mods:{FUE:2,INT:-1}},
+    "elfo_sombrio":{name:"Elfo Sombrío",pr:4,
+      txt:"Desterrados de las ciudades arbóreas. Afinidad Mística Innata (2 PR): acceden a la Fuente sin Despertar.",
+      bonus:"+1 DES, +1 CAR",
+      grant:["Visión en Oscuridad Total 30 pies","Afinidad Mística Innata: 2 Trucos + 1 Poder Niv.1 + +6 Ingenio permanente"],
+      mods:{DES:1,CAR:1},innate_magic:true},
+    "tiefling":{name:"Tiefling",pr:4,
+      txt:"Sangre infernal. Resistencia al fuego. Afinidad Mística Innata (2 PR).",
+      bonus:"+1 INT, +1 CAR",
+      grant:["Resistencia al Daño de Fuego (mitad)","Afinidad Mística Innata: 2 Trucos + 1 Poder Niv.1 + +6 Ingenio permanente"],
+      mods:{INT:1,CAR:1},innate_magic:true},
+    "draconido":{name:"Dracónido",pr:4,
+      txt:"Descendientes de dragones. Aliento elemental y resistencia al tipo correspondiente.",
+      bonus:"+2 FUE, +1 CAR, −1 DES",
+      grant:["Aliento Elemental (2 PA · 2d6 · tipo a elegir · Sal.DES CD13 mitad)","Resistencia al tipo elemental elegido"],
+      mods:{FUE:2,CAR:1,DES:-1}},
+    "nativo_estelar":{name:"Nativo Estelar",pr:4,
+      txt:"Nacidos en colonias del espacio profundo. Adaptados a microgravedad y radiación.",
+      bonus:"+1 INT, +1 CON",
+      grant:["Orientación Espacial: nunca se pierde en vacío o zonas sin luz","Resistencia a Radiación (Ventaja Sal. vs efectos radiactivos)"],
+      mods:{INT:1,CON:1}},
+    "dhampir":{name:"Dhampir",pr:4,
+      txt:"Híbridos vivo/no-muerto. Percepción sobrenatural del peligro, resistencia a necrosis.",
+      bonus:"+1 DES, +1 CAR, −1 CON",
+      grant:["Visión en Oscuridad 60 pies","Resistencia a Daño Necrótico","Desventaja en Percepción bajo luz solar intensa"],
+      mods:{DES:1,CAR:1,CON:-1}}
   },
+
+  /* ══ ARQUETIPOS — Manual Cap.II Paso 3 ══
+     Fórmulas de Reservas (Nivel N):
+       Audaz:  PV=(8+MOD_CON)×N   Adr=max(MOD_FUE,MOD_DES)+N+8    Ing=max(MOD_INT,MOD_SAB,MOD_CAR)+N+2
+       Sutil:  PV=(6+MOD_CON)×N   Adr=max(MOD_FUE,MOD_DES)+N+5    Ing=max(MOD_INT,MOD_SAB,MOD_CAR)+N+5
+       Sagaz:  PV=(4+MOD_CON)×N   Adr=max(MOD_FUE,MOD_DES)+N+2    Ing=max(MOD_INT,MOD_SAB,MOD_CAR)+N+12  */
   archetypes:{
-    "guerrero":{name:"Guerrero",txt:"Maestro del combate, experto en armas y armaduras de todo tipo.",pv:10,adr:4,ing:0,speed:9,prof:2,armorProf:["light","medium","heavy"],edges:["Tácticas","Parada","Berserker","Guardia"],skills:["Atletismo","Intimidación","Percepción","Supervivencia","Historia Militar"]},
-    "picaresco":{name:"Picaresco",txt:"Ágil y astuto, experto en sigilo, trampas y el ataque por sorpresa.",pv:8,adr:3,ing:2,speed:9,prof:2,armorProf:["light"],edges:["Emboscada","Evasión","Maestría del Ladrón","Sombras"],skills:["Sigilo","Engaño","Acrobacias","Trapas","Percepción","Robar"]},
-    "mago":{name:"Mago",txt:"Erudito de los arcanos, manipula la realidad con conjuros poderosos.",pv:6,adr:1,ing:6,speed:9,prof:2,armorProf:[],edges:["Evocación","Ilusión","Transmutación","Nigromancia"],skills:["Arcana","Historia","Investigación","Medicina"]},
-    "clerigo":{name:"Clérigo",txt:"Campeón divino que canaliza el poder de su deidad para sanar y proteger.",pv:8,adr:2,ing:4,speed:9,prof:2,armorProf:["light","medium"],edges:["Dominio Solar","Dominio Tormentoso","Dominio Muerte","Dominio Vida"],skills:["Medicina","Religión","Perspicacia","Persuasión"]},
-    "explorador":{name:"Explorador",txt:"Rastreador y superviviente experto en tierras salvajes y combate a distancia.",pv:8,adr:3,ing:1,speed:10,prof:2,armorProf:["light","medium"],edges:["Caza Mayor","Guardabosque","Arquero","Bestia de Compañía"],skills:["Supervivencia","Naturaleza","Percepción","Atletismo","Sigilo"]}
+    "audaz":{name:"Audaz",
+      txt:"El Luchador. Maestría total en armas y armaduras. Puede ignorar requisitos de FUE para equiparse.",
+      pv:8,adr_bonus:8,ing_bonus:2,speed:30,prof:2,
+      armorProf:["light","medium","heavy"],
+      edges:["Físico","Mental"],
+      skills:["Proeza Física","Intimidación","Percepción","Supervivencia"],
+      skills_count:2,
+      feature1:"Veterano de Mil Batallas: +1 CA mientras vistes armadura.",
+      feature2:"Inercia de Guerra: al reducir un enemigo a 0 PV, gasta 0 PA para un segundo ataque inmediato."},
+    "sutil":{name:"Sutil",
+      txt:"El Especialista Versátil. Armas ligeras y 1 mediana, armaduras ligeras. Filo Flexible exclusivo.",
+      pv:6,adr_bonus:5,ing_bonus:5,speed:30,prof:2,
+      armorProf:["light"],
+      edges:["Flexible","Físico","Mental"],
+      skills:["Sigilo","Engaño","Investigación","Percepción","Supervivencia","Proeza Física","Tecnología"],
+      skills_count:3,
+      feature1:"Acción Astuta: por 3 pts Ingenio, realiza Esconderse / Desconectar / Usar Objeto como 0 PA.",
+      feature2:"Polifacético: no sufre Desventaja Técnica en Habilidades Generales sin Grado de Maestría."},
+    "sagaz":{name:"Sagaz",
+      txt:"El Adepto del Conocimiento. Armas simples, sin armadura. Altísima reserva de Ingenio.",
+      pv:4,adr_bonus:2,ing_bonus:12,speed:30,prof:2,
+      armorProf:[],
+      edges:["Mental","Físico"],
+      skills:["Arcano","Historia","Medicina","Naturaleza","Perspicacia","Investigación","Religión"],
+      skills_count:4,
+      feature1:"Sentido de la Fuente: detecta emanaciones mágicas/tecnológicas a 60 pies de forma pasiva.",
+      feature2:"Dominio de Axiomas: lanza 1 Truco de su Fuente por 0 PA (en lugar de 1 PA), una vez por turno."}
   },
+
+  /* ══ TRASFONDOS — Manual Cap.II Paso 4 ══
+     Cada trasfondo: elige 2 habilidades de la lista (Grado 0),
+     1 Vínculo (Dado de Uso), 1 Defecto narrativo.              */
   backgrounds:{
-    "soldado":{name:"Soldado",txt:"Veterano de las guerras, conoce el campo de batalla y la disciplina militar.",grant:["Rango Militar"],skills:["Atletismo","Intimidación"]},
-    "erudito":{name:"Erudito",txt:"Académico de una gran biblioteca o universidad, lleno de conocimientos.",grant:["Investigador"],skills:["Historia","Arcana","Medicina","Religión"]},
-    "criminal":{name:"Criminal",txt:"Ha operado fuera de la ley, con contactos en el submundo.",grant:["Contactos Criminales"],skills:["Engaño","Sigilo","Trapas","Robar"]},
-    "noble":{name:"Noble",txt:"De alta alcurnia, con acceso a recursos y contactos sociales.",grant:["Posición Privilegiada"],skills:["Historia","Persuasión","Perspicacia"]},
-    "ermitano":{name:"Ermitaño",txt:"Vivió en soledad y meditación, ganando sabiduría interior.",grant:["Descubrimiento"],skills:["Medicina","Religión","Naturaleza","Perspicacia"]},
-    "marinero":{name:"Marinero",txt:"Veterano del mar, hábil navegante y combatiente en cubierta.",grant:["Pasaje en Barco"],skills:["Atletismo","Percepción","Naturaleza"]}
+    "soldado":{name:"Soldado",
+      txt:"Veterano de las guerras.",
+      grant:["Red Militar (Ud8)"],
+      defecto:"No toleras el desorden. Obedeces la cadena de mando incluso cuando está equivocada.",
+      skills:["Proeza Física","Intimidación","Perspicacia","Tecnología","Supervivencia","Medicina"]},
+    "picaro":{name:"Pícaro",
+      txt:"Operativo del bajo mundo.",
+      grant:["Bajo Mundo (Ud6)"],
+      defecto:"Alguien importante te busca. Siempre huyes de tus deudas.",
+      skills:["Sigilo","Engaño","Influencia","Conocimiento de la Calle","Percepción","Tecnología"]},
+    "acolito":{name:"Acólito",
+      txt:"Sirviente de una orden religiosa.",
+      grant:["Red Eclesiástica (Ud8)"],
+      defecto:"Tu fe es inflexible. Ves herejía donde hay simple diferencia de opinión.",
+      skills:["Religión","Perspicacia","Influencia","Medicina","Historia","Investigación"]},
+    "erudito":{name:"Erudito",
+      txt:"Académico de una gran institución.",
+      grant:["Archivo Académico (Ud10)"],
+      defecto:"Tu curiosidad te mete en problemas. Priorizas el conocimiento sobre la seguridad.",
+      skills:["Arcano","Historia","Investigación","Naturaleza","Tecnología","Medicina"]},
+    "salvaje":{name:"Salvaje",
+      txt:"Criado en las tierras salvajes.",
+      grant:["Red Animal (Ud8)"],
+      defecto:"La civilización te incomoda. Las multitudes y el ruido te perturban.",
+      skills:["Supervivencia","Percepción","Naturaleza","Sigilo","Proeza Física","Medicina"]},
+    "artesano":{name:"Artesano",
+      txt:"Maestro de un gremio.",
+      grant:["Red de Gremios (Ud10)"],
+      defecto:"Eres perfeccionista. No puedes dejar un trabajo a medias.",
+      skills:["Investigación","Artesanía","Influencia","Tecnología","Historia","Perspicacia"]},
+    "forastero":{name:"Forastero",
+      txt:"Siempre el extranjero.",
+      grant:["Conocimiento Inusual (Ud6)"],
+      defecto:"Siempre eres el extranjero. La gente desconfía de ti sin razón aparente.",
+      skills:["Supervivencia","Sigilo","Engaño","Perspicacia","Conocimiento de la Calle","Percepción"]},
+    "noble":{name:"Noble",
+      txt:"De alta alcurnia.",
+      grant:["Red de Influencia (Ud12)"],
+      defecto:"Eres arrogante sin saberlo. Esperas que los demás resuelvan tus problemas.",
+      skills:["Influencia","Historia","Engaño","Perspicacia","Religión","Investigación"]},
+    "mercenario":{name:"Mercenario",
+      txt:"Soldado de fortuna.",
+      grant:["Red de Contratos (Ud6)"],
+      defecto:"La lealtad es negociable. Siempre calculas el beneficio antes de arriesgar.",
+      skills:["Intimidación","Percepción","Supervivencia","Engaño","Proeza Física","Influencia"]},
+    "marinero":{name:"Marinero",
+      txt:"Veterano del mar o el espacio.",
+      grant:["Red de Puertos (Ud8)"],
+      defecto:"Eres supersticioso. Ciertos colores, palabras o fechas te perturban.",
+      skills:["Proeza Física","Percepción","Supervivencia","Engaño","Tecnología","Naturaleza"]},
+    "gladiador":{name:"Gladiador",
+      txt:"Campeón de la arena.",
+      grant:["Fama de Arena (Ud8)"],
+      defecto:"Necesitas ser el centro de atención. La discreción no es tu fuerte.",
+      skills:["Intimidación","Proeza Física","Influencia","Percepción","Engaño","Supervivencia"]},
+    "mercader":{name:"Mercader",
+      txt:"Comerciante hábil.",
+      grant:["Red Comercial (Ud10)"],
+      defecto:"Todo tiene un precio para ti, incluidas las relaciones personales.",
+      skills:["Influencia","Investigación","Engaño","Perspicacia","Conocimiento de la Calle","Historia"]}
   },
+
+  /* ══ ARMAS — Apéndice A (tabla exacta del manual) ══
+     Propiedades: Ligera · Versátil · Alcance · A distancia
+                  Munición(Ud10) · Pesada · Lanzar · Sigilo    */
   weapons:{
-    "daga":{name:"Daga",dmg:"1d4",type:"light",slots:1,atk_bonus:0,req_FUE:0,req_DES:0},
-    "espada_corta":{name:"Espada Corta",dmg:"1d6",type:"light",slots:1,atk_bonus:0,req_FUE:0,req_DES:0},
-    "espada_larga":{name:"Espada Larga",dmg:"1d8",type:"medium",slots:2,atk_bonus:0,req_FUE:12,req_DES:0},
-    "hacha_batalla":{name:"Hacha de Batalla",dmg:"1d10",type:"heavy",slots:2,atk_bonus:0,req_FUE:14,req_DES:0},
-    "arco_corto":{name:"Arco Corto",dmg:"1d6",type:"ranged",slots:2,atk_bonus:0,req_FUE:0,req_DES:10},
-    "arco_largo":{name:"Arco Largo",dmg:"1d8",type:"ranged",slots:2,atk_bonus:0,req_FUE:0,req_DES:12},
-    "ballesta":{name:"Ballesta de Mano",dmg:"1d6",type:"ranged",slots:1,atk_bonus:0,req_FUE:0,req_DES:10},
-    "lanza":{name:"Lanza",dmg:"1d8",type:"reach",slots:2,atk_bonus:0,req_FUE:10,req_DES:0},
-    "garrote":{name:"Garrote",dmg:"1d4",type:"light",slots:1,atk_bonus:0,req_FUE:0,req_DES:0}
+    "garras":    {name:"Desarmado",       dmg:"1d4", type:"light",  slots:0, notes:"Ligera · Daño contundente · Sin coste de slots"},
+    "daga":      {name:"Daga",            dmg:"1d4", type:"light",  slots:1, notes:"Ligera · Lanzar (20/60 pies) · Sigilo"},
+    "espada_corta":{name:"Espada Corta",  dmg:"1d6", type:"light",  slots:1, notes:"Ligera · Mano secundaria"},
+    "hacha_mano":{name:"Hacha de Mano",   dmg:"1d6", type:"light",  slots:1, notes:"Ligera · Lanzar (20/60 pies)"},
+    "mazo":      {name:"Maza",            dmg:"1d6", type:"medium", slots:2, notes:"Versátil · Contundente · Ignora RD no-muertos"},
+    "baston":    {name:"Bastón",          dmg:"1d6", type:"light",  slots:1, notes:"Versátil · Puede ser foco mágico"},
+    "espada_larga":{name:"Espada Larga",  dmg:"1d8", type:"medium", slots:2, notes:"Versátil (a dos manos: +1d4)"},
+    "hacha_batalla":{name:"Hacha de Batalla",dmg:"1d8",type:"medium",slots:2,notes:"Versátil (a dos manos: +1d4)"},
+    "martillo_guerra":{name:"Martillo de Guerra",dmg:"1d8",type:"medium",slots:2,notes:"Versátil · Pesada (req.FUE 13 para Ataque Pesado)"},
+    "lanza":     {name:"Lanza",           dmg:"1d8", type:"reach",  slots:2, notes:"Alcance 10 pies · Lanzar (20/60 pies)"},
+    "arco_corto":{name:"Arco Corto",      dmg:"1d6", type:"ranged", slots:2, notes:"A distancia · Munición Ud10 · 80/320 pies"},
+    "arco_largo":{name:"Arco Largo",      dmg:"1d8", type:"ranged", slots:2, notes:"A distancia · Munición Ud10 · 150/600 pies · Pesada req.FUE 13"},
+    "ballesta_mano":{name:"Ballesta de Mano",dmg:"1d6",type:"ranged",slots:1,notes:"A distancia · Munición Ud10 · 30/120 pies · Una mano"},
+    "ballesta_pesada":{name:"Ballesta Pesada",dmg:"1d10",type:"ranged",slots:3,notes:"A distancia · Munición Ud10 · 100/400 pies · Pesada · Recargar 1 PA"},
+    "pistola":   {name:"Pistola",         dmg:"1d8", type:"ranged", slots:1, notes:"A distancia · Munición Ud10 · 30/90 pies"},
+    "rifle":     {name:"Rifle",           dmg:"1d10",type:"ranged", slots:2, notes:"A distancia · Munición Ud10 · 80/320 pies · Pesada · Ráfaga +1d6/+2PA"}
   },
+
+  /* ══ ARMADURAS — Apéndice A (tabla exacta del manual) ══
+     Cálculo CA:
+       none/light → CA base + MOD DES (sin límite)
+       medium     → CA base + MOD DES (máx +2)
+       heavy      → CA base (sin DES)                       */
   armors:{
-    "ropas":{name:"Ropas de Viaje",ca:10,type:"none",slots:0},
-    "cuero":{name:"Cuero",ca:11,type:"light",slots:1},
-    "cuero_tachonado":{name:"Cuero Tachonado",ca:12,type:"light",slots:1},
-    "cota_malla":{name:"Cota de Malla",ca:13,type:"medium",slots:2},
-    "laminar":{name:"Laminar",ca:15,type:"heavy",slots:3},
-    "coraza":{name:"Coraza",ca:14,type:"medium",slots:2}
+    "ninguna":      {name:"Sin Armadura",      ca:10,type:"none",  slots:0,notes:"CA=10+MOD DES. Sin restricciones."},
+    "cuero":        {name:"Cuero",             ca:11,type:"light", slots:1,notes:"CA=11+MOD DES. Sin restricciones."},
+    "cuero_tachonado":{name:"Cuero Tachonado", ca:12,type:"light", slots:1,notes:"CA=12+MOD DES. Sin restricciones."},
+    "cota_malla":   {name:"Cota de Malla",     ca:13,type:"medium",slots:2,notes:"CA=13+MOD DES(máx+2). Req.FUE 11. Desventaja Sigilo."},
+    "semicoraza":   {name:"Semicoraza",        ca:14,type:"medium",slots:2,notes:"CA=14+MOD DES(máx+2). Req.FUE 11. Desventaja Sigilo."},
+    "coraza_completa":{name:"Coraza Completa", ca:15,type:"medium",slots:2,notes:"CA=15+MOD DES(máx+2). Req.FUE 13. Desventaja Sigilo."},
+    "armadura_placas":{name:"Armadura de Placas",ca:17,type:"heavy",slots:3,notes:"CA=17 (sin DES). Req.FUE 15. Desventaja Sigilo."},
+    "traje_combate":{name:"Traje de Combate",  ca:13,type:"light", slots:1,notes:"Magitecnología. CA=13+MOD DES. Absorbe 1 pt daño/turno."}
   },
+
+  /* ══ ESCUDOS — Apéndice A (manual: un solo tipo, +2 CA) */
   shields:{
-    "rodela":{name:"Rodela",slots:1,bonus:1},
-    "basico":{name:"Escudo Básico",slots:1,bonus:2},
-    "torre":{name:"Escudo Torre",slots:2,bonus:3}
+    "escudo":{name:"Escudo",slots:1,bonus:2,notes:"+2 CA · Ocupa la mano secundaria · 10 po"}
   },
+
+  /* ══ TALENTOS — Manual Cap.III: Catálogo de Vectores ══
+     4 Vectores (Impacto, Transformación, Vínculo, Entorno)
+     + Generales. Requisitos siempre de atributo o nivel.    */
   talents:{
-    "acero":[
-      {name:"Maestro del Escudo",desc:"Usa reacción para golpear con el escudo cuando un enemigo te ataca.",grades:[{g:1,d:"Golpe de reacción 1d4+FUE"}]},
-      {name:"Disparo Preciso",desc:"Gasta Adrenalina para añadir bono de daño a distancia.",grades:[{g:1,d:"+1 Adr = +1d4 daño"}]},
-      {name:"Duelista Táctico",desc:"Gasta Adrenalina para imponer desventaja en el ataque de un enemigo.",grades:[{g:1,d:"Imponer desventaja (1 Adr)"}]}
+    "impacto":[
+      {id:"golpe_demoledor",name:"Golpe Demoledor",
+       desc:"Ataque Normal (2 PA) + 2 pts Adrenalina: +1d8 daño extra y Sal. FUE (CD 12+MOD FUE) o Derribado.",
+       req:"FUE 13+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"2 Adr → +1d8 daño. Sal. FUE o Derribado."},
+         {g:2,d:"Nivel 3+: +2d8. CD 14+MOD FUE. Si ya Derribado → Desgarro (DoT Ud6, −2 CA)."},
+         {g:3,d:"Nivel 6+: Fallo de Sal. → todos los enemigos en 10 pies retroceden (misma Sal. o Derribados)."}
+       ]},
+      {id:"descarga_energia",name:"Descarga de Energía",
+       desc:"2 PA · 4 pts Ingenio. Proyectil a 60 pies: 2d6 daño elemental (Fuego/Frío/Relámpago, elige al lanzar). Req. Despertar Sobrenatural.",
+       req:"SAB o INT 13+ · Despertar Sobrenatural",
+       grades:[
+         {g:1,d:"2d6 a 1 objetivo (60 pies). Tipo elemental a elección."},
+         {g:2,d:"Nivel 3+: 3d6. Segundo objetivo a 10 pies del primero sin coste extra."},
+         {g:3,d:"Nivel 7+: Como Reacción (0 PA) cuando un enemigo falla un ataque. Daño 1d6."}
+       ]},
+      {id:"veneno_precision",name:"Veneno de Precisión",
+       desc:"1 PA de preparación: aplica veneno a un arma. Próximo ataque exitoso → Toxicidad (DoT Ud8 · 1d6 químico/turno). 1 dosis/Descanso Corto.",
+       req:"DES 12+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"1 dosis/Descanso Corto. Toxicidad (DoT Ud8)."},
+         {g:2,d:"Nivel 4+: 2 dosis/Descanso Corto. En crítico: Ud10."},
+         {g:3,d:"Nivel 8+: Primera degradación del Ud → Trauma adicional (Desventaja FUE, sin Sal.)."}
+       ]}
     ],
-    "adrenalina":[
-      {name:"Defensor Incansable",desc:"Impone desventaja en ataques contra aliados adyacentes.",grades:[{g:1,d:"Desventaja en aliados cercanos"}]},
-      {name:"Furia",desc:"+2 Daño en cuerpo a cuerpo y resistencia al Miedo mientras dura.",grades:[{g:1,d:"+2 Daño melee"}]},
-      {name:"Defensa Natural",id:"def_nat",desc:"CA = 10 + MOD DES + MOD CON sin armadura.",grades:[{g:1,d:"Bonificación CA natural"}]}
+    "transformacion":[
+      {id:"furia_corporal",name:"Furia Corporal",
+       desc:"1 PA · 4 pts Adrenalina. Furia activa (Ud6): +2 a ataques CaC y +1d4 daño. Al entrar: PV temp. = MOD CON × 2 (mín. 2).",
+       req:"FUE 12+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"+2 ataque CaC, +1d4 daño. PV temp.=MOD CON×2. Duración Ud6."},
+         {g:2,d:"Nivel 3+: Ud8. Ataques frontales que te impacten: −2 a su dado de daño."},
+         {g:3,d:"Nivel 7+: Activar como Reacción (0 PA) al recibir daño. Coste Adrenalina a la mitad (mín. 1)."}
+       ]},
+      {id:"forma_alterada",name:"Forma Alterada",
+       desc:"2 PA · 6 pts Ingenio. Forma alternativa durante Ud6: 1 beneficio físico (escalar 30 pies, visión nocturna, garras 1d6…). Req. Despertar Sobrenatural.",
+       req:"SAB o INT 13+ · Despertar Sobrenatural",
+       grades:[
+         {g:1,d:"1 beneficio físico. Duración Ud6."},
+         {g:2,d:"Nivel 4+: 2 beneficios, Ud8, coste baja a 4 pts Ingenio."},
+         {g:3,d:"Nivel 8+: 2 formas preparadas. Cambiar entre formas activas: 1 PA."}
+       ]},
+      {id:"interfaz_neural",name:"Interfaz Neural",
+       desc:"1 PA · 3 pts Ingenio. Conecta a sistema tecnológico adyacente (Ud6): Ventaja en Tecnología y control mental sin PA.",
+       req:"INT 13+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"Ud6. Sistema tecnológico adyacente."},
+         {g:2,d:"Nivel 3+: Ud8. Alcance 30 pies. IAs con Desventaja; éxito = acceso total."},
+         {g:3,d:"Nivel 6+: El sistema atacante tiene Desventaja contra ti. Transferir conexión: 1 PA."}
+       ]}
     ],
-    "astucia":[
-      {name:"Ataque Furtivo",desc:"+1d6 Daño cuando tienes ventaja o un aliado está adyacente al objetivo.",grades:[{g:1,d:"+1d6 daño por grado"}]},
-      {name:"Marca del Cazador",desc:"Ventaja para rastrear y +1d6 daño contra el objetivo marcado.",grades:[{g:1,d:"Ventaja rastreo + daño"}]}
+    "vinculo":[
+      {id:"toque_restaurador",name:"Toque Restaurador",
+       desc:"2 PA · 4 pts Ingenio. Aliado adyacente recupera 2d6 + MOD SAB o CAR PV. No usable en uno mismo durante combate.",
+       req:"SAB o CAR 12+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"2d6+MOD a aliado adyacente."},
+         {g:2,d:"Nivel 3+: Reacción (0 PA) cuando aliado cae a 0 PV. Coste×2. Aliado queda con 1 PV."},
+         {g:3,d:"Nivel 7+: 1/Descanso Largo, restaura 1 pto de Flesh en lugar de PV."}
+       ]},
+      {id:"companero_vinculado",name:"Compañero Vinculado",
+       desc:"Descanso Largo: estableces vínculo con una criatura/entidad. Compañero NA 1 (10 PV, CA 12, +2 ataque, 1d6 daño). Actúa al gastar 1 PA.",
+       req:"SAB o CAR 13+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"Compañero NA 1. 1 PA para dar una orden. 1 compañero máximo."},
+         {g:2,d:"Nivel 5+: NA 3 (30 PV, CA 14, +5 ataque, 1d10). 2 órdenes/turno. 1 acción especial."}
+       ]},
+      {id:"despertar",name:"Despertar Sobrenatural",
+       desc:"Acceso a la Fuente de Poder. Elige: Erudición (INT 13+) · Pacto (CAR 13+) · Herencia (CAR 13+) · Divinidad (SAB/CAR 13+) · Naturaleza (SAB 13+) · Psiónica (INT/SAB 13+). +6 Ingenio permanente.",
+       req:"INT, SAB o CAR 13+ según Fuente elegida",
+       grades:[
+         {g:1,d:"Acceso a Axiomas de tu Fuente. CD Axioma = 8+PB+MOD Fuente. +6 Ingenio permanente."}
+       ]},
+      {id:"pacto_sobrenatural",name:"Pacto Sobrenatural",
+       desc:"Pacto con entidad sobrenatural menor. Beneficio constante menor (define con DJ) a cambio de una Demanda periódica.",
+       req:"CAR 14+ · Despertar Sobrenatural · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"Beneficio constante menor + Demanda por sesión."},
+         {g:2,d:"Nivel 4+: Beneficio mejora. Invocar (3 PA, 8 Ing): NA 2, Ud6 rondas."},
+         {g:3,d:"Nivel 8+: Con Voluntad Autónoma, la entidad usa sus 3 PA propios. Demanda mensual."}
+       ]},
+      {id:"voluntad_autonoma",name:"Voluntad Autónoma",
+       desc:"El Compañero tira su propia iniciativa (1d20+DES) y actúa con 3 PA propios. Cada orden directa: +1 Tensión (máx 3). Con 3 Tensión actúa solo 1 turno.",
+       req:"SAB o CAR 15+ · Nivel 5+ · Compañero Vinculado G2",
+       grades:[
+         {g:1,d:"3 PA e iniciativa propia. Órdenes directas acumulan Tensión (máx 3). Reinicia en Descanso Corto."}
+       ]}
     ],
-    "sobrenatural":[
-      {name:"Despertar Sobrenatural",id:"despertar",desc:"Acceso a magia. Ganas +6 Ingenio adicional.",grades:[{g:1,d:"+6 Ingenio base"}]},
-      {name:"Canalización Divina",desc:"Sana PG o ahuyenta no-muertos usando tu Carisma como fuente.",grades:[{g:1,d:"Sanar / Ahuyentar"}]}
+    "entorno":[
+      {id:"terreno_hostil",name:"Terreno Hostil",
+       desc:"2 PA · 4 pts Ingenio o Adrenalina. Zona 15 pies durante Ud6: enemigos −10 pies de velocidad y Desventaja en Proeza Física.",
+       req:"INT o SAB 12+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"Zona 15 pies, Ud6. −10 vel. + Desventaja Proeza Física."},
+         {g:2,d:"Nivel 4+: Efecto adicional: niebla (Desventaja a distancia) · suelo inestable (Sal.DES o Derribado) · calor (1d4 fuego/turno)."},
+         {g:3,d:"Nivel 7+: 2 zonas simultáneas con un solo coste. Pueden solaparse y acumularse."}
+       ]},
+      {id:"barrera_instinto",name:"Barrera de Instinto",
+       desc:"Reacción (0 PA) · 3 pts Adrenalina o Ingenio. Reduce daño del ataque activador en 1d8 + el mayor entre MOD FUE y MOD SAB. Dura hasta tu próximo turno, absorbe un segundo impacto.",
+       req:"SAB 13+ o FUE 14+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"Reacción. Reduce 1d8+MOD. Dura hasta próximo turno; colapsa al 2.º impacto."},
+         {g:2,d:"Nivel 4+: 2d8+MOD. Dura Ud4 rondas."},
+         {g:3,d:"Nivel 8+: Al colapsar, pulso de área 10 pies: mitad daño absorbido (Sal.DES para cuarta parte)."}
+       ]}
     ],
     "general":[
-      {name:"Alerta",id:"alerta",desc:"+5 Iniciativa. No puedes ser sorprendido.",grades:[{g:1,d:"+5 Iniciativa"}]},
-      {name:"Atleta",id:"atleta",desc:"+1 FUE o DES. Levantarse solo cuesta 5 pies de movimiento.",grades:[{g:1,d:"+1 FUE o DES"}]}
+      {id:"segundo_viento",name:"Segundo Viento",
+       desc:"1/encuentro · 1 PA: recupera 1d8 + MOD CON PV y 4 pts de la Reserva que elijas. Sin Ración.",
+       req:"CON 12+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"1/encuentro. 1d8+MOD CON PV + 4 pts Reserva a elegir."},
+         {g:2,d:"Nivel 5+: 2.ª vez/encuentro. El 2.º uso recupera la mitad (redondea arriba)."}
+       ]},
+      {id:"alerta",name:"Alerta",
+       desc:"+5 a la Iniciativa. Inmune a ser Sorprendido mientras no estés incapacitado.",
+       req:"Cualquier Arquetipo",
+       grades:[{g:1,d:"+5 Iniciativa. No puedes ser sorprendido."}]},
+      {id:"maestria_objetos",name:"Maestría en Objetos Mágicos",
+       desc:"+1 ranura de sintonización (base: 3 simultáneos). Objetos sintonizados: −1 pto coste activación (mín. 1).",
+       req:"INT o SAB 12+ · Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"+1 ranura sintonización. −1 coste activación objetos sintonizados."},
+         {g:2,d:"Nivel 3+: +1 ranura más. Identificar objeto: Descanso Corto en lugar de Largo."}
+       ]},
+      {id:"golpe_furtivo",name:"Golpe Furtivo",
+       desc:"+1d6 daño cuando tienes Ventaja en el ataque O hay un aliado adyacente al objetivo (y sin Desventaja propia). Una vez por turno.",
+       req:"Cualquier Arquetipo",
+       grades:[
+         {g:1,d:"+1d6 daño (Ventaja o aliado adyacente). 1/turno."},
+         {g:2,d:"+2d6 daño."},
+         {g:3,d:"+3d6 daño. 1/turno sin Ventaja si el aliado tiene el flanqueo."}
+       ]},
+      {id:"def_nat",name:"Defensa Natural",
+       desc:"Sin armadura: CA = 10 + MOD DES + MOD CON.",
+       req:"CON 13+ · Cualquier Arquetipo",
+       grades:[{g:1,d:"Sin armadura: CA = 10 + MOD DES + MOD CON."}]}
     ]
   },
+
   spells:{},
   misc:{}
 };
@@ -1215,8 +1506,8 @@ const app = {
 
     // Info boxes
     document.getElementById('desc_info').innerText = desc ? (desc.bonus||'') + (desc.grant?.length?' · '+desc.grant.join(', '):'') : '';
-    document.getElementById('arq_info').innerText = arq ? `PG:${arq.pv} Adr:${arq.adr} Ing:${arq.ing}` : '';
-    document.getElementById('bg_info').innerText = bg ? (bg.skills?.join(', ')||'') : '';
+    document.getElementById('arq_info').innerText = arq ? `PV base: ${arq.pv}+CON · Adr: FUE/DES+Niv+${arq.adr_bonus||0} · Ing: INT/SAB/CAR+Niv+${arq.ing_bonus||0} · Skills: ${arq.skills_count||2}` : '';
+    document.getElementById('bg_info').innerText = bg ? `Habilidades: ${bg.skills?.join(', ')||'—'}${bg.defecto?' · '+bg.defecto:''}` : '';
 
     // Filo select
     const filoSel = document.getElementById('sel_filo');
@@ -1245,7 +1536,7 @@ const app = {
         div.appendChild(lbl);
       });
     };
-    const arqLimit = arq?.pv >= 10 ? 3 : 2;
+    const arqLimit = arq?.skills_count || 2;
     document.getElementById('limit_arq').innerText = arqLimit;
     buildSkills('skills_arq', arq?.skills, 'chk_arq', arqLimit);
     buildSkills('skills_bg', bg?.skills, 'chk_bg', 2);
@@ -1292,11 +1583,17 @@ const app = {
     const lvl = parseInt(document.getElementById('char_lvl')?.value)||1;
     const prof = lvl >= 9 ? 5 : lvl >= 7 ? 4 : lvl >= 5 ? 3 : 2;
 
-    // Resources
-    const pvBase = (arq?.pv||6) + mods.CON;
+    // Resources — fórmulas según tabla de Arquetipos (Cap.II Paso 3)
+    // PV: (Base Arquetipo + Puntuación CON) × Nivel
+    const conScoreForPV = final.CON || 8;
+    const pvBase = (arq?.pv||6) + conScoreForPV;
     const maxPv = pvBase * lvl;
-    const maxAdr = (arq?.adr||0) + mods.DES;
-    let maxIng = (arq?.ing||0) + mods.INT;
+    // Adrenalina: max(Puntuación FUE, Puntuación DES) + Nivel + bonus
+    const adrScore = Math.max(final.FUE||8, final.DES||8);
+    const maxAdr = adrScore + lvl + (arq?.adr_bonus||0);
+    // Ingenio: max(Puntuación INT, Puntuación SAB, Puntuación CAR) + Nivel + bonus
+    const ingScore = Math.max(final.INT||8, final.SAB||8, final.CAR||8);
+    let maxIng = ingScore + lvl + (arq?.ing_bonus||0);
 
     // Talent bonuses
     const hasTalent = (id) => !!document.querySelector(`input[name="chk_talents_hidden"][data-id="${id}"]`);
@@ -1317,16 +1614,22 @@ const app = {
     document.getElementById('res_ini').innerText = (ini>=0?'+':'')+ini;
 
     // Velocidad
-    const spd = arq?.speed || 9;
-    document.getElementById('res_vel').innerText = spd+'m';
+    const spd = arq?.speed || 30;
+    document.getElementById('res_vel').innerText = spd+' pies';
 
-    // Carne (CON modifier)
-    document.getElementById('res_carne').innerText = mods.CON;
+    // Flesh/Carne = puntuación de CON (el número, no el modificador)
+    const conScore = parseInt(document.getElementById('base_CON')?.value)||8;
+    const carneVal = conScore + (desc?.mods?.CON||0);
+    document.getElementById('res_carne').innerText = carneVal;
 
     // CA
     const armorUID = document.getElementById('sel_armor').value;
     const shieldUID = document.getElementById('sel_shield').value;
-    const magicBonus = parseInt(document.getElementById('sel_magic_bonus').value)||0;
+    const magicBonus  = parseInt(document.getElementById('sel_magic_bonus')?.value)||0;
+    const otherBonus  = parseInt(document.getElementById('sel_ca_other')?.value)||0;
+    const caMod1Key   = document.getElementById('ca_mod1')?.value || 'DES';
+    const caMod2Key   = document.getElementById('ca_mod2')?.value || 'NONE';
+    const caMod3Key   = document.getElementById('ca_mod3')?.value || 'NONE';
     let armorItem = this._getInventoryItem(armorUID);
     let armorData = armorItem ? (armorItem.dbData || this.DB.armors?.[armorItem.dbKey]) : this.DB.armors?.[armorUID];
     const shieldItem = this._getInventoryItem(shieldUID);
@@ -1335,13 +1638,27 @@ const app = {
     let caBase = armorData?.ca || 10;
     const armorType = armorData?.type || 'none';
     let caFinal = caBase;
-    if (armorType === 'none' || armorType === 'light') caFinal += mods.DES;
-    else if (armorType === 'medium') caFinal += Math.min(2, mods.DES);
+
+    // Primary MOD (respects armor type cap)
+    const getMod1 = (k) => k === 'NONE' ? 0 : (mods[k] || 0);
+    if (armorType === 'heavy') {
+      // heavy: no attribute bonus
+    } else if (armorType === 'medium') {
+      caFinal += Math.min(2, getMod1(caMod1Key));
+    } else {
+      caFinal += getMod1(caMod1Key);
+    }
+    // Extra mods (no cap)
+    if (caMod2Key !== 'NONE') caFinal += (mods[caMod2Key] || 0);
+    if (caMod3Key !== 'NONE') caFinal += (mods[caMod3Key] || 0);
+
     if (shieldData) caFinal += (shieldData.bonus || 0);
     caFinal += magicBonus;
-    // Defensa Natural talent
+    caFinal += otherBonus;
+
+    // Defensa Natural talent (override if no armor)
     if (hasTalent('def_nat') && (armorType === 'none')) {
-      caFinal = Math.max(caFinal, 10 + mods.DES + mods.CON);
+      caFinal = Math.max(caFinal, 10 + (mods.DES||0) + (mods.CON||0));
     }
     document.getElementById('res_ca').innerText = caFinal;
     document.getElementById('armor_base_val').innerText = caBase;
@@ -1352,22 +1669,21 @@ const app = {
     if (adesc) adesc.innerText = armorData ? `${armorData.name} · CA ${caBase} · ${({none:'Sin restricción',light:'Ligera',medium:'Media',heavy:'Pesada'}[armorType]||armorType)}` : '';
 
     // Weapons
-    this._calcWeapon('w1', document.getElementById('sel_weapon').value, document.getElementById('w1_attr').value, mods, prof, arq);
-    this._calcWeapon('w2', document.getElementById('sel_weapon_sec').value, document.getElementById('w2_attr').value, mods, prof, arq);
+    this._calcWeapon('w1', document.getElementById('sel_weapon').value, document.getElementById('w1_attr').value, document.getElementById('w1_dmg_attr')?.value||'FUE', mods, prof, arq);
+    this._calcWeapon('w2', document.getElementById('sel_weapon_sec').value, document.getElementById('w2_attr').value, document.getElementById('w2_dmg_attr')?.value||'FUE', mods, prof, arq);
 
     // Attack panel (page 0) sync
     ['1','2'].forEach(n => {
-      const atkEl = document.getElementById(`atk_bonus_${n}`);
-      const dmgEl = document.getElementById(`atk_dmg_${n}`);
-      const sumBonusEl = document.getElementById(`sum_atk${n}_bonus`);
-      const sumDmgEl = document.getElementById(`sum_atk${n}_dmg`);
-      const nameEl = document.getElementById(`atk_name_${n}`);
-      const srcAtk = document.getElementById(`w${n}_atk_val`);
-      const srcDmg = document.getElementById(`w${n}_dmg_val`);
-      if (atkEl && srcAtk) atkEl.innerText = srcAtk.innerText;
-      if (dmgEl && srcDmg) dmgEl.innerText = srcDmg.innerText;
+      const atkEl     = document.getElementById(`atk_bonus_${n}`);
+      const dmgEl     = document.getElementById(`atk_dmg_${n}`);
+      const sumBonusEl= document.getElementById(`sum_atk${n}_bonus`);
+      const sumDmgEl  = document.getElementById(`sum_atk${n}_dmg`);
+      const srcAtk    = document.getElementById(`w${n}_atk_val`);
+      const srcDmg    = document.getElementById(`w${n}_dmg_val`);
+      if (atkEl    && srcAtk) atkEl.innerText     = srcAtk.innerText;
+      if (dmgEl    && srcDmg) dmgEl.innerText     = srcDmg.innerText;
       if (sumBonusEl && srcAtk) sumBonusEl.innerText = srcAtk.innerText.replace(/[^+\-\d]/g,'')||'+0';
-      if (sumDmgEl && srcDmg) sumDmgEl.innerText = srcDmg.innerText;
+      if (sumDmgEl && srcDmg) sumDmgEl.innerText  = srcDmg.innerText;
     });
 
     // Encumbrance
@@ -1387,21 +1703,21 @@ const app = {
     this._buildStatsSummary();
   },
 
-  _calcWeapon(wid, uid, attr, mods, prof, arq) {
+  _calcWeapon(wid, uid, attr, dmgAttr, mods, prof, arq) {
     const n = wid === 'w1' ? 1 : 2;
     const weapon = this._getInventoryItem(uid);
     const wData = weapon ? (weapon.dbData || this.DB.weapons?.[weapon.dbKey]) : this.DB.weapons?.[uid];
-    const nameEl = document.getElementById(`atk_name_${n}`);
-    const atkEl = document.getElementById(`${wid}_atk_val`);
-    const dmgEl = document.getElementById(`${wid}_dmg_val`);
+    const nameEl  = document.getElementById(`atk_name_${n}`);
+    const atkEl   = document.getElementById(`${wid}_atk_val`);
+    const dmgEl   = document.getElementById(`${wid}_dmg_val`);
     const alertEl = document.getElementById(`${wid}_alert`);
 
     if (!wData || uid === 'unarmed') {
       if (nameEl) nameEl.innerText = 'Desarmado';
-      if (atkEl) atkEl.innerText = (mods[attr]>=0?'+':'')+mods[attr];
-      if (dmgEl) dmgEl.innerText = '1';
+      if (atkEl)  atkEl.innerText  = (mods[attr]>=0?'+':'')+mods[attr];
+      if (dmgEl)  dmgEl.innerText  = '1d4';
       if (alertEl) alertEl.innerText = '';
-      this._weaponDmgData[n-1] = {formula:'1', name:'Desarmado'};
+      this._weaponDmgData[n-1] = {formula:'1d4', name:'Desarmado', dmgMod:0, dmgModStr:''};
       return;
     }
 
@@ -1409,24 +1725,36 @@ const app = {
     const attrMod = mods[attr] || 0;
     const atkBonus = attrMod + prof + (wData.atk_bonus||0);
     if (atkEl) atkEl.innerText = (atkBonus>=0?'+':'')+atkBonus;
-    if (dmgEl) dmgEl.innerText = wData.dmg || '1d4';
-    this._weaponDmgData[n-1] = {formula: wData.dmg||'1d4', name: wData.name};
+
+    // Damage mod from chosen attribute (NONE = 0)
+    const dmgMod = (dmgAttr && dmgAttr !== 'NONE') ? (mods[dmgAttr] || 0) : 0;
+    const dmgModStr = dmgMod !== 0 ? (dmgMod > 0 ? `+${dmgMod}` : `${dmgMod}`) : '';
+    const baseDmg = wData.dmg || '1d4';
+    if (dmgEl) dmgEl.innerText = baseDmg + dmgModStr;
+
+    // Store for rollDice: formula includes modifier as static bonus
+    const formulaWithMod = dmgMod !== 0
+      ? `${baseDmg}${dmgMod >= 0 ? '+' : ''}${dmgMod}`
+      : baseDmg;
+    this._weaponDmgData[n-1] = {formula: formulaWithMod, name: wData.name, dmgMod, dmgModStr};
 
     // Requirements
     let alert = '';
-    if (wData.req_FUE > 0 && (parseInt(document.getElementById('base_FUE').value)||8) < wData.req_FUE) alert = `⚠ Requiere FUE ${wData.req_FUE}`;
-    if (wData.req_DES > 0 && (parseInt(document.getElementById('base_DES').value)||8) < wData.req_DES) alert += `${alert?' · ':''}⚠ Requiere DES ${wData.req_DES}`;
+    if (wData.req_FUE > 0 && (parseInt(document.getElementById('base_FUE')?.value)||8) < wData.req_FUE) alert = `⚠ Requiere FUE ${wData.req_FUE}`;
+    if (wData.req_DES > 0 && (parseInt(document.getElementById('base_DES')?.value)||8) < wData.req_DES) alert += `${alert?' · ':''}⚠ Requiere DES ${wData.req_DES}`;
     if (alertEl) alertEl.innerText = alert;
   },
 
   onWeaponChange(wid) {
     const uid = document.getElementById(wid==='w1'?'sel_weapon':'sel_weapon_sec').value;
-    const attr = document.getElementById(wid==='w1'?'w1_attr':'w2_attr').value;
+    const attrSel    = document.getElementById(wid==='w1'?'w1_attr':'w2_attr');
+    const dmgAttrSel = document.getElementById(wid==='w1'?'w1_dmg_attr':'w2_dmg_attr');
     const wItem = this._getInventoryItem(uid);
     const wData = wItem ? (wItem.dbData||this.DB.weapons?.[wItem.dbKey]) : this.DB.weapons?.[uid];
-    // Auto-select attribute
-    if (wData?.type === 'ranged' && attr === 'FUE') {
-      document.getElementById(wid==='w1'?'w1_attr':'w2_attr').value = 'DES';
+    // Auto-select atk attribute for ranged
+    if (wData?.type === 'ranged') {
+      if (attrSel?.value === 'FUE') attrSel.value = 'DES';
+      if (dmgAttrSel?.value === 'FUE') dmgAttrSel.value = 'DES';
     }
     this.calc();
   },
@@ -1559,6 +1887,12 @@ const app = {
     const prev = {
       armor: document.getElementById('sel_armor')?.value,
       shield: document.getElementById('sel_shield')?.value,
+      ca_mod1: document.getElementById('ca_mod1')?.value,
+      ca_mod2: document.getElementById('ca_mod2')?.value,
+      ca_mod3: document.getElementById('ca_mod3')?.value,
+      ca_other: document.getElementById('sel_ca_other')?.value,
+      w1_dmg_attr: document.getElementById('w1_dmg_attr')?.value,
+      w2_dmg_attr: document.getElementById('w2_dmg_attr')?.value,
       w1: document.getElementById('sel_weapon')?.value,
       w2: document.getElementById('sel_weapon_sec')?.value
     };
@@ -1579,6 +1913,9 @@ const app = {
       else s.value = s.options[0]?.value;
     };
     restore('sel_armor',prev.armor); restore('sel_shield',prev.shield);
+    restore('ca_mod1',prev.ca_mod1); restore('ca_mod2',prev.ca_mod2); restore('ca_mod3',prev.ca_mod3);
+    restore('sel_ca_other',prev.ca_other);
+    restore('w1_dmg_attr',prev.w1_dmg_attr); restore('w2_dmg_attr',prev.w2_dmg_attr);
     restore('sel_weapon',prev.w1); restore('sel_weapon_sec',prev.w2);
   },
 
@@ -1824,7 +2161,7 @@ const app = {
       at.innerText = 'Arquetipo: '+arq.name;
       let h = `<p style="font-size:.82rem;color:var(--text);line-height:1.6;margin-bottom:8px">${arq.txt||''}</p>`;
       h += `<div class="g3" style="margin-bottom:8px">`;
-      h += `<div style="text-align:center;background:rgba(176,48,64,.12);border:1px solid rgba(176,48,64,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--blood);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">PG Base</div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--bright);font-weight:700">${arq.pv}</div></div>`;
+      h += `<div style="text-align:center;background:rgba(176,48,64,.12);border:1px solid rgba(176,48,64,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--blood);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">PV Base</div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--bright);font-weight:700">${arq.pv}</div></div>`;
       h += `<div style="text-align:center;background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--sage);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Adrenalina</div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--bright);font-weight:700">${arq.adr}</div></div>`;
       h += `<div style="text-align:center;background:rgba(74,158,202,.1);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--ice);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Ingenio</div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--bright);font-weight:700">${arq.ing}</div></div>`;
       h += '</div>';
@@ -1933,7 +2270,7 @@ const app = {
       <div style="margin-bottom:6px"><span class="dfl">Nombre</span><input type="text" id="db_name" value="${existing?.name||''}"></div>
       <div style="margin-bottom:6px"><span class="dfl">Descripción</span><textarea id="db_txt" style="min-height:56px">${existing?.txt||''}</textarea></div>
       <div class="g3" style="gap:6px;margin-bottom:6px">
-        <div><span class="dfl">PG Base</span><input type="number" id="db_pv" value="${existing?.pv||8}"></div>
+        <div><span class="dfl">PV Base</span><input type="number" id="db_pv" value="${existing?.pv||8}"></div>
         <div><span class="dfl">Adrenalina</span><input type="number" id="db_adr" value="${existing?.adr||2}"></div>
         <div><span class="dfl">Ingenio</span><input type="number" id="db_ing" value="${existing?.ing||0}"></div>
       </div>
@@ -2268,6 +2605,12 @@ const app = {
     document.getElementById('char_img').src = DEFAULT_PORTRAIT;
     document.getElementById('char_img_summary').src = DEFAULT_PORTRAIT;
     const mg = document.getElementById('sel_magic_bonus'); if(mg)mg.value='0';
+    const co = document.getElementById('sel_ca_other'); if(co)co.value='0';
+    const cm1 = document.getElementById('ca_mod1'); if(cm1)cm1.value='DES';
+    const cm2 = document.getElementById('ca_mod2'); if(cm2)cm2.value='NONE';
+    const cm3 = document.getElementById('ca_mod3'); if(cm3)cm3.value='NONE';
+    const wd1 = document.getElementById('w1_dmg_attr'); if(wd1)wd1.value='FUE';
+    const wd2 = document.getElementById('w2_dmg_attr'); if(wd2)wd2.value='FUE';
     this.showTalentSummary(); this.updateTalentCount();
     this.renderInventory();
   },
@@ -2417,4 +2760,3 @@ window.onload = () => app.init();
 </script>
 </body>
 </html>
-
