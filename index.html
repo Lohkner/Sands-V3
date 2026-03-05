@@ -266,12 +266,46 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 .bsave{background:linear-gradient(135deg,var(--crimson),var(--blood));color:#fff;border:none;padding:10px;cursor:pointer;border-radius:var(--r);font-family:var(--fd);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;transition:all .18s}
 .bsave:hover{box-shadow:var(--gb)}
 /* ══ TOAST ══ */
-#toast-ct{position:fixed;bottom:calc(var(--nav) + 10px);left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:5px;pointer-events:none;align-items:center}
+/* ══ SIMPLE TOASTS (info, errors, etc.) ══ */
+#toast-ct{position:fixed;bottom:calc(var(--nav) + 12px);left:50%;transform:translateX(-50%);z-index:998;display:flex;flex-direction:column;gap:5px;pointer-events:none;align-items:center}
 .toast{background:var(--panel);color:var(--bright);padding:7px 14px;border-radius:var(--rl);border:1px solid var(--border);font-family:var(--fm);font-size:.74rem;box-shadow:var(--lg);display:flex;align-items:center;gap:7px;animation:slideUp .2s ease forwards;min-width:170px;max-width:320px;justify-content:center}
 .toast.crit{border-color:var(--blood);background:rgba(125,28,42,.35)}
 .tdie{font-size:1.2rem;font-weight:700;color:var(--gold)}.tdie.cd{color:var(--ember)}
 .tinf{display:flex;flex-direction:column}.tlbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
 @keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+/* ══ DICE ROLL OVERLAY ══ */
+#dice-overlay{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;pointer-events:none;background:transparent}
+#dice-overlay.active{pointer-events:auto}
+.dice-backdrop{position:absolute;inset:0;background:rgba(7,6,10,.72);backdrop-filter:blur(6px);opacity:0;transition:opacity .22s}
+#dice-overlay.active .dice-backdrop{opacity:1}
+.dice-card{position:relative;background:linear-gradient(145deg,var(--panel),var(--raised));border:1px solid var(--border);border-radius:16px;padding:28px 36px 24px;min-width:220px;max-width:88vw;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 24px 80px rgba(0,0,0,.85),0 0 0 1px rgba(200,169,110,.08);opacity:0;transform:scale(.88) translateY(12px);transition:opacity .25s cubic-bezier(.18,.89,.32,1.28),transform .25s cubic-bezier(.18,.89,.32,1.28)}
+#dice-overlay.active .dice-card{opacity:1;transform:scale(1) translateY(0)}
+#dice-overlay.closing .dice-card{opacity:0;transform:scale(.92) translateY(-8px);transition:opacity .22s ease,transform .22s ease}
+#dice-overlay.closing .dice-backdrop{opacity:0}
+.dice-label{font-family:var(--fd);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.15em;text-align:center}
+.dice-face{width:88px;height:88px;border-radius:14px;background:linear-gradient(145deg,var(--deep),var(--void));border:2px solid var(--rim);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:inset 0 2px 8px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.5)}
+.dice-face::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 25%,rgba(255,255,255,.06) 0%,transparent 60%);pointer-events:none}
+.dice-num{font-family:var(--ft);font-size:2.8rem;font-weight:700;color:var(--gold);line-height:1;text-shadow:0 0 20px rgba(200,169,110,.6);transition:none;will-change:transform,opacity}
+.dice-num.rolling{animation:diceFlip .07s ease-in-out}
+.dice-num.result-pop{animation:resultPop .4s cubic-bezier(.18,.89,.32,1.28) forwards}
+.dice-num.crit-glow{color:var(--goldb);text-shadow:0 0 30px rgba(232,201,126,.9),0 0 60px rgba(200,169,110,.5)}
+.dice-num.fail-glow{color:var(--blood);text-shadow:0 0 30px rgba(176,48,64,.9)}
+@keyframes diceFlip{0%{opacity:1;transform:scale(1)}40%{opacity:.2;transform:scale(.7) rotateY(90deg)}60%{opacity:.2;transform:scale(.7) rotateY(-90deg)}100%{opacity:1;transform:scale(1)}}
+@keyframes resultPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.2)}80%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+.dice-detail{font-family:var(--fm);font-size:.72rem;color:var(--dim);text-align:center;min-height:1.1em;opacity:0;transform:translateY(4px);transition:opacity .3s .15s,transform .3s .15s}
+#dice-overlay.active .dice-detail.show{opacity:1;transform:none}
+.dice-total-row{display:flex;align-items:center;gap:6px;justify-content:center;opacity:0;transform:translateY(6px);transition:opacity .3s .25s,transform .3s .25s}
+#dice-overlay.active .dice-total-row.show{opacity:1;transform:none}
+.dice-total{font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--goldb);text-shadow:0 0 12px rgba(200,169,110,.4)}
+.dice-total.crit{color:var(--goldb);text-shadow:0 0 20px rgba(232,201,126,.8)}
+.dice-total.fail{color:var(--blood)}
+.dice-mod-txt{font-family:var(--fm);font-size:.78rem;color:var(--muted)}
+.dice-deco-line{width:70%;height:1px;background:linear-gradient(90deg,transparent,rgba(200,169,110,.35) 50%,transparent);margin:2px 0}
+.dice-badge{font-family:var(--fd);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 10px;border-radius:20px;margin-top:2px}
+.dice-badge.crit{background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.4);color:var(--goldb)}
+.dice-badge.fail{background:rgba(176,48,64,.15);border:1px solid rgba(176,48,64,.4);color:var(--blood)}
+.dice-close-hint{font-family:var(--fm);font-size:.55rem;color:var(--border);letter-spacing:.1em;margin-top:6px;text-transform:uppercase;opacity:0;transition:opacity .3s .5s}
+#dice-overlay.active .dice-close-hint.show{opacity:1}
 /* ══ MISC ══ */
 .dvdr{display:flex;align-items:center;gap:6px;margin:8px 0;color:var(--muted);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;font-family:var(--fd)}
 .dvdr::before,.dvdr::after{content:'';flex:1;height:1px;background:var(--rim)}
@@ -296,6 +330,22 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 </head>
 <body>
 <div id="toast-ct"></div>
+<div id="dice-overlay">
+  <div class="dice-backdrop" id="dice-backdrop" onclick="app.closeDiceOverlay()"></div>
+  <div class="dice-card" id="dice-card">
+    <div class="dice-label" id="dice-label">Tirada</div>
+    <div class="dice-face">
+      <span class="dice-num" id="dice-num">20</span>
+    </div>
+    <div class="dice-deco-line"></div>
+    <div class="dice-detail" id="dice-detail"></div>
+    <div class="dice-total-row" id="dice-total-row">
+      <span class="dice-total" id="dice-total">—</span>
+    </div>
+    <span class="dice-badge" id="dice-badge" style="display:none"></span>
+    <span class="dice-close-hint" id="dice-close-hint">toca para cerrar</span>
+  </div>
+</div>
 <input type="file" id="img_input" accept="image/*" style="display:none" onchange="app.startCrop(this)">
 <input type="file" id="json_char_input" accept=".json" style="display:none" onchange="app.loadJSON(this)">
 <input type="file" id="json_rules_input" accept=".json" style="display:none" onchange="app.loadRulesFile(this)">
@@ -1533,8 +1583,18 @@ const app = {
     const d20 = Math.floor(Math.random()*20)+1;
     const total = d20 + mod;
     const isCrit = d20===20, isFail = d20===1;
-    const sym = isCrit?'★':isFail?'☠':d20;
-    this.toastHtml(`<span class="tdie${isCrit||isFail?' cd':''}">${sym}</span><div class="tinf"><span class="tlbl">${label}</span><span>Total: <b>${total}</b> (d20:${d20}, mod:${mod>=0?'+':''}${mod})</span></div>`, isCrit?'crit':'');
+    const modStr = (mod>=0?'+':'')+mod;
+    const detailTxt = `d20: ${d20}  ${modStr !== '+0' ? `(${modStr})` : ''}`;
+    const totalTxt = `${total>=0?'+':''}${total}`;
+    this.showDiceRoll({
+      label,
+      die: 20,
+      finalFace: d20,
+      isCrit, isFail,
+      detail: detailTxt,
+      total: total,
+      totalLabel: 'Total'
+    });
   },
 
   rollDice(formula, label) {
@@ -1545,8 +1605,95 @@ const app = {
     for (let i=0;i<num;i++){const r=Math.floor(Math.random()*die)+1;rolls.push(r);total+=r}
     total += bonus;
     const isMax = rolls.some(r=>r===die);
-    const bonusStr = bonus>0?`+${bonus}`:bonus<0?`${bonus}`:'';
-    this.toastHtml(`<span class="tdie${isMax?' cd':''}">${total}</span><div class="tinf"><span class="tlbl">${label}</span><span>[${rolls.join('+')}]${bonusStr} = <b>${total}</b></span></div>`, isMax?'crit':'');
+    const bonusStr = bonus>0?`+${bonus}`:bonus<0?String(bonus):'';
+    const detailTxt = num > 1
+      ? `[${rolls.join(' + ')}]${bonusStr}`
+      : `${rolls[0]}${bonusStr}`;
+    this.showDiceRoll({
+      label,
+      die,
+      finalFace: rolls[rolls.length-1],
+      isCrit: isMax, isFail: false,
+      detail: detailTxt,
+      total,
+      totalLabel: 'Daño'
+    });
+  },
+
+  showDiceRoll({label, die, finalFace, isCrit, isFail, detail, total, totalLabel}) {
+    const overlay = document.getElementById('dice-overlay');
+    const numEl   = document.getElementById('dice-num');
+    const labelEl = document.getElementById('dice-label');
+    const detailEl= document.getElementById('dice-detail');
+    const totalRow= document.getElementById('dice-total-row');
+    const totalEl = document.getElementById('dice-total');
+    const badgeEl = document.getElementById('dice-badge');
+    const hintEl  = document.getElementById('dice-close-hint');
+
+    // Reset state
+    overlay.classList.remove('closing');
+    numEl.className = 'dice-num';
+    detailEl.className = 'dice-detail';
+    totalRow.className = 'dice-total-row';
+    totalEl.className = 'dice-total';
+    badgeEl.style.display = 'none';
+    hintEl.className = 'dice-close-hint';
+    detailEl.textContent = '';
+    totalEl.textContent = '';
+
+    labelEl.textContent = label;
+    numEl.textContent = Math.floor(Math.random()*die)+1;
+    overlay.classList.add('active');
+
+    // Rolling animation: rapid random numbers
+    let ticks = 0;
+    const totalTicks = 14;
+    const rollInterval = setInterval(() => {
+      ticks++;
+      const progress = ticks / totalTicks;
+      // Slow down as we approach final
+      const delay = 50 + progress * 180;
+      numEl.classList.remove('rolling');
+      void numEl.offsetWidth; // reflow to restart animation
+      numEl.classList.add('rolling');
+      if (ticks < totalTicks) {
+        numEl.textContent = Math.floor(Math.random()*die)+1;
+      } else {
+        clearInterval(rollInterval);
+        // Final result
+        numEl.textContent = finalFace;
+        numEl.classList.remove('rolling');
+        numEl.classList.add('result-pop');
+        if (isCrit) numEl.classList.add('crit-glow');
+        if (isFail) numEl.classList.add('fail-glow');
+
+        // Show detail + total after pop
+        setTimeout(() => {
+          detailEl.textContent = detail;
+          detailEl.classList.add('show');
+          totalEl.textContent = (total>=0&&totalLabel!=='Daño'?'+':'')+total;
+          if (isCrit) totalEl.classList.add('crit');
+          if (isFail) totalEl.classList.add('fail');
+          totalRow.classList.add('show');
+          if (isCrit) { badgeEl.textContent='✦ Crítico ✦'; badgeEl.className='dice-badge crit'; badgeEl.style.display=''; }
+          if (isFail) { badgeEl.textContent='☠ Fallo Total ☠'; badgeEl.className='dice-badge fail'; badgeEl.style.display=''; }
+          hintEl.classList.add('show');
+        }, 280);
+
+        // Auto-close after 3.2s
+        this._diceAutoClose = setTimeout(() => this.closeDiceOverlay(), 3200);
+      }
+    }, 55 + ticks * 8);
+
+    // Slow down dynamically
+    this._diceRollInterval = rollInterval;
+  },
+
+  closeDiceOverlay() {
+    clearTimeout(this._diceAutoClose);
+    const overlay = document.getElementById('dice-overlay');
+    overlay.classList.add('closing');
+    setTimeout(() => overlay.classList.remove('active','closing'), 280);
   },
 
   rollWeaponAtk(n) {
