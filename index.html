@@ -65,6 +65,7 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .sdial-item{width:32px;height:32px;border-radius:50%;background:var(--deep);border:1px solid var(--border);color:var(--dim);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,.5)}
 .sdial-item:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1)}
 .sdial-danger:hover{border-color:var(--blood);color:var(--blood);background:rgba(180,40,40,.1)}
+
 /* ══ PAGES ══ */
 .pages-wrapper{flex:1;overflow:hidden;position:relative;min-height:0;touch-action:pan-y}
 .pages-track{display:flex;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform}
@@ -83,9 +84,9 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .snum{font-family:var(--fm);font-size:.58rem;color:var(--muted);background:var(--raised);border:1px solid var(--rim);padding:1px 5px;border-radius:3px}
 /* ══ PORTRAIT ══ */
 .portrait-wrap{position:relative;display:block;width:100%;height:228px;min-height:228px;overflow:hidden;border-radius:var(--rl) var(--rl) 0 0;border-bottom:1px solid var(--border)}
-.port-card{position:relative;width:280px;max-width:100%;height:384px;overflow:hidden;border-radius:var(--rl);border:1px solid rgba(200,169,110,.35);flex-shrink:0;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.port-card{position:relative;width:308px;max-width:100%;height:422px;overflow:hidden;border-radius:var(--rl);border:1px solid rgba(200,169,110,.35);flex-shrink:0;box-shadow:0 4px 24px rgba(0,0,0,.5)}
 .port-card img{display:block;width:100%;height:100%;object-fit:cover;background:var(--raised)}
-.port-card-edit{position:relative;width:280px;max-width:100%;height:384px;overflow:hidden;border-radius:var(--rl);border:1px dashed rgba(200,169,110,.5);flex-shrink:0;cursor:pointer;transition:border-color .2s}
+.port-card-edit{position:relative;width:308px;max-width:100%;height:422px;overflow:hidden;border-radius:var(--rl);border:1px dashed rgba(200,169,110,.5);flex-shrink:0;cursor:pointer;transition:border-color .2s}
 .port-card-edit:hover{border-color:var(--gold);border-style:solid}
 .port-card-edit:hover .port-hint{opacity:1}
 .port-card-edit:hover img{transform:scale(1.03)}
@@ -97,8 +98,10 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .port-hint{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.78) 0%,transparent 55%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;opacity:0;transition:opacity .25s;pointer-events:none}
 .port-hint span{font-family:var(--fm);font-size:.58rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase}
 .port-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,transparent 55%);padding:32px 14px 14px;pointer-events:none}
-.port-name{font-family:var(--fd);font-size:1.1rem;color:var(--goldb);letter-spacing:.04em;text-shadow:0 2px 8px rgba(0,0,0,.9)}
-.port-lvl{font-family:var(--fm);font-size:.58rem;color:var(--dim);margin-top:2px}
+.port-identity{width:308px;max-width:100%;text-align:center;padding:10px 0 4px}
+.port-name{font-family:var(--fd);font-size:1.1rem;color:var(--goldb);letter-spacing:.05em}
+.port-divider{width:55%;margin:8px auto 7px;height:1px;background:linear-gradient(90deg,transparent,rgba(200,169,110,.55) 15%,var(--gold) 50%,rgba(200,169,110,.55) 85%,transparent)}
+.port-lvl{font-family:var(--fm);font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 /* ══ INPUTS ══ */
 .fl{font-family:var(--fd);font-size:.68rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:2px}
 input[type=text],input[type=number],select,textarea{background:var(--raised);border:1px solid var(--border);border-radius:var(--r);color:var(--bright);font-family:var(--fb);font-size:.85rem;padding:5px 8px;width:100%;min-width:0;box-sizing:border-box;transition:border-color .18s,box-shadow .18s;appearance:none;-moz-appearance:textfield}
@@ -364,13 +367,14 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             </div>
             <!-- SUMMARY MODE -->
             <div id="personal_summary_view" style="display:none;padding:14px 16px 10px">
-              <div style="display:flex;justify-content:center">
+              <div style="display:flex;flex-direction:column;align-items:center">
                 <div class="port-card">
                   <img id="char_img_summary" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23382f47'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Retrato">
-                  <div class="port-overlay">
-                    <div class="port-name" id="sum_name_ov">—</div>
-                    <div class="port-lvl" id="sum_lvl_ov">Nivel 1</div>
-                  </div>
+                </div>
+                <div class="port-identity">
+                  <div class="port-name" id="sum_name_ov">—</div>
+                  <div class="port-divider"></div>
+                  <div class="port-lvl" id="sum_lvl_ov">Nivel 1</div>
                 </div>
               </div>
               <div style="padding:6px 4px 10px;text-align:center">
@@ -688,6 +692,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
     </div>
   </div>
 </dialog>
+
 <script>
 /* ══════════════════════════════════════════
    DEFAULT RULES DATABASE
@@ -2131,7 +2136,6 @@ const app = {
     const open = menu.classList.toggle('open');
     btn.classList.toggle('open', open);
     if (open) {
-      // close on outside click
       setTimeout(() => {
         document.addEventListener('click', function _close(e) {
           if (!document.getElementById('sdial').contains(e.target)) {
