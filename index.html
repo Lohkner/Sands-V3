@@ -57,6 +57,14 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .app-hdr-ttl{font-family:var(--ft);font-size:.85rem;color:var(--gold);letter-spacing:.1em;flex:1;text-align:center}
 .app-hdr-save{background:transparent;border:1px solid rgba(200,169,110,.4);color:var(--gold);font-family:var(--fd);font-size:.6rem;padding:4px 10px;border-radius:var(--r);cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .18s;flex-shrink:0}
 .app-hdr-save:hover{background:rgba(200,169,110,.12);border-color:var(--gold)}
+.sdial{position:relative;flex-shrink:0}
+.sdial-btn{width:28px;height:28px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.sdial-btn:hover,.sdial-btn.open{border-color:var(--gold);color:var(--gold)}
+.sdial-menu{position:absolute;top:calc(100% + 8px);right:0;display:flex;flex-direction:column;gap:6px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .18s,transform .18s;z-index:100}
+.sdial-menu.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.sdial-item{width:32px;height:32px;border-radius:50%;background:var(--deep);border:1px solid var(--border);color:var(--dim);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.sdial-item:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1)}
+.sdial-danger:hover{border-color:var(--blood);color:var(--blood);background:rgba(180,40,40,.1)}
 /* ══ PAGES ══ */
 .pages-wrapper{flex:1;overflow:hidden;position:relative;min-height:0;touch-action:pan-y}
 .pages-track{display:flex;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform}
@@ -75,13 +83,9 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .snum{font-family:var(--fm);font-size:.58rem;color:var(--muted);background:var(--raised);border:1px solid var(--rim);padding:1px 5px;border-radius:3px}
 /* ══ PORTRAIT ══ */
 .portrait-wrap{position:relative;display:block;width:100%;height:228px;min-height:228px;overflow:hidden;border-radius:var(--rl) var(--rl) 0 0;border-bottom:1px solid var(--border)}
-.port-card{position:relative;width:min(278px,100%);height:382px;overflow:hidden;border-radius:var(--rl);border:1px solid rgba(200,169,110,.35);margin:0 auto;display:block;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.port-card{position:relative;width:280px;max-width:100%;height:384px;overflow:hidden;border-radius:var(--rl);border:1px solid rgba(200,169,110,.35);flex-shrink:0;box-shadow:0 4px 24px rgba(0,0,0,.5)}
 .port-card img{display:block;width:100%;height:100%;object-fit:cover;background:var(--raised)}
-.port-fabs{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:6px;z-index:10}
-.port-fab{width:32px;height:32px;border-radius:50%;background:rgba(7,6,10,.72);border:1px solid rgba(200,169,110,.45);color:var(--gold);font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);line-height:1;padding:0}
-.port-fab:hover{background:rgba(200,169,110,.18);border-color:var(--gold);transform:scale(1.1);box-shadow:0 0 12px rgba(200,169,110,.3)}
-.port-fab:active{transform:scale(.93)}
-.port-card-edit{position:relative;width:min(278px,100%);height:382px;overflow:hidden;border-radius:var(--rl);border:1px dashed rgba(200,169,110,.5);margin:0 auto;display:block;cursor:pointer;transition:border-color .2s}
+.port-card-edit{position:relative;width:280px;max-width:100%;height:384px;overflow:hidden;border-radius:var(--rl);border:1px dashed rgba(200,169,110,.5);flex-shrink:0;cursor:pointer;transition:border-color .2s}
 .port-card-edit:hover{border-color:var(--gold);border-style:solid}
 .port-card-edit:hover .port-hint{opacity:1}
 .port-card-edit:hover img{transform:scale(1.03)}
@@ -321,6 +325,14 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
       <button class="app-hdr-back" onclick="app.goHome()" title="Volver">←</button>
       <span class="app-hdr-ttl">Stars &amp; Sorcery</span>
       <button class="app-hdr-save" onclick="app.saveChar()">💾 Guardar</button>
+      <div class="sdial" id="sdial">
+        <button class="sdial-btn" onclick="app.toggleDial()" title="Acciones">⚙</button>
+        <div class="sdial-menu" id="sdial_menu">
+          <button class="sdial-item" onclick="app.randomize();app.toggleDial()" title="Aleatorio">⚄</button>
+          <button class="sdial-item sdial-danger" onclick="app.confirmClear();app.toggleDial()" title="Resetear">↺</button>
+          <button class="sdial-item" onclick="document.getElementById('settings_modal').showModal();app.toggleDial()" title="Configuración">☰</button>
+        </div>
+      </div>
     </header>
 
     <div class="pages-wrapper" id="pages_wrapper">
@@ -333,17 +345,11 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           <div class="panel panel-accent" style="padding:0">
             <!-- EDIT MODE -->
             <div id="personal_edit_view">
-              <div style="padding:14px 12px 0">
-              <div class="port-card-edit" onclick="document.getElementById('img_input').click()">
-                <img id="char_img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23382f47'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Retrato">
-                <div class="port-hint"><span>Cambiar Retrato</span></div>
-                <!-- Floating action buttons top-right -->
-                <div class="port-fabs" onclick="event.stopPropagation()">
-                  <button class="port-fab" title="Aleatorio" onclick="app.randomize()">⚄</button>
-                  <button class="port-fab" title="Resetear" onclick="app.confirmClear()">↺</button>
-                  <button class="port-fab" title="Configuración" onclick="document.getElementById('settings_modal').showModal()">⚙</button>
+              <div style="padding:14px 16px 0;display:flex;justify-content:center">
+                <div class="port-card-edit" onclick="document.getElementById('img_input').click()">
+                  <img id="char_img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23382f47'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Retrato">
+                  <div class="port-hint"><span>Cambiar Retrato</span></div>
                 </div>
-              </div>
               </div>
               <div style="padding:10px 12px">
                 <div style="margin-bottom:6px"><span class="fl">Nombre</span><input type="text" id="char_name" placeholder="ej. Valerius el Audaz" style="font-family:var(--fd);font-size:.92rem;font-weight:600"></div>
@@ -357,18 +363,14 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
               </div>
             </div>
             <!-- SUMMARY MODE -->
-            <div id="personal_summary_view" style="display:none;padding:14px 12px 10px">
-              <div class="port-card">
-                <img id="char_img_summary" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23382f47'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Retrato">
-                <div class="port-overlay">
-                  <div class="port-name" id="sum_name_ov">—</div>
-                  <div class="port-lvl" id="sum_lvl_ov">Nivel 1</div>
-                </div>
-                <!-- Floating action buttons top-right -->
-                <div class="port-fabs">
-                  <button class="port-fab" title="Aleatorio" onclick="app.randomize()">⚄</button>
-                  <button class="port-fab" title="Resetear" onclick="app.confirmClear()">↺</button>
-                  <button class="port-fab" title="Configuración" onclick="document.getElementById('settings_modal').showModal()">⚙</button>
+            <div id="personal_summary_view" style="display:none;padding:14px 16px 10px">
+              <div style="display:flex;justify-content:center">
+                <div class="port-card">
+                  <img id="char_img_summary" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23382f47'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Retrato">
+                  <div class="port-overlay">
+                    <div class="port-name" id="sum_name_ov">—</div>
+                    <div class="port-lvl" id="sum_lvl_ov">Nivel 1</div>
+                  </div>
                 </div>
               </div>
               <div style="padding:6px 4px 10px;text-align:center">
@@ -2121,6 +2123,25 @@ const app = {
     const mg = document.getElementById('sel_magic_bonus'); if(mg)mg.value='0';
     this.showTalentSummary(); this.updateTalentCount();
     this.renderInventory();
+  },
+
+  toggleDial() {
+    const menu = document.getElementById('sdial_menu');
+    const btn  = document.querySelector('.sdial-btn');
+    const open = menu.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    if (open) {
+      // close on outside click
+      setTimeout(() => {
+        document.addEventListener('click', function _close(e) {
+          if (!document.getElementById('sdial').contains(e.target)) {
+            menu.classList.remove('open');
+            btn.classList.remove('open');
+          }
+          document.removeEventListener('click', _close);
+        });
+      }, 10);
+    }
   },
 
   confirmClear() {
