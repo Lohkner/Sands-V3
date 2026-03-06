@@ -5,9 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#07060a">
 <title>S&amp;S Companion</title>
-<link rel="icon" type="image/webp" href="Bind_Pact_Weapon.webp">
-<link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">  
-<style>html,body{background:#07060a!important;color:#d8cce8}</style>
+<style>html,body{background:#07060a!important;color:#d8cce8}
+/* ── LOADER ── */
+#ss-loader{position:fixed;inset:0;z-index:9999;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .5s ease;background-image:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(125,28,42,.18) 0%,transparent 70%)}
+#ss-loader.fade-out{opacity:0;pointer-events:none}
+.loader-title{font-family:var(--ft);font-size:clamp(1.3rem,6vw,2.2rem);color:var(--gold);letter-spacing:.12em;text-shadow:0 0 40px rgba(200,169,110,.5),0 2px 8px rgba(0,0,0,.9);text-align:center;line-height:1.3}
+.loader-sub{font-family:var(--fd);font-size:.6rem;color:var(--muted);letter-spacing:.4em;text-transform:uppercase;margin-top:-6px}
+.loader-orb{width:48px;height:48px;border-radius:50%;border:2px solid rgba(200,169,110,.25);border-top-color:var(--gold);animation:lorb .9s linear infinite;box-shadow:0 0 20px rgba(200,169,110,.15)}
+@keyframes lorb{to{transform:rotate(360deg)}}
+.loader-star{font-size:2rem;animation:lpulse 2s ease-in-out infinite;color:var(--gold);text-shadow:0 0 20px rgba(200,169,110,.6)}
+@keyframes lpulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.05)}}
+
+/* ── LETALIDAD BUTTONS ── */
+.leth-btn{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:7px 4px;cursor:pointer;transition:all .18s;text-align:center;width:100%}
+.leth-btn.active{background:rgba(200,169,110,.08);border-color:var(--gold)}
+.leth-btn:hover{border-color:var(--border)}
+
+/* ── FONT SIZE BUTTONS ── */
+.fs-btn{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px 8px;cursor:pointer;color:var(--dim);font-family:var(--fd);transition:all .15s;line-height:1}
+.fs-btn.active{background:rgba(200,169,110,.12);border-color:var(--gold);color:var(--gold)}
+.fs-btn:hover{border-color:var(--border);color:var(--text)}
+</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -22,13 +40,13 @@
   --gb:0 0 16px rgba(176,48,64,.3);
   --sm:0 1px 4px rgba(0,0,0,.4);--md:0 4px 16px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.3);--lg:0 8px 32px rgba(0,0,0,.65),0 2px 8px rgba(0,0,0,.4);
   --si:inset 0 1px 0 rgba(255,255,255,.04);
-  --r:4px;--rl:8px;--nav:52px;--ph:228px;--safe-b:env(safe-area-inset-bottom,0px);
+  --r:4px;--rl:8px;--nav:52px;--ph:228px;--safe-b:env(safe-area-inset-bottom,0px);--fs-base:15px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 ::selection{background:rgba(200,169,110,.2);color:var(--bright)}
 ::-webkit-scrollbar{display:none}*{scrollbar-width:none;-ms-overflow-style:none}
 html{scroll-behavior:smooth}
-body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dvh;font-size:14px;line-height:1.4;overflow:hidden;
+body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dvh;font-size:var(--fs-base,15px);line-height:1.4;overflow:hidden;
   background-image:radial-gradient(ellipse 100% 50% at 10% 0%,rgba(125,28,42,.10) 0%,transparent 55%),radial-gradient(ellipse 70% 70% at 90% 100%,rgba(29,78,143,.07) 0%,transparent 55%);}
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:opacity .28s,transform .28s;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 .screen.hidden{opacity:0;pointer-events:none;transform:translateY(14px)}
@@ -461,29 +479,61 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           </div>
 
           <!-- Estado -->
-          <div class="panel">
-            <div class="ph" style="margin-bottom:6px"><span class="pt">Estado</span></div>
-            <div style="display:flex;flex-direction:column;gap:5px">
-              <div class="frow c3">
-                <div class="fbox"><div class="flbl r">PV</div><div class="fval"><div class="pvw rr"><input type="number" id="cur_pv" value="0" class="fin"><span class="sl">/</span><span id="max_pv" class="mv">0</span></div></div></div>
-                <div class="fbox"><div class="flbl gr">Adr</div><div class="fval"><div class="rw rg"><input type="number" id="cur_adr" value="0" class="fin"><span class="sl">/</span><span id="max_adr" class="mv">0</span></div></div></div>
-                <div class="fbox"><div class="flbl b">Ing</div><div class="fval"><div class="rw rb"><input type="number" id="cur_ing" value="0" class="fin"><span class="sl">/</span><span id="max_ing" class="mv">0</span></div></div></div>
+          <div class="panel" style="padding:8px">
+            <div class="ph" style="margin-bottom:7px"><span class="pt">Estado</span></div>
+            <!-- Reservas principales -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:5px">
+              <div style="background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35);border-radius:var(--r);padding:5px 4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.5rem;color:var(--blood);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Puntos de Vida</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--fd);font-weight:700;font-size:1.05rem;color:var(--blood)"><input type="number" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:3ch"><span style="color:rgba(176,48,64,.6);font-size:.8rem;margin:0 1px">/</span><span id="max_pv" style="color:var(--blood)">0</span></div>
               </div>
-              <div class="frow c6">
-                <div class="fbox"><div class="flbl g">CA</div><div class="fval" style="font-size:.88rem;color:var(--gold)"><span id="res_ca">10</span></div></div>
-                <div class="fbox cl" onclick="app.rollCheck('Iniciativa',parseInt(document.getElementById('res_ini').innerText))"><div class="flbl">Ini</div><div class="fval" style="font-size:.82rem"><span id="res_ini">+0</span></div></div>
-                <div class="fbox"><div class="flbl">Vel</div><div class="fval" style="font-size:.8rem"><span id="res_vel">9m</span></div></div>
-                <div class="fbox"><div class="flbl">Carne</div><div class="fval" style="font-size:.8rem"><span id="res_carne">0</span></div></div>
-                <div class="fbox"><div class="flbl g">Comp</div><div class="fval" style="font-size:.8rem;color:var(--gold)"><span id="res_prof">+2</span></div></div>
-                <div class="fbox"><div class="flbl">Filo</div><div class="fval" style="font-size:.68rem"><span id="res_filo_val">—</span></div></div>
+              <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:5px 4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.5rem;color:var(--sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Adrenalina</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--sage)"><input type="number" id="cur_adr" value="0" class="fin" style="color:var(--bright);width:3ch"><span style="color:rgba(76,175,125,.5);font-size:.8rem;margin:0 1px">/</span><span id="max_adr" style="color:var(--sage)">0</span></div>
               </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-family:var(--fd);font-size:.53rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim)">
-                  <span>Encumbramiento</span><span id="res_carga" style="color:var(--text);font-family:var(--fm);font-size:.7rem">0/0</span>
-                </div>
-                <div class="lbar"><div id="carga_bar" class="lfill"></div></div>
-                <p id="carga_warn" style="display:none;color:var(--ember);font-size:.6rem;text-align:center;margin-top:2px;font-family:var(--fm)">⚠ SOBRECARGADO</p>
+              <div style="background:rgba(74,158,202,.08);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:5px 4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.5rem;color:var(--ice);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Ingenio</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--ice)"><input type="number" id="cur_ing" value="0" class="fin" style="color:var(--bright);width:3ch"><span style="color:rgba(74,158,202,.5);font-size:.8rem;margin:0 1px">/</span><span id="max_ing" style="color:var(--ice)">0</span></div>
               </div>
+            </div>
+            <!-- Stats secundarios row 1 -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px">
+              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">CA</div>
+                <div style="font-family:var(--fd);font-size:.95rem;color:var(--gold);font-weight:700"><span id="res_ca">10</span></div>
+                <div style="font-family:var(--fm);font-size:.42rem;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="res_ca_armor">—</div>
+              </div>
+              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center;cursor:pointer" onclick="app.rollCheck('Iniciativa',parseInt(document.getElementById('res_ini').innerText))">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Ini</div>
+                <div style="font-family:var(--fd);font-size:.95rem;color:var(--bright);font-weight:700"><span id="res_ini">+0</span></div>
+              </div>
+              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Vel</div>
+                <div style="font-family:var(--fm);font-size:.82rem;color:var(--bright);font-weight:600"><span id="res_vel">30 pies</span></div>
+              </div>
+            </div>
+            <!-- Stats secundarios row 2 -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:5px">
+              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Carne</div>
+                <div style="font-family:var(--fm);font-size:.92rem;color:var(--bright);font-weight:600"><span id="res_carne">0</span></div>
+              </div>
+              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Comp</div>
+                <div style="font-family:var(--fd);font-size:.92rem;color:var(--gold);font-weight:700"><span id="res_prof">+2</span></div>
+              </div>
+              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Filo</div>
+                <div style="font-family:var(--fd);font-size:.82rem;color:var(--bright);font-weight:600"><span id="res_filo_val">—</span></div>
+              </div>
+            </div>
+            <!-- Encumbramiento -->
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-family:var(--fd);font-size:.53rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim)">
+                <span>Encumbramiento</span><span id="res_carga" style="color:var(--text);font-family:var(--fm);font-size:.7rem">0/0</span>
+              </div>
+              <div class="lbar"><div id="carga_bar" class="lfill"></div></div>
+              <p id="carga_warn" style="display:none;color:var(--ember);font-size:.6rem;text-align:center;margin-top:2px;font-family:var(--fm)">⚠ SOBRECARGADO</p>
             </div>
             <details style="margin-top:6px"><summary>Notas Rápidas</summary><textarea id="char_notes" style="min-height:52px;margin-top:4px;font-size:.8rem" placeholder="Notas…"></textarea></details>
           </div>
@@ -681,6 +731,40 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 
         <!-- ══ P4: DETALLE ══ -->
         <div class="page" id="page_4">
+          <!-- Configuración de Campaña -->
+          <div class="panel">
+            <div class="ph">
+              <span class="pt">Configuración de Campaña</span>
+            </div>
+            <!-- Summary view -->
+            <div id="campana_summary" style="padding:4px 0">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <span style="font-family:var(--fd);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Letalidad</span>
+                <span id="campana_leth_label" style="font-family:var(--fd);font-size:.78rem;color:var(--gold);font-weight:600">Letalidad 1 — +1 PV/nivel</span>
+              </div>
+              <button class="bedit" id="campana_edit_btn" onclick="app.editCampana()">✏ Editar</button>
+            </div>
+            <!-- Edit view -->
+            <div id="campana_edit" style="display:none;margin-top:6px">
+              <span class="fl">Nivel de Letalidad</span>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px">
+                <button class="leth-btn active" id="leth_1" onclick="app.setLethality(1)">
+                  <div style="font-family:var(--fd);font-size:.65rem;color:var(--sage);font-weight:600">Letalidad 1</div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px">+1 PV/nivel</div>
+                </button>
+                <button class="leth-btn" id="leth_2" onclick="app.setLethality(2)">
+                  <div style="font-family:var(--fd);font-size:.65rem;color:var(--gold);font-weight:600">Letalidad 2</div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px">+2 PV/nivel</div>
+                </button>
+                <button class="leth-btn" id="leth_3" onclick="app.setLethality(3)">
+                  <div style="font-family:var(--fd);font-size:.65rem;color:var(--blood);font-weight:600">Letalidad 3</div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px">+3 PV/nivel</div>
+                </button>
+              </div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--muted);margin-top:5px;font-style:italic;line-height:1.4">PV adicionales a partir del Nivel 2. No afectan al Nivel 1.</div>
+              <button class="bcnf" style="margin-top:8px;width:100%" onclick="app.confirmCampana()">✓ Confirmar</button>
+            </div>
+          </div>
           <div class="panel"><div class="ph"><span class="pt" id="detail_desc_title">Linaje: —</span></div><div id="detail_desc_body"><p style="color:var(--muted);font-size:.8rem;font-style:italic">Selecciona un Linaje.</p></div></div>
           <div class="panel"><div class="ph"><span class="pt" id="detail_arq_title">Arquetipo: —</span></div><div id="detail_arq_body"><p style="color:var(--muted);font-size:.8rem;font-style:italic">Selecciona un Arquetipo.</p></div></div>
           <div class="panel"><div class="ph"><span class="pt">Talentos Activos</span></div><div id="detail_talents_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:8px">Sin talentos.</p></div></div>
@@ -690,10 +774,10 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
     </div><!-- /pages-wrapper -->
 
     <nav class="bnav">
-      <button class="nbtn active" onclick="app.goToPage(0)"><span class="nico">⚔</span><span class="nlbl">Perfil</span></button>
+      <button class="nbtn active" onclick="app.goToPage(0)"><span class="nico" style="display:flex;align-items:center;justify-content:center"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4"/><path d="M12 14c-5 0-8 2.5-8 4v1h16v-1c0-1.5-3-4-8-4z"/></svg></span><span class="nlbl">Perfil</span></button>
       <button class="nbtn" onclick="app.goToPage(1)"><span class="nico">✦</span><span class="nlbl">Stats</span></button>
       <button class="nbtn" onclick="app.goToPage(2)"><span class="nico">✧</span><span class="nlbl">Aptitudes</span></button>
-      <button class="nbtn" onclick="app.goToPage(3)"><span class="nico">⚒</span><span class="nlbl">Equipo</span></button>
+      <button class="nbtn" onclick="app.goToPage(3)"><span class="nico" style="display:flex;align-items:center;justify-content:center"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="9" width="20" height="13" rx="2"/><path d="M8 9V6a4 4 0 018 0v3"/><rect x="10" y="12" width="4" height="3" rx="1"/><path d="M2 13h20" stroke="currentColor" stroke-width="1.5" fill="none"/></svg></span><span class="nlbl">Equipo</span></button>
       <button class="nbtn" onclick="app.goToPage(4)"><span class="nico">📜</span><span class="nlbl">Detalle</span></button>
     </nav>
   </div>
@@ -703,8 +787,20 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 <dialog id="settings_modal" class="modal">
   <div class="mhd"><span class="mttl">Ajustes &amp; Datos</span><button class="bcls" onclick="document.getElementById('settings_modal').close()">✕</button></div>
   <div class="mbd" style="display:flex;flex-direction:column;gap:14px">
+    <div><div class="dvdr">Interfaz</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span style="font-family:var(--fd);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Tamaño de Fuente</span>
+        <div style="display:flex;gap:5px;align-items:center">
+          <button class="fs-btn" id="fs_small" onclick="app.setFontSize('small')" title="Pequeño" style="font-size:11px">A</button>
+          <button class="fs-btn" id="fs_normal" onclick="app.setFontSize('normal')" title="Normal" style="font-size:14px">A</button>
+          <button class="fs-btn" id="fs_large" onclick="app.setFontSize('large')" title="Grande" style="font-size:17px">A</button>
+          <button class="fs-btn" id="fs_xlarge" onclick="app.setFontSize('xlarge')" title="Muy Grande" style="font-size:20px">A</button>
+        </div>
+      </div>
+    </div>
     <div><div class="dvdr">Reglas del Juego</div><div style="display:flex;flex-direction:column;gap:6px"><button class="btn btn-g" style="width:100%" onclick="document.getElementById('json_rules_input').click()">↑ Importar Reglas (JSON)</button><button class="btn btn-gold" style="width:100%" onclick="app.openDatabaseEditor()">⚙ Editor de Base de Datos</button></div></div>
     <div><div class="dvdr">Personaje</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><button class="btn btn-g" onclick="app.saveChar();document.getElementById('settings_modal').close()">💾 Guardar</button><button class="btn btn-g" onclick="app.exportJSON()">↓ Exportar JSON</button></div></div>
+    <button class="bcnf" style="width:100%;margin-top:4px" onclick="document.getElementById('settings_modal').close()">✓ Confirmar</button>
   </div>
 </dialog>
 
@@ -1588,7 +1684,8 @@ const app = {
     // PV Nivel 2+: resultado nivel 1 + MOD_CON por cada nivel adicional
     const conScoreForPV = final.CON || 8;
     const pvNivel1 = (arq?.pv||6) + conScoreForPV;
-    const maxPv = pvNivel1 + (mods.CON * Math.max(0, lvl - 1));
+    const lethBonus = (this.lethality||1) - 1; // extra PV per level above 1
+    const maxPv = pvNivel1 + ((mods.CON + lethBonus) * Math.max(0, lvl - 1));
     // Adrenalina: max(Puntuación FUE, Puntuación DES) + Nivel + bonus
     const adrScore = Math.max(final.FUE||8, final.DES||8);
     const maxAdr = adrScore + lvl + (arq?.adr_bonus||0);
@@ -1664,6 +1761,8 @@ const app = {
     document.getElementById('res_ca').innerText = caFinal;
     document.getElementById('armor_base_val').innerText = caBase;
     document.getElementById('sum_ac').innerText = caFinal;
+    const caArmorEl = document.getElementById('res_ca_armor');
+    if (caArmorEl) caArmorEl.innerText = armorData?.name || 'Sin armadura';
 
     // Armor desc
     const adesc = document.getElementById('armor_desc');
@@ -2162,9 +2261,12 @@ const app = {
       at.innerText = 'Arquetipo: '+arq.name;
       let h = `<p style="font-size:.82rem;color:var(--text);line-height:1.6;margin-bottom:8px">${arq.txt||''}</p>`;
       h += `<div class="g3" style="margin-bottom:8px">`;
-      h += `<div style="text-align:center;background:rgba(176,48,64,.12);border:1px solid rgba(176,48,64,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--blood);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">PV Base</div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--bright);font-weight:700">${arq.pv}</div></div>`;
-      h += `<div style="text-align:center;background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--sage);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Adrenalina</div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--bright);font-weight:700">${arq.adr}</div></div>`;
-      h += `<div style="text-align:center;background:rgba(74,158,202,.1);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--ice);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Ingenio</div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--bright);font-weight:700">${arq.ing}</div></div>`;
+      const pvFormula = `${arq.pv} + CON`;
+      const adrFormula = `FUE/DES + Niv + ${arq.adr_bonus||0}`;
+      const ingFormula = `INT/SAB/CAR + Niv + ${arq.ing_bonus||0}`;
+      h += `<div style="text-align:center;background:rgba(176,48,64,.12);border:1px solid rgba(176,48,64,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--blood);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">PV Base</div><div style="font-family:var(--fd);font-size:.82rem;color:var(--bright);font-weight:700">${pvFormula}</div></div>`;
+      h += `<div style="text-align:center;background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--sage);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Adrenalina</div><div style="font-family:var(--fd);font-size:.72rem;color:var(--bright);font-weight:700">${adrFormula}</div></div>`;
+      h += `<div style="text-align:center;background:rgba(74,158,202,.1);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:6px"><div style="font-family:var(--fm);font-size:.56rem;color:var(--ice);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Ingenio</div><div style="font-family:var(--fd);font-size:.72rem;color:var(--bright);font-weight:700">${ingFormula}</div></div>`;
       h += '</div>';
       if (filoVal) h += `<div style="font-family:var(--fd);font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">Filo Seleccionado</div><div style="margin-bottom:8px"><span class="tbadge">⚔ ${filoVal}</span></div>`;
       const selSkills = [...new Set([...Array.from(document.querySelectorAll('input[name="chk_arq"]:checked')).map(e=>e.value),...Array.from(document.querySelectorAll('input[name="chk_bg"]:checked')).map(e=>e.value)])];
@@ -2517,7 +2619,8 @@ const app = {
       notes: document.getElementById('char_notes').value,
       alignment: this.alignment,
       inventory: this.inventory,
-      gold: this.gold
+      gold: this.gold,
+      lethality: this.lethality||1
     };
     document.querySelectorAll('input[type=text]:not(.inm),input[type=number]:not(.isl):not(#gold_coins_edit)').forEach(el=>{if(el.id)data.inputs[el.id]=el.value});
     document.querySelectorAll('select:not(#inv_db_category):not(#inv_db_item):not(.ityp)').forEach(el=>{if(el.id)data.selects[el.id]=el.value});
@@ -2530,6 +2633,7 @@ const app = {
     this.inventory = data.inventory||[];
     this.gold = data.gold||0;
     this.alignment = data.alignment||'';
+    if(data.lethality) this.setLethality(data.lethality);
     this.syncCombatOptions();
     for (const id in data.inputs) { const el=document.getElementById(id); if(el)el.value=data.inputs[id]; }
     for (const id in data.selects) { const el=document.getElementById(id); if(el)el.value=data.selects[id]; }
@@ -2614,6 +2718,53 @@ const app = {
     const wd2 = document.getElementById('w2_dmg_attr'); if(wd2)wd2.value='FUE';
     this.showTalentSummary(); this.updateTalentCount();
     this.renderInventory();
+  },
+
+
+  /* ── FONT SIZE ── */
+  setFontSize(size) {
+    const map = {small:'13px', normal:'15px', large:'17px', xlarge:'19px'};
+    const px = map[size]||'15px';
+    document.documentElement.style.setProperty('--fs-base', px);
+    document.body.style.fontSize = px;
+    localStorage.setItem('ss_font_size', size);
+    ['small','normal','large','xlarge'].forEach(s=>{
+      const el=document.getElementById('fs_'+s);
+      if(el) el.classList.toggle('active', s===size);
+    });
+  },
+
+  _restoreFontSize() {
+    const saved = localStorage.getItem('ss_font_size')||'normal';
+    this.setFontSize(saved);
+  },
+
+  /* ── LETHALITY ── */
+  lethality: 1,
+
+  setLethality(n) {
+    this.lethality = n;
+    [1,2,3].forEach(i=>{
+      const el=document.getElementById('leth_'+i);
+      if(el) el.classList.toggle('active', i===n);
+    });
+    // Update summary label
+    const labels = {1:'Letalidad 1 — +1 PV/nivel', 2:'Letalidad 2 — +2 PV/nivel', 3:'Letalidad 3 — +3 PV/nivel'};
+    const lbl = document.getElementById('campana_leth_label');
+    if(lbl) lbl.innerText = labels[n]||labels[1];
+    this.calc();
+  },
+
+  editCampana() {
+    document.getElementById('campana_summary').style.display = 'none';
+    document.getElementById('campana_edit').style.display = 'block';
+    document.getElementById('campana_edit_btn').style.display = 'none';
+  },
+
+  confirmCampana() {
+    document.getElementById('campana_edit').style.display = 'none';
+    document.getElementById('campana_summary').style.display = 'block';
+    document.getElementById('campana_edit_btn').style.display = '';
   },
 
   toggleDial() {
@@ -2758,6 +2909,18 @@ const app = {
 };
 
 window.onload = () => app.init();
+
+  // ── Loader dismiss
+  (function(){
+    function dismiss(){
+      const l=document.getElementById('ss-loader');
+      if(!l)return;
+      l.classList.add('fade-out');
+      setTimeout(()=>{if(l.parentNode)l.parentNode.removeChild(l);},520);
+    }
+    if(document.readyState==='complete'){setTimeout(dismiss,500);}
+    else{window.addEventListener('load',()=>setTimeout(dismiss,400));}
+  })();
 </script>
 </body>
 </html>
