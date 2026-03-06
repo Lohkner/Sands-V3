@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#07060a">
 <title>S&amp;S Companion</title>
-<link rel="icon" type="image/webp" href="Bind_Pact_Weapon.webp">
+<link rel="icon" type="image/webp" href="Bind_Pact_Weapon.webp"> 
 <link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">
 <style>html,body{background:#07060a!important;color:#d8cce8}
-/* ── LOADER ── */
 #ss-loader{position:fixed;inset:0;z-index:9999;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .5s ease;background-image:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(125,28,42,.18) 0%,transparent 70%)}
 #ss-loader.fade-out{opacity:0;pointer-events:none}
 .loader-title{font-family:var(--ft);font-size:clamp(1.3rem,6vw,2.2rem);color:var(--gold);letter-spacing:.12em;text-shadow:0 0 40px rgba(200,169,110,.5),0 2px 8px rgba(0,0,0,.9);text-align:center;line-height:1.3}
@@ -17,16 +16,21 @@
 @keyframes lorb{to{transform:rotate(360deg)}}
 .loader-star{font-size:2rem;animation:lpulse 2s ease-in-out infinite;color:var(--gold);text-shadow:0 0 20px rgba(200,169,110,.6)}
 @keyframes lpulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.05)}}
-
-/* ── LETALIDAD BUTTONS ── */
 .leth-btn{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:7px 4px;cursor:pointer;transition:all .18s;text-align:center;width:100%}
 .leth-btn.active{background:rgba(200,169,110,.08);border-color:var(--gold)}
 .leth-btn:hover{border-color:var(--border)}
-
-/* ── FONT SIZE BUTTONS ── */
 .fs-btn{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px 8px;cursor:pointer;color:var(--dim);font-family:var(--fd);transition:all .15s;line-height:1}
 .fs-btn.active{background:rgba(200,169,110,.12);border-color:var(--gold);color:var(--gold)}
 .fs-btn:hover{border-color:var(--border);color:var(--text)}
+.sc{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center}
+.sc-lbl{font-family:var(--fd);font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.sc-val{font-family:var(--fd);font-size:.92rem;font-weight:700}
+.mb4{margin-bottom:4px}.mb5{margin-bottom:5px}.mb6{margin-bottom:6px}.mb8{margin-bottom:8px}
+.mt4{margin-top:4px}.mt6{margin-top:6px}.mt8{margin-top:8px}
+.g3c{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.g3c-6{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.txt-it{color:var(--muted);font-size:.8rem;font-style:italic}
+.txt-it-c{color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:8px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,7 +100,7 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 /* ══ BOTTOM NAV ══ */
 .bnav{height:calc(var(--nav) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--deep);border-top:1px solid var(--rim);display:flex;flex-shrink:0;z-index:10}
 .nbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:none;cursor:pointer;color:var(--muted);transition:color .2s;padding:4px 2px;position:relative;font-family:var(--fd)}
-.nbtn.active{color:var(--gold)}.nbtn.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--gold);border-radius:0 0 2px 2px;box-shadow:var(--gg)}
+.nbtn.active{color:var(--gold)}.nbtn.active::before{content:'';position:absolute;top:0;left:15%;right:15%;height:2px;background:var(--gold);border-radius:0 0 3px 3px;box-shadow:var(--gg)}.nbtn:hover:not(.active){color:var(--dim)}
 .nico{font-size:1.05rem;line-height:1}.nlbl{font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
 /* ══ PANELS ══ */
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:10px 12px;box-shadow:var(--md),var(--si);min-width:0;width:100%}
@@ -162,7 +166,7 @@ input[type=radio]:checked::after{transform:scale(1)}
 .fbox.cl{cursor:pointer}.fbox.cl:hover{border-color:var(--gold);background:var(--panel);box-shadow:0 0 0 1px var(--glow-g)}.fbox.cl:active{transform:scale(.97)}
 .flbl{font-family:var(--fd);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:2px 4px 1px;border-bottom:1px solid var(--rim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .flbl.r{color:var(--blood)}.flbl.b{color:var(--ice)}.flbl.g{color:var(--gold)}.flbl.gr{color:var(--sage)}
-.fval{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:600;font-size:.95rem;color:var(--bright);padding:3px 4px}
+.fval{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:600;font-size:.95rem;color:var(--bright);padding:3px 4px;-webkit-user-select:none;user-select:none}
 .pvw{display:flex;align-items:center;gap:1px;font-family:var(--fd);font-weight:700;font-size:1.1rem}
 .pvw .sl{color:var(--blood);font-size:.8rem;margin:0 1px}.pvw .mv{color:var(--blood)}
 .rw{display:flex;align-items:center;gap:1px;font-family:var(--fm);font-weight:600;font-size:.88rem}
@@ -176,7 +180,7 @@ input[type=radio]:checked::after{transform:scale(1)}
 .atk-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .atk-nm{font-family:var(--fd);font-size:.78rem;color:var(--gold);font-weight:600}
 .atk-btns{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.abtn{border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fd);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:7px 8px;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:1px}
+.abtn{border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fd);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:7px 8px;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:1px;-webkit-user-select:none;user-select:none}.abtn:active{transform:scale(.95);opacity:.85}
 .abtn:active{transform:scale(.96)}
 .abtn-a{background:linear-gradient(135deg,var(--crimson),var(--blood));color:#fff;box-shadow:0 2px 8px rgba(125,28,42,.4)}.abtn-a:hover{box-shadow:var(--gb)}
 .abtn-d{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.35);color:var(--goldb)}.abtn-d:hover{background:rgba(200,169,110,.2);border-color:var(--gold)}
@@ -194,7 +198,7 @@ input[type=radio]:checked::after{transform:scale(1)}
 .stag:hover{border-color:var(--gold);color:var(--gold)}.stag.g1{border-color:var(--blood);color:var(--ember);background:rgba(125,28,42,.15)}
 /* ══ SAVES ══ */
 .saves-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px;border-top:1px solid var(--rim);padding-top:6px}
-.svsbox{text-align:center;padding:3px 2px;background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);font-family:var(--fm);font-weight:600;font-size:.9rem;cursor:pointer;transition:all .15s;color:var(--bright)}
+.svsbox{text-align:center;padding:3px 2px;background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);font-family:var(--fm);font-weight:600;font-size:.9rem;cursor:pointer;transition:all .15s;color:var(--bright);-webkit-user-select:none;user-select:none}.svsbox:active{transform:scale(.94);background:var(--panel)}
 .svsbox:hover{background:var(--panel);border-color:var(--border)}.svsbox.prof{color:var(--blood);border-color:rgba(176,48,64,.3)}
 .svslbl{font-size:.56rem;font-family:var(--fd);color:var(--muted);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:1px}
 /* ══ INVENTORY ══ */
@@ -353,6 +357,12 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 </style>
 </head>
 <body>
+<div id="ss-loader" aria-hidden="true">
+  <div class="loader-star">✦</div>
+  <div class="loader-title">Stars &amp; Sorcery</div>
+  <div class="loader-sub">Companion</div>
+  <div class="loader-orb"></div>
+</div>
 <div id="toast-ct"></div>
 <div id="dice-overlay">
   <div class="dice-backdrop" id="dice-backdrop" onclick="app.closeDiceOverlay()"></div>
@@ -484,7 +494,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           <div class="panel" style="padding:8px">
             <div class="ph" style="margin-bottom:7px"><span class="pt">Estado</span></div>
             <!-- Reservas principales -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:5px">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px" class="mb5">
               <div style="background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35);border-radius:var(--r);padding:5px 4px;text-align:center">
                 <div style="font-family:var(--fd);font-size:.5rem;color:var(--blood);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Puntos de Vida</div>
                 <div style="display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--fd);font-weight:700;font-size:1.05rem;color:var(--blood)"><input type="number" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:3ch"><span style="color:rgba(176,48,64,.6);font-size:.8rem;margin:0 1px">/</span><span id="max_pv" style="color:var(--blood)">0</span></div>
@@ -499,33 +509,33 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
               </div>
             </div>
             <!-- Stats secundarios row 1 -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px">
-              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">CA</div>
+            <div class="g3c mb4">
+              <div class="sc">
+                <div class="sc-lbl" style="color:var(--gold)">CA</div>
                 <div style="font-family:var(--fd);font-size:.95rem;color:var(--gold);font-weight:700"><span id="res_ca">10</span></div>
                 <div style="font-family:var(--fm);font-size:.42rem;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="res_ca_armor">—</div>
               </div>
               <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center;cursor:pointer" onclick="app.rollCheck('Iniciativa',parseInt(document.getElementById('res_ini').innerText))">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Ini</div>
+                <div class="sc-lbl" style="color:var(--muted)">Ini</div>
                 <div style="font-family:var(--fd);font-size:.95rem;color:var(--bright);font-weight:700"><span id="res_ini">+0</span></div>
               </div>
-              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Vel</div>
+              <div class="sc">
+                <div class="sc-lbl" style="color:var(--muted)">Vel</div>
                 <div style="font-family:var(--fm);font-size:.82rem;color:var(--bright);font-weight:600"><span id="res_vel">30 pies</span></div>
               </div>
             </div>
             <!-- Stats secundarios row 2 -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:5px">
-              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Carne</div>
+            <div class="g3c mb5">
+              <div class="sc">
+                <div class="sc-lbl" style="color:var(--muted)">Carne</div>
                 <div style="font-family:var(--fm);font-size:.92rem;color:var(--bright);font-weight:600"><span id="res_carne">0</span></div>
               </div>
-              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Comp</div>
+              <div class="sc">
+                <div class="sc-lbl" style="color:var(--gold)">Comp</div>
                 <div style="font-family:var(--fd);font-size:.92rem;color:var(--gold);font-weight:700"><span id="res_prof">+2</span></div>
               </div>
-              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Filo</div>
+              <div class="sc">
+                <div class="sc-lbl" style="color:var(--muted)">Filo</div>
                 <div style="font-family:var(--fd);font-size:.82rem;color:var(--bright);font-weight:600"><span id="res_filo_val">—</span></div>
               </div>
             </div>
@@ -739,17 +749,14 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
               <span class="pt">Configuración de Campaña</span>
             </div>
             <!-- Summary view -->
-            <div id="campana_summary" style="padding:4px 0">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                <span style="font-family:var(--fd);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Letalidad</span>
-                <span id="campana_leth_label" style="font-family:var(--fd);font-size:.78rem;color:var(--gold);font-weight:600">Letalidad 1 — +1 PV/nivel</span>
-              </div>
+            <div id="campana_summary" style="padding:4px 0;text-align:center">
+              <div id="campana_leth_label" style="font-family:var(--fd);font-size:.78rem;color:var(--gold);font-weight:600;margin-bottom:6px">Letalidad 1 — +1 PV/nivel</div>
               <button class="bedit" id="campana_edit_btn" onclick="app.editCampana()">✏ Editar</button>
             </div>
             <!-- Edit view -->
             <div id="campana_edit" style="display:none;margin-top:6px">
               <span class="fl">Nivel de Letalidad</span>
-              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px">
+              <div class="g3c-6 mt4">
                 <button class="leth-btn active" id="leth_1" onclick="app.setLethality(1)">
                   <div style="font-family:var(--fd);font-size:.65rem;color:var(--sage);font-weight:600">Letalidad 1</div>
                   <div style="font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px">+1 PV/nivel</div>
@@ -769,7 +776,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           </div>
           <div class="panel"><div class="ph"><span class="pt" id="detail_desc_title">Linaje: —</span></div><div id="detail_desc_body"><p style="color:var(--muted);font-size:.8rem;font-style:italic">Selecciona un Linaje.</p></div></div>
           <div class="panel"><div class="ph"><span class="pt" id="detail_arq_title">Arquetipo: —</span></div><div id="detail_arq_body"><p style="color:var(--muted);font-size:.8rem;font-style:italic">Selecciona un Arquetipo.</p></div></div>
-          <div class="panel"><div class="ph"><span class="pt">Talentos Activos</span></div><div id="detail_talents_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:8px">Sin talentos.</p></div></div>
+          <div class="panel"><div class="ph"><span class="pt">Talentos Activos</span></div><div id="detail_talents_list"><p class="txt-it-c">Sin talentos.</p></div></div>
         </div><!-- /page 4 -->
 
       </div><!-- /pages-track -->
@@ -1663,11 +1670,13 @@ const app = {
   /* ── CALC ── */
   calc() {
     const STATS = ['FUE','DES','CON','INT','SAB','CAR'];
+    // Cache DOM refs used multiple times in this call
+    const $  = id => document.getElementById(id);
     const raw = {};
-    STATS.forEach(s => raw[s] = parseInt(document.getElementById('base_'+s)?.value)||8);
+    STATS.forEach(s => raw[s] = parseInt($('base_'+s)?.value)||8);
 
     // Descriptor mods
-    const descKey = document.getElementById('sel_desc').value;
+    const descKey = $('sel_desc').value;
     const desc = this.DB.descriptors?.[descKey];
     const final = {...raw};
     if (desc?.mods) Object.entries(desc.mods).forEach(([k,v]) => final[k]=(final[k]||0)+v);
@@ -1676,9 +1685,9 @@ const app = {
     STATS.forEach(s => mods[s] = this.getMod(final[s]));
 
     // Archetype
-    const arqKey = document.getElementById('sel_arq').value;
+    const arqKey = $('sel_arq').value;
     const arq = this.DB.archetypes?.[arqKey];
-    const lvl = parseInt(document.getElementById('char_lvl')?.value)||1;
+    const lvl = parseInt($('char_lvl')?.value)||1;
     const prof = lvl >= 9 ? 5 : lvl >= 7 ? 4 : lvl >= 5 ? 3 : 2;
 
     // Resources — fórmulas según tabla de Arquetipos (Cap.II Paso 3)
@@ -1699,37 +1708,37 @@ const app = {
     const hasTalent = (id) => !!document.querySelector(`input[name="chk_talents_hidden"][data-id="${id}"]`);
     if (hasTalent('despertar')) maxIng += 6;
 
-    document.getElementById('max_pv').innerText = maxPv;
-    document.getElementById('max_adr').innerText = Math.max(0, maxAdr);
-    document.getElementById('max_ing').innerText = Math.max(0, maxIng);
-    document.getElementById('res_prof').innerText = '+'+prof;
+    $('max_pv').innerText = maxPv;
+    $('max_adr').innerText = Math.max(0, maxAdr);
+    $('max_ing').innerText = Math.max(0, maxIng);
+    $('res_prof').innerText = '+'+prof;
 
     // Filo
-    const filoVal = document.getElementById('sel_filo').value;
-    document.getElementById('res_filo_val').innerText = filoVal || '—';
+    const filoVal = $('sel_filo').value;
+    $('res_filo_val').innerText = filoVal || '—';
 
     // Iniciativa
     let ini = mods.DES;
     if (hasTalent('alerta')) ini += 5;
-    document.getElementById('res_ini').innerText = (ini>=0?'+':'')+ini;
+    $('res_ini').innerText = (ini>=0?'+':'')+ini;
 
     // Velocidad
     const spd = arq?.speed || 30;
-    document.getElementById('res_vel').innerText = spd+' pies';
+    $('res_vel').innerText = spd+' pies';
 
     // Flesh/Carne = puntuación de CON (el número, no el modificador)
-    const conScore = parseInt(document.getElementById('base_CON')?.value)||8;
+    const conScore = parseInt($('base_CON')?.value)||8;
     const carneVal = conScore + (desc?.mods?.CON||0);
-    document.getElementById('res_carne').innerText = carneVal;
+    $('res_carne').innerText = carneVal;
 
     // CA
-    const armorUID = document.getElementById('sel_armor').value;
-    const shieldUID = document.getElementById('sel_shield').value;
-    const magicBonus  = parseInt(document.getElementById('sel_magic_bonus')?.value)||0;
-    const otherBonus  = parseInt(document.getElementById('sel_ca_other')?.value)||0;
-    const caMod1Key   = document.getElementById('ca_mod1')?.value || 'DES';
-    const caMod2Key   = document.getElementById('ca_mod2')?.value || 'NONE';
-    const caMod3Key   = document.getElementById('ca_mod3')?.value || 'NONE';
+    const armorUID = $('sel_armor').value;
+    const shieldUID = $('sel_shield').value;
+    const magicBonus  = parseInt($('sel_magic_bonus')?.value)||0;
+    const otherBonus  = parseInt($('sel_ca_other')?.value)||0;
+    const caMod1Key   = $('ca_mod1')?.value || 'DES';
+    const caMod2Key   = $('ca_mod2')?.value || 'NONE';
+    const caMod3Key   = $('ca_mod3')?.value || 'NONE';
     let armorItem = this._getInventoryItem(armorUID);
     let armorData = armorItem ? (armorItem.dbData || this.DB.armors?.[armorItem.dbKey]) : this.DB.armors?.[armorUID];
     const shieldItem = this._getInventoryItem(shieldUID);
@@ -1760,19 +1769,19 @@ const app = {
     if (hasTalent('def_nat') && (armorType === 'none')) {
       caFinal = Math.max(caFinal, 10 + (mods.DES||0) + (mods.CON||0));
     }
-    document.getElementById('res_ca').innerText = caFinal;
-    document.getElementById('armor_base_val').innerText = caBase;
-    document.getElementById('sum_ac').innerText = caFinal;
-    const caArmorEl = document.getElementById('res_ca_armor');
+    $('res_ca').innerText = caFinal;
+    $('armor_base_val').innerText = caBase;
+    $('sum_ac').innerText = caFinal;
+    const caArmorEl = $('res_ca_armor');
     if (caArmorEl) caArmorEl.innerText = armorData?.name || 'Sin armadura';
 
     // Armor desc
-    const adesc = document.getElementById('armor_desc');
+    const adesc = $('armor_desc');
     if (adesc) adesc.innerText = armorData ? `${armorData.name} · CA ${caBase} · ${({none:'Sin restricción',light:'Ligera',medium:'Media',heavy:'Pesada'}[armorType]||armorType)}` : '';
 
     // Weapons
-    this._calcWeapon('w1', document.getElementById('sel_weapon').value, document.getElementById('w1_attr').value, document.getElementById('w1_dmg_attr')?.value||'FUE', mods, prof, arq);
-    this._calcWeapon('w2', document.getElementById('sel_weapon_sec').value, document.getElementById('w2_attr').value, document.getElementById('w2_dmg_attr')?.value||'FUE', mods, prof, arq);
+    this._calcWeapon('w1', $('sel_weapon').value, $('w1_attr').value, $('w1_dmg_attr')?.value||'FUE', mods, prof, arq);
+    this._calcWeapon('w2', $('sel_weapon_sec').value, $('w2_attr').value, $('w2_dmg_attr')?.value||'FUE', mods, prof, arq);
 
     // Attack panel (page 0) sync
     ['1','2'].forEach(n => {
@@ -1790,14 +1799,14 @@ const app = {
 
     // Encumbrance
     const inv = this.calcInventory();
-    document.getElementById('res_carga').innerText = `${inv.current}/${inv.max}`;
+    $('res_carga').innerText = `${inv.current}/${inv.max}`;
     const pct = inv.max > 0 ? Math.min(100, (inv.current/inv.max)*100) : 0;
-    document.getElementById('carga_bar').style.width = pct+'%';
-    document.getElementById('carga_bar').style.background = pct > 100 ? 'var(--blood)' : '';
-    const warn = document.getElementById('carga_warn');
+    $('carga_bar').style.width = pct+'%';
+    $('carga_bar').style.background = pct > 100 ? 'var(--blood)' : '';
+    const warn = $('carga_warn');
     warn.style.display = inv.current > inv.max ? 'block' : 'none';
-    if (document.getElementById('load_summary_display'))
-      document.getElementById('load_summary_display').innerText = `${inv.current}/${inv.max}`;
+    if ($('load_summary_display'))
+      $('load_summary_display').innerText = `${inv.current}/${inv.max}`;
 
     // Saves display (live)
     this._buildSavesSummary();
@@ -1806,6 +1815,7 @@ const app = {
   },
 
   _calcWeapon(wid, uid, attr, dmgAttr, mods, prof, arq) {
+    const $ = id => document.getElementById(id);
     const n = wid === 'w1' ? 1 : 2;
     const weapon = this._getInventoryItem(uid);
     const wData = weapon ? (weapon.dbData || this.DB.weapons?.[weapon.dbKey]) : this.DB.weapons?.[uid];
@@ -1842,8 +1852,8 @@ const app = {
 
     // Requirements
     let alert = '';
-    if (wData.req_FUE > 0 && (parseInt(document.getElementById('base_FUE')?.value)||8) < wData.req_FUE) alert = `⚠ Requiere FUE ${wData.req_FUE}`;
-    if (wData.req_DES > 0 && (parseInt(document.getElementById('base_DES')?.value)||8) < wData.req_DES) alert += `${alert?' · ':''}⚠ Requiere DES ${wData.req_DES}`;
+    if (wData.req_FUE > 0 && (parseInt($('base_FUE')?.value)||8) < wData.req_FUE) alert = `⚠ Requiere FUE ${wData.req_FUE}`;
+    if (wData.req_DES > 0 && (parseInt($('base_DES')?.value)||8) < wData.req_DES) alert += `${alert?' · ':''}⚠ Requiere DES ${wData.req_DES}`;
     if (alertEl) alertEl.innerText = alert;
   },
 
@@ -2279,7 +2289,7 @@ const app = {
     // Talents
     const tl = document.getElementById('detail_talents_list');
     const talents = Array.from(document.querySelectorAll('input[name="chk_talents_hidden"]'));
-    if (!talents.length) { tl.innerHTML='<p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:8px">Sin talentos.</p>'; return; }
+    if (!talents.length) { tl.innerHTML='<p class="txt-it-c">Sin talentos.</p>'; return; }
     tl.innerHTML = '';
     talents.forEach(h => {
       let grades = [];
@@ -2307,8 +2317,8 @@ const app = {
         card.onclick = () => card.classList.toggle('open');
         target.appendChild(card);
       });
-      if (!powers.children.length) powers.innerHTML='<p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:8px">Sin poderes.</p>';
-      if (!spells.children.length) spells.innerHTML='<p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:8px">Sin conjuros.</p>';
+      if (!powers.children.length) powers.innerHTML='<p class="txt-it-c">Sin poderes.</p>';
+      if (!spells.children.length) spells.innerHTML='<p class="txt-it-c">Sin conjuros.</p>';
     }
   },
 
@@ -2926,4 +2936,3 @@ window.onload = () => app.init();
 </script>
 </body>
 </html>
-
