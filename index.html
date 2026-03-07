@@ -171,7 +171,7 @@ input[type=radio]:checked::after{transform:scale(1)}
 .pvw .sl{color:var(--blood);font-size:.8rem;margin:0 1px}.pvw .mv{color:var(--blood)}
 .rw{display:flex;align-items:center;gap:1px;font-family:var(--fm);font-weight:600;font-size:.88rem}
 .rr,.rr input,.rr .sl,.rr .mv{color:var(--blood)!important}.rb,.rb input,.rb .sl,.rb .mv{color:var(--ice)!important}.rg,.rg input,.rg .sl,.rg .mv{color:var(--sage)!important}
-.fin{border:none!important;background:transparent!important;text-align:right;font-family:inherit;font-size:inherit;font-weight:inherit;color:inherit;padding:0;width:3ch;box-shadow:none!important}
+.fin{border:none!important;background:transparent!important;text-align:center;font-family:inherit;font-size:inherit;font-weight:inherit;color:inherit;padding:0;box-shadow:none!important}
 .fin:focus{outline:none;background:rgba(255,255,255,.07)!important;border-radius:2px!important}
 .lbar{height:3px;background:var(--rim);border-radius:2px;overflow:hidden;margin-top:3px}
 .lfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--goldb));width:0%;transition:width .4s ease}
@@ -497,15 +497,15 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px" class="mb5">
               <div style="background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35);border-radius:var(--r);padding:5px 4px;text-align:center">
                 <div style="font-family:var(--fd);font-size:.5rem;color:var(--blood);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Puntos de Vida</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--fd);font-weight:700;font-size:1.05rem;color:var(--blood)"><input type="number" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:3ch"><span style="color:rgba(176,48,64,.6);font-size:.8rem;margin:0 1px">/</span><span id="max_pv" style="color:var(--blood)">0</span></div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fd);font-weight:700;font-size:1rem;color:var(--blood)"><input type="text" inputmode="numeric" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(176,48,64,.6);font-size:.8rem">/</span><span id="max_pv" style="color:var(--blood)">0</span></div>
               </div>
               <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:5px 4px;text-align:center">
                 <div style="font-family:var(--fd);font-size:.5rem;color:var(--sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Adrenalina</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--sage)"><input type="number" id="cur_adr" value="0" class="fin" style="color:var(--bright);width:3ch"><span style="color:rgba(76,175,125,.5);font-size:.8rem;margin:0 1px">/</span><span id="max_adr" style="color:var(--sage)">0</span></div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--sage)"><input type="text" inputmode="numeric" id="cur_adr" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(76,175,125,.5);font-size:.8rem">/</span><span id="max_adr" style="color:var(--sage)">0</span></div>
               </div>
               <div style="background:rgba(74,158,202,.08);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:5px 4px;text-align:center">
                 <div style="font-family:var(--fd);font-size:.5rem;color:var(--ice);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Ingenio</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--ice)"><input type="number" id="cur_ing" value="0" class="fin" style="color:var(--bright);width:3ch"><span style="color:rgba(74,158,202,.5);font-size:.8rem;margin:0 1px">/</span><span id="max_ing" style="color:var(--ice)">0</span></div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--ice)"><input type="text" inputmode="numeric" id="cur_ing" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(74,158,202,.5);font-size:.8rem">/</span><span id="max_ing" style="color:var(--ice)">0</span></div>
               </div>
             </div>
             <!-- Stats secundarios row 1 -->
@@ -528,7 +528,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             <div class="g3c mb5">
               <div class="sc">
                 <div class="sc-lbl" style="color:var(--muted)">Carne</div>
-                <div style="font-family:var(--fm);font-size:.92rem;color:var(--bright);font-weight:600"><span id="res_carne">0</span></div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fm);font-weight:600;font-size:.92rem;color:var(--bright)"><input type="text" inputmode="numeric" id="cur_carne" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(255,255,255,.3);font-size:.8rem">/</span><span id="res_carne">0</span></div>
               </div>
               <div class="sc">
                 <div class="sc-lbl" style="color:var(--gold)">Comp</div>
@@ -2714,7 +2714,7 @@ const app = {
     ['base_FUE','base_DES','base_CON','base_INT','base_SAB','base_CAR'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=8});
     ['char_name','char_concept','char_notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     ['char_lvl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=1});
-    ['char_xp','cur_pv','cur_adr','cur_ing'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0});
+    ['char_xp','cur_pv','cur_adr','cur_ing','cur_carne'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0});
     this.inventory=[]; this.gold=0; this.alignment='';
     document.querySelectorAll('.aopt').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(c=>c.checked=false);
@@ -2910,6 +2910,7 @@ const app = {
     const pv=document.getElementById('max_pv'); const cpv=document.getElementById('cur_pv'); if(pv&&cpv)cpv.value=pv.innerText;
     const adr=document.getElementById('max_adr'); const cadr=document.getElementById('cur_adr'); if(adr&&cadr)cadr.value=adr.innerText;
     const ing=document.getElementById('max_ing'); const cing=document.getElementById('cur_ing'); if(ing&&cing)cing.value=ing.innerText;
+    const carne=document.getElementById('res_carne'); const ccarne=document.getElementById('cur_carne'); if(carne&&ccarne)ccarne.value=carne.innerText;
     this.renderInventory();
 
     // 14. Cerrar TODAS las secciones en modo resumen
