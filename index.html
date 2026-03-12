@@ -23,7 +23,7 @@
 .fs-btn.active{background:rgba(200,169,110,.12);border-color:var(--gold);color:var(--gold)}
 .fs-btn:hover{border-color:var(--border);color:var(--text)}
 .sc{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center}
-.sc-lbl{font-family:var(--fd);font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.sc-lbl{font-family:var(--fd);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;font-weight:600;opacity:.92}
 .sc-val{font-family:var(--fd);font-size:.92rem;font-weight:700}
 .mb4{margin-bottom:4px}.mb5{margin-bottom:5px}.mb6{margin-bottom:6px}.mb8{margin-bottom:8px}
 .mt4{margin-top:4px}.mt6{margin-top:6px}.mt8{margin-top:8px}
@@ -523,7 +523,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 
           <!-- Identidad & Origen -->
           <div class="panel">
-            <div class="ph"><span class="snum">II</span><span class="pt">Identidad &amp; Origen</span></div>
+            <div class="ph"><span class="pt">Identidad &amp; Origen</span></div>
             <div id="identity_edit_view">
               <div class="g2">
                 <div><span class="fl">Linaje (Raza)</span><select id="sel_desc" onchange="app.updateOptions()"></select><div id="desc_info" class="infobox"></div></div>
@@ -548,7 +548,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             <!-- Reservas principales -->
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px" class="mb5">
               <div style="background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35);border-radius:var(--r);padding:4px 3px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--blood);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">PV</div>
+                <div style="font-family:var(--fd);font-size:.62rem;color:var(--blood);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-weight:700;opacity:.95">PV</div>
                 <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fd);font-weight:700;font-size:1rem;color:var(--blood)">
                   <button class="res-btn res-btn-pv" onclick="app.adjustRes('cur_pv','max_pv',-1)">−</button>
                   <input type="text" inputmode="numeric" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
@@ -557,7 +557,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
                 <div style="font-family:var(--fm);font-size:.58rem;color:rgba(176,48,64,.7);margin-top:1px">/ <span id="max_pv">0</span></div>
               </div>
               <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:4px 3px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Adr</div>
+                <div style="font-family:var(--fd);font-size:.62rem;color:var(--sage);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-weight:700;opacity:.95">Adrenalina</div>
                 <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--sage)">
                   <button class="res-btn res-btn-adr" onclick="app.adjustRes('cur_adr','max_adr',-1)">−</button>
                   <input type="text" inputmode="numeric" id="cur_adr" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
@@ -566,7 +566,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
                 <div style="font-family:var(--fm);font-size:.58rem;color:rgba(76,175,125,.6);margin-top:1px">/ <span id="max_adr">0</span></div>
               </div>
               <div style="background:rgba(74,158,202,.08);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:4px 3px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.48rem;color:var(--ice);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Ing</div>
+                <div style="font-family:var(--fd);font-size:.62rem;color:var(--ice);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-weight:700;opacity:.95">Ingenio</div>
                 <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--ice)">
                   <button class="res-btn res-btn-ing" onclick="app.adjustRes('cur_ing','max_ing',-1)">−</button>
                   <input type="text" inputmode="numeric" id="cur_ing" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
@@ -1415,6 +1415,7 @@ const app = {
       const lvl = data.inputs?.char_lvl || '1';
       const arq = data.selects?.sel_arq ? (this.DB.archetypes?.[data.selects.sel_arq]?.name || data.selects.sel_arq) : '—';
       const desc = data.selects?.sel_desc ? (this.DB.descriptors?.[data.selects.sel_desc]?.name || '') : '';
+      const bg   = data.selects?.sel_bg   ? (this.DB.backgrounds?.[data.selects.sel_bg]?.name   || '') : '';
       const hasPortrait = data.portrait && data.portrait !== DEFAULT_PORTRAIT && !data.portrait.includes('fill=');
       const portHtml = hasPortrait
         ? `<img class="char-port" src="${data.portrait}" alt="">`
@@ -1434,7 +1435,7 @@ const app = {
         ${portHtml}
         <div class="char-ci">
           <div class="char-cn">${name}</div>
-          <div class="char-cs">${arq}${desc ? ' · '+desc : ''}</div>
+          <div class="char-cs">${desc||'—'} · ${arq}${bg ? ' · '+bg : ''}</div>
           <div style="margin-top:3px"><span class="char-lvl-badge">Nivel ${lvl}</span></div>
         </div>`;
       card.onclick = () => { if (!card._swiped) this.loadCharToApp(name); };
