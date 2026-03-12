@@ -209,7 +209,7 @@ input[type=radio]:checked::after{transform:scale(1)}
 .svsbox:hover{background:var(--panel);border-color:var(--border)}.svsbox.prof{color:var(--blood);border-color:rgba(176,48,64,.3)}
 .svslbl{font-size:.56rem;font-family:var(--fd);color:var(--muted);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:1px}
 /* ══ INVENTORY ══ */
-.iitem{display:grid;grid-template-columns:60px minmax(0,1fr) 36px 20px 20px;gap:3px;align-items:center;background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:3px 5px;min-width:0}
+.iitem{display:grid;grid-template-columns:60px minmax(0,1fr) 36px 18px 18px 18px 18px;gap:2px;align-items:center;background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:3px 5px;min-width:0}
 .iitem:hover{border-color:var(--border)}
 .ityp{background:transparent;border:none;font-family:var(--fm);font-size:.57rem;color:var(--gold);cursor:pointer;appearance:none;text-transform:uppercase;letter-spacing:.05em;padding:0}
 .inm{background:transparent;border:none;border-bottom:1px dotted var(--rim);font-size:.82rem;color:var(--text);padding:1px 3px}
@@ -350,6 +350,21 @@ details>summary:hover{color:var(--dim)}details>summary::-webkit-details-marker{d
 details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transition:transform .2s}details[open]>summary::before{content:'▾'}
 /* ══ RESPONSIVE ══ */
 .char-lvl-badge{display:inline-block;font-family:var(--fm);font-size:.58rem;color:var(--muted);background:var(--raised);border:1px solid var(--rim);border-radius:10px;padding:1px 6px;letter-spacing:.06em}
+/* ══ RESOURCE CONTROLS ══ */
+.res-btn-carne{border-color:rgba(160,104,58,.55);color:#a0683a}.res-btn-carne:hover{background:rgba(160,104,58,.22);border-color:#a0683a}
+.res-btn{width:22px;height:22px;border-radius:50%;border:1px solid;background:transparent;cursor:pointer;font-size:.95rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;line-height:1;padding:0;-webkit-user-select:none;user-select:none}
+.res-btn:active{transform:scale(.85)}
+.res-btn-pv{border-color:rgba(176,48,64,.45);color:var(--blood)}.res-btn-pv:hover{background:rgba(176,48,64,.2);border-color:var(--blood)}
+.res-btn-adr{border-color:rgba(76,175,125,.45);color:var(--sage)}.res-btn-adr:hover{background:rgba(76,175,125,.2);border-color:var(--sage)}
+.res-btn-ing{border-color:rgba(74,158,202,.45);color:var(--ice)}.res-btn-ing:hover{background:rgba(74,158,202,.2);border-color:var(--ice)}
+/* ══ LAST SAVED ══ */
+.last-saved{font-family:var(--fm);font-size:.52rem;color:var(--border);letter-spacing:.04em;transition:color .5s;text-align:center;margin-top:1px}
+.last-saved.fresh{color:var(--sage)!important}
+/* ══ TALENT CATEGORY DOTS ══ */
+.cat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sage);margin-left:6px;vertical-align:middle;flex-shrink:0;box-shadow:0 0 4px rgba(76,175,125,.6)}
+/* ══ APT EMPTY STATE ══ */
+.apt-empty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px;text-align:center}
+.apt-empty p{color:var(--muted);font-size:.8rem;font-style:italic;line-height:1.5}
 @media(max-width:480px){
   .g6{grid-template-columns:repeat(3,1fr)}
   .tml{grid-template-columns:1fr;grid-template-rows:auto 1fr}
@@ -386,9 +401,34 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
     </div>
     <span class="dice-badge" id="dice-badge" style="display:none"></span>
     <button class="dice-close-btn" id="dice-close-btn" onclick="app.closeDiceOverlay()">✕ Cerrar</button>
+    <div style="font-family:var(--fm);font-size:.5rem;color:var(--border);letter-spacing:.08em;margin-top:2px">↓ desliza para cerrar</div>
   </div>
 </div>
 <input type="file" id="img_input" accept="image/*" style="display:none" onchange="app.startCrop(this)">
+
+<!-- ══ APTITUDE MANAGER MODAL ══ -->
+<dialog id="apt_manager_modal" class="modal" style="max-width:min(960px,96vw);height:min(85dvh,90svh)">
+  <div class="mhd">
+    <span class="mttl" id="apt_manager_title">Gestor de Trucos</span>
+    <button class="bcls" onclick="app.closeAptManager()">✕</button>
+  </div>
+  <div class="mbd tml" style="padding:0">
+    <!-- Left: all available -->
+    <div class="tms" style="min-width:0;flex:1;overflow-y:auto;background:var(--void);padding:10px;display:flex;flex-direction:column;gap:4px">
+      <div style="font-family:var(--fd);font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--rim)">Disponibles</div>
+      <div id="apt_available_list" style="display:flex;flex-direction:column;gap:4px"></div>
+    </div>
+    <!-- Right: selected -->
+    <div class="tms" style="min-width:0;flex:1;overflow-y:auto;background:var(--surface);padding:10px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--border)">
+      <div style="font-family:var(--fd);font-size:.6rem;color:var(--ice);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--rim)">Seleccionados <span id="apt_sel_count" style="color:var(--ice);font-weight:700">0</span></div>
+      <div id="apt_selected_list" style="display:flex;flex-direction:column;gap:4px"></div>
+      <p id="apt_selected_empty" class="txt-it-c" style="display:none">Ninguno seleccionado.<br>Toca un truco/conjuro para añadirlo.</p>
+    </div>
+  </div>
+  <div class="tmft" style="justify-content:flex-end">
+    <button class="btn btn-gold" onclick="app.closeAptManager()">✓ Listo</button>
+  </div>
+</dialog>
 <input type="file" id="json_char_input" accept=".json" style="display:none" onchange="app.loadJSON(this)">
 <input type="file" id="json_rules_input" accept=".json" style="display:none" onchange="app.loadRulesFile(this)">
 
@@ -419,7 +459,10 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
   <div class="app-shell">
     <header class="app-hdr">
       <button class="app-hdr-back" onclick="app.goHome()" title="Volver">←</button>
-      <span class="app-hdr-ttl">Stars &amp; Sorcery</span>
+      <div style="flex:1;text-align:center;min-width:0">
+        <span class="app-hdr-ttl">Stars &amp; Sorcery</span>
+        <div class="last-saved" id="last_saved_lbl"></div>
+      </div>
       <button class="app-hdr-save" onclick="app.saveChar()">💾 Guardar</button>
       <div class="sdial" id="sdial">
         <button class="sdial-btn" onclick="app.toggleDial()" title="Acciones">⚙</button>
@@ -504,17 +547,32 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             <div class="ph" style="margin-bottom:7px"><span class="pt">Estado</span></div>
             <!-- Reservas principales -->
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px" class="mb5">
-              <div style="background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35);border-radius:var(--r);padding:5px 4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.5rem;color:var(--blood);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Puntos de Vida</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fd);font-weight:700;font-size:1rem;color:var(--blood)"><input type="text" inputmode="numeric" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(176,48,64,.6);font-size:.8rem">/</span><span id="max_pv" style="color:var(--blood)">0</span></div>
+              <div style="background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35);border-radius:var(--r);padding:4px 3px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--blood);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">PV</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fd);font-weight:700;font-size:1rem;color:var(--blood)">
+                  <button class="res-btn res-btn-pv" onclick="app.adjustRes('cur_pv','max_pv',-1)">−</button>
+                  <input type="text" inputmode="numeric" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
+                  <button class="res-btn res-btn-pv" onclick="app.adjustRes('cur_pv','max_pv',1)">+</button>
+                </div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(176,48,64,.7);margin-top:1px">/ <span id="max_pv">0</span></div>
               </div>
-              <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:5px 4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.5rem;color:var(--sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Adrenalina</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--sage)"><input type="text" inputmode="numeric" id="cur_adr" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(76,175,125,.5);font-size:.8rem">/</span><span id="max_adr" style="color:var(--sage)">0</span></div>
+              <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:4px 3px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--sage);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Adr</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--sage)">
+                  <button class="res-btn res-btn-adr" onclick="app.adjustRes('cur_adr','max_adr',-1)">−</button>
+                  <input type="text" inputmode="numeric" id="cur_adr" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
+                  <button class="res-btn res-btn-adr" onclick="app.adjustRes('cur_adr','max_adr',1)">+</button>
+                </div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(76,175,125,.6);margin-top:1px">/ <span id="max_adr">0</span></div>
               </div>
-              <div style="background:rgba(74,158,202,.08);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:5px 4px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.5rem;color:var(--ice);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Ingenio</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--ice)"><input type="text" inputmode="numeric" id="cur_ing" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(74,158,202,.5);font-size:.8rem">/</span><span id="max_ing" style="color:var(--ice)">0</span></div>
+              <div style="background:rgba(74,158,202,.08);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:4px 3px;text-align:center">
+                <div style="font-family:var(--fd);font-size:.48rem;color:var(--ice);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Ing</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--ice)">
+                  <button class="res-btn res-btn-ing" onclick="app.adjustRes('cur_ing','max_ing',-1)">−</button>
+                  <input type="text" inputmode="numeric" id="cur_ing" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
+                  <button class="res-btn res-btn-ing" onclick="app.adjustRes('cur_ing','max_ing',1)">+</button>
+                </div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(74,158,202,.6);margin-top:1px">/ <span id="max_ing">0</span></div>
               </div>
             </div>
             <!-- Stats secundarios row 1 -->
@@ -535,9 +593,14 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             </div>
             <!-- Stats secundarios row 2 -->
             <div class="g3c mb5">
-              <div class="sc">
-                <div class="sc-lbl" style="color:var(--muted)">Carne</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--fm);font-weight:600;font-size:.92rem;color:var(--bright)"><input type="text" inputmode="numeric" id="cur_carne" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center"><span style="color:rgba(255,255,255,.3);font-size:.8rem">/</span><span id="res_carne">0</span></div>
+              <div class="sc" style="padding:4px 3px">
+                <div class="sc-lbl" style="color:#a0683a">Carne</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fm);font-weight:600;font-size:.92rem;">
+                  <button class="res-btn res-btn-carne" onclick="app.adjustRes('cur_carne','res_carne',-1)">−</button>
+                  <input type="text" inputmode="numeric" id="cur_carne" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
+                  <button class="res-btn res-btn-carne" onclick="app.adjustRes('cur_carne','res_carne',1)">+</button>
+                </div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(160,104,58,.8);margin-top:1px">/ <span id="res_carne">0</span></div>
               </div>
               <div class="sc">
                 <div class="sc-lbl" style="color:var(--gold)">Comp</div>
@@ -657,26 +720,36 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 
         <!-- ══ P2: APTITUDES ══ -->
         <div class="page" id="page_2">
+          <!-- Trucos panel -->
           <div class="panel">
-            <div class="ph"><span class="pt">Trucos</span></div>
-            <div id="tricks_edit_view">
-              <div id="tricks_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:12px">Sin trucos. Añádelos en el Editor de Reglas.</p></div>
-              <div style="text-align:center;margin-top:8px"><button class="bcnf" style="width:auto;padding:7px 28px" onclick="app.confirmAptSection('tricks')">✓ Confirmar</button></div>
+            <div class="ph">
+              <span class="pt">Trucos</span>
+              <div style="display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.66rem;color:var(--muted);margin-left:auto;background:var(--raised);border:1px solid var(--rim);border-radius:20px;padding:2px 9px">
+                <span id="tricks_count" style="color:var(--ice);font-weight:700">0</span>
+              </div>
             </div>
-            <div id="tricks_summary_view" style="display:none">
-              <div id="tricks_summary_list"></div>
-              <div style="text-align:center;margin-top:6px"><button class="bedit" onclick="app.editAptSection('tricks')">✏ Editar</button></div>
+            <!-- Summary (default) -->
+            <div id="tricks_summary_view">
+              <div id="tricks_summary_list"><p class="txt-it-c">Sin trucos seleccionados.</p></div>
+              <div style="text-align:center;margin-top:8px">
+                <button class="btn btn-g" style="font-size:.7rem" onclick="app.openAptManager('tricks')">✎ Gestionar Trucos</button>
+              </div>
             </div>
           </div>
+          <!-- Conjuros panel -->
           <div class="panel">
-            <div class="ph"><span class="pt">Conjuros</span></div>
-            <div id="spells_edit_view">
-              <div id="spells_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:12px">Sin conjuros. Añádelos en el Editor de Reglas.</p></div>
-              <div style="text-align:center;margin-top:8px"><button class="bcnf" style="width:auto;padding:7px 28px" onclick="app.confirmAptSection('spells')">✓ Confirmar</button></div>
+            <div class="ph">
+              <span class="pt">Conjuros</span>
+              <div style="display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.66rem;color:var(--muted);margin-left:auto;background:var(--raised);border:1px solid var(--rim);border-radius:20px;padding:2px 9px">
+                <span id="spells_count" style="color:var(--ice);font-weight:700">0</span>
+              </div>
             </div>
-            <div id="spells_summary_view" style="display:none">
-              <div id="spells_summary_list"></div>
-              <div style="text-align:center;margin-top:6px"><button class="bedit" onclick="app.editAptSection('spells')">✏ Editar</button></div>
+            <!-- Summary (default) -->
+            <div id="spells_summary_view">
+              <div id="spells_summary_list"><p class="txt-it-c">Sin conjuros seleccionados.</p></div>
+              <div style="text-align:center;margin-top:8px">
+                <button class="btn btn-g" style="font-size:.7rem" onclick="app.openAptManager('spells')">✎ Gestionar Conjuros</button>
+              </div>
             </div>
           </div>
         </div><!-- /page 2 -->
@@ -854,7 +927,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
       <button class="catbtn" onclick="app.dbEditCategory('weapons')">Armas</button>
       <button class="catbtn" onclick="app.dbEditCategory('armors')">Armaduras</button>
       <button class="catbtn" onclick="app.dbEditCategory('shields')">Escudos</button>
-      <button class="catbtn" onclick="app.dbEditCategory('spells')">Poderes/Conjuros</button>
+      <button class="catbtn" onclick="app.dbEditCategory('spells')">Trucos / Conjuros</button>
       <hr style="border-color:var(--rim);margin:8px 0">
       <button class="btn btn-g" style="font-size:.66rem;padding:6px;width:100%" onclick="app.exportRulesDB()">↓ Exportar Reglas</button>
     </div>
@@ -1281,6 +1354,7 @@ const app = {
     // Setup alignment for app
     this.buildAlignmentPicker();
     this.setupSwipe();
+    this._initDiceSwipe();
     // Setup crop drag listeners
     window.addEventListener('mouseup', () => this.endDrag());
     window.addEventListener('touchend', () => this.endDrag());
@@ -1434,7 +1508,19 @@ const app = {
   },
 
   deleteChar(name) {
-    if (!confirm(`¿Eliminar "${name}"?`)) return;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    overlay.innerHTML = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:20px;max-width:300px;width:100%;text-align:center">
+      <div style="font-family:var(--fd);color:var(--gold);font-size:.9rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">¿Eliminar personaje?</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">"${name}" será eliminado permanentemente.</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-g" style="flex:1" onclick="this.closest('[style*=fixed]').remove()">Cancelar</button>
+        <button class="btn btn-p" style="flex:1" onclick="app._doDeleteChar('${name.replace(/'/g,"\'")}');this.closest('[style*=fixed]').remove()">✓ Eliminar</button>
+      </div></div>`;
+    document.body.appendChild(overlay);
+  },
+
+  _doDeleteChar(name) {
     const r = JSON.parse(localStorage.getItem('sands_roster') || '{}');
     delete r[name];
     localStorage.setItem('sands_roster', JSON.stringify(r));
@@ -1514,7 +1600,6 @@ const app = {
 
   goToPage(n) {
     this.currentPage = n;
-    // Use pixel-based translation for reliability across devices
     const w = document.getElementById('pages_wrapper');
     const pageW = w ? w.clientWidth : window.innerWidth;
     document.getElementById('pages_track').style.transform = `translateX(-${n * pageW}px)`;
@@ -2053,6 +2138,12 @@ const app = {
   },
 
   removeInvItem(idx) { this.inventory.splice(idx,1); this.renderInventory(); this.syncCombatOptions(); },
+  moveInvItem(idx, dir) {
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= this.inventory.length) return;
+    [this.inventory[idx], this.inventory[newIdx]] = [this.inventory[newIdx], this.inventory[idx]];
+    this.renderInventory(); this.syncCombatOptions();
+  },
   updateInvItem(idx, field, value) {
     if (field==='slots') value = parseInt(value)||0;
     this.inventory[idx][field] = value;
@@ -2074,7 +2165,8 @@ const app = {
         let sel = `<select class="ityp" onchange="app.updateInvItem(${i},'type',this.value)">`;
         typeOpts.forEach(o => sel += `<option value="${o.v}"${item.type===o.v?' selected':''}>${o.l}</option>`);
         sel += '</select>';
-        row.innerHTML = `${sel}<input type="text" class="inm" value="${item.name}" onchange="app.updateInvItem(${i},'name',this.value)"><input type="number" class="isl" value="${item.slots}" min="0" max="20" onchange="app.updateInvItem(${i},'slots',this.value)"><button class="idel" onclick="app._openCustomItemForm(${i})" style="color:var(--dim);font-size:.78rem">✎</button><button class="idel" onclick="app.removeInvItem(${i})">×</button>`;
+        const isFirst = i === 0, isLast = i === this.inventory.length - 1;
+        row.innerHTML = `${sel}<input type="text" class="inm" value="${item.name}" onchange="app.updateInvItem(${i},'name',this.value)"><input type="number" class="isl" value="${item.slots}" min="0" max="20" onchange="app.updateInvItem(${i},'slots',this.value)"><button class="idel" onclick="app.moveInvItem(${i},-1)" style="color:var(--muted);font-size:.7rem;opacity:${isFirst?'0.2':'1'}" ${isFirst?'disabled':''}>↑</button><button class="idel" onclick="app.moveInvItem(${i},1)" style="color:var(--muted);font-size:.7rem;opacity:${isLast?'0.2':'1'}" ${isLast?'disabled':''}>↓</button><button class="idel" onclick="app._openCustomItemForm(${i})" style="color:var(--dim);font-size:.78rem">✎</button><button class="idel" onclick="app.removeInvItem(${i})">×</button>`;
         list.appendChild(row);
       });
     }
@@ -2241,11 +2333,39 @@ const app = {
     setTimeout(() => overlay.classList.remove('active','closing'), 220);
   },
 
+  _initDiceSwipe() {
+    const card = document.getElementById('dice-card');
+    if (!card || card._swipeInit) return;
+    card._swipeInit = true;
+    let startY = 0, startX = 0;
+    card.addEventListener('touchstart', e => { startY = e.touches[0].clientY; startX = e.touches[0].clientX; }, {passive:true});
+    card.addEventListener('touchend', e => {
+      const dy = e.changedTouches[0].clientY - startY;
+      const dx = Math.abs(e.changedTouches[0].clientX - startX);
+      if (dy > 55 && dx < 60) this.closeDiceOverlay();
+    }, {passive:true});
+  },
+
   rollWeaponAtk(n) {
     const bonus = parseInt(document.getElementById(`atk_bonus_${n}`).innerText) || 0;
     this.rollCheck(`Ataque: ${this._weaponDmgData[n-1]?.name||'Arma'}`, bonus);
   },
   rollWeaponDmg(n) { this.rollDice(this._weaponDmgData[n-1]?.formula||'1', `Daño: ${this._weaponDmgData[n-1]?.name||'Arma'}`); },
+
+  /* ── RESOURCE ADJUST ── */
+  adjustRes(curId, maxId, delta) {
+    const cur = document.getElementById(curId);
+    const max = document.getElementById(maxId);
+    if (!cur) return;
+    let val = parseInt(cur.value) || 0;
+    const maxVal = parseInt(max?.innerText) || 999;
+    val = Math.max(0, Math.min(maxVal, val + delta));
+    cur.value = val;
+    // Flash feedback
+    cur.style.transition = 'color .15s';
+    cur.style.color = delta > 0 ? 'var(--sage)' : 'var(--blood)';
+    setTimeout(() => { cur.style.color = 'var(--bright)'; }, 300);
+  },
 
   toast(msg, lbl='Info') { this.toastHtml(`<div class="tinf"><span class="tlbl">${lbl}</span><span>${msg}</span></div>`); },
   toastHtml(html, cls='') {
@@ -2261,6 +2381,7 @@ const app = {
     const cc = document.getElementById('tm_categories'); cc.innerHTML='';
     Object.keys(this.DB.talents).forEach(k => {
       const btn = document.createElement('button'); btn.className='catbtn'; btn.type='button';
+      btn.setAttribute('data-cat', k);
       btn.innerText = k.charAt(0).toUpperCase()+k.slice(1);
       btn.onclick = () => this.showTalentCategory(k, btn);
       cc.appendChild(btn);
@@ -2320,7 +2441,19 @@ const app = {
   },
 
   clearTalents() {
-    if (!confirm('¿Limpiar todos los talentos?')) return;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    overlay.innerHTML = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:20px;max-width:300px;width:100%;text-align:center">
+      <div style="font-family:var(--fd);color:var(--gold);font-size:.9rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">¿Limpiar talentos?</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">Se eliminarán todos los talentos seleccionados.</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-g" style="flex:1" onclick="this.closest('[style*=fixed]').remove()">Cancelar</button>
+        <button class="btn btn-p" style="flex:1" onclick="app._doCleanTalents();this.closest('[style*=fixed]').remove()">✓ Limpiar</button>
+      </div></div>`;
+    document.body.appendChild(overlay);
+  },
+
+  _doCleanTalents() {
     document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el=>el.remove());
     document.querySelectorAll('#tm_list input[type="checkbox"]').forEach(c=>{c.checked=false;c.closest('.tc')?.classList.remove('sel')});
     this.updateTalentCount(); this.calc();
@@ -2330,6 +2463,17 @@ const app = {
     const n = document.querySelectorAll('input[name="chk_talents_hidden"]').length;
     const el1 = document.getElementById('talent_count_main'); if(el1) el1.innerText=n;
     const el2 = document.getElementById('talent_count_modal'); if(el2) el2.innerText=n;
+    // Update category dots
+    if (this.DB.talents) {
+      Object.keys(this.DB.talents).forEach(k => {
+        const catBtn = document.querySelector(`#tm_categories .catbtn[data-cat="${k}"]`);
+        if (!catBtn) return;
+        const hasSel = (this.DB.talents[k]||[]).some(t=>!!document.querySelector(`input[name="chk_talents_hidden"][value="${t.name}"]`));
+        let dot = catBtn.querySelector('.cat-dot');
+        if (hasSel && !dot) { dot=document.createElement('span'); dot.className='cat-dot'; catBtn.appendChild(dot); }
+        else if (!hasSel && dot) dot.remove();
+      });
+    }
   },
 
   showTalentSummary() {
@@ -2403,44 +2547,117 @@ const app = {
   },
 
   /* ── APTITUDES PAGE ── */
-  editAptSection(sec) {
-    document.getElementById(`${sec}_edit_view`).style.display = 'block';
-    document.getElementById(`${sec}_summary_view`).style.display = 'none';
-  },
-
-  confirmAptSection(sec) {
-    const listId = sec === 'tricks' ? 'tricks_list' : 'spells_list';
-    const sumId = sec === 'tricks' ? 'tricks_summary_list' : 'spells_summary_list';
-    const srcEl = document.getElementById(listId);
-    const sumEl = document.getElementById(sumId);
-    if (srcEl && sumEl) sumEl.innerHTML = srcEl.innerHTML;
-    document.getElementById(`${sec}_edit_view`).style.display = 'none';
-    document.getElementById(`${sec}_summary_view`).style.display = 'block';
-  },
+  // selectedApt stores { tricks: Set of keys, spells: Set of keys }
+  _aptSel: { tricks: new Set(), spells: new Set() },
+  _aptMode: 'tricks',
 
   buildAptitudesPage() {
-    const tricks = document.getElementById('tricks_list');
-    const spells = document.getElementById('spells_list');
+    this._renderAptSummary('tricks');
+    this._renderAptSummary('spells');
+  },
+
+  _renderAptSummary(sec) {
+    const sumList = document.getElementById(`${sec}_summary_list`);
+    const countEl = document.getElementById(`${sec}_count`);
+    const sel = this._aptSel[sec];
+    if (!sumList) return;
     const spellKeys = Object.keys(this.DB.spells||{});
-    if (spellKeys.length) {
-      tricks.innerHTML=''; spells.innerHTML='';
-      spellKeys.forEach(k => {
-        const s = this.DB.spells[k];
-        const isTrick = s.type==='trick'||(s.cost&&s.cost.toLowerCase().includes('adr'));
-        const target = isTrick ? tricks : spells;
-        const card = document.createElement('div'); card.className='pc';
-        card.innerHTML = `<div class="pch"><span class="pcn">${s.name||k}</span><span style="font-size:.62rem;font-family:var(--fm);color:var(--muted)">▾</span></div><div class="pcb">${s.txt||'Sin descripción.'}</div>`;
-        card.onclick = () => card.classList.toggle('open');
-        target.appendChild(card);
-      });
-      if (!tricks.children.length) tricks.innerHTML='<p class="txt-it-c">Sin trucos.</p>';
-      if (!spells.children.length) spells.innerHTML='<p class="txt-it-c">Sin conjuros.</p>';
+    const items = spellKeys.filter(k => {
+      const s = this.DB.spells[k];
+      const isTrick = s.type==='trick'||(s.cost&&s.cost.toLowerCase().includes('adr'));
+      return sec==='tricks' ? isTrick : !isTrick;
+    }).filter(k => sel.has(k));
+
+    if (countEl) countEl.innerText = items.length;
+
+    if (!items.length) {
+      const label = sec==='tricks' ? 'trucos' : 'conjuros';
+      sumList.innerHTML = `<p class="txt-it-c">Sin ${label} seleccionados.</p>`;
+      return;
     }
-    // Reset to edit mode so user sees content
-    document.getElementById('tricks_edit_view').style.display = 'block';
-    document.getElementById('tricks_summary_view').style.display = 'none';
-    document.getElementById('spells_edit_view').style.display = 'block';
-    document.getElementById('spells_summary_view').style.display = 'none';
+    sumList.innerHTML = '';
+    items.forEach(k => {
+      const s = this.DB.spells[k];
+      const card = document.createElement('div'); card.className='pc';
+      card.innerHTML = `<div class="pch"><span class="pcn">${s.name||k}</span><span style="font-size:.62rem;font-family:var(--fm);color:var(--muted)">▾</span></div><div class="pcb">${s.txt||'Sin descripción.'}</div>`;
+      card.onclick = () => card.classList.toggle('open');
+      sumList.appendChild(card);
+    });
+  },
+
+  openAptManager(sec) {
+    this._aptMode = sec;
+    const modal = document.getElementById('apt_manager_modal');
+    const title = document.getElementById('apt_manager_title');
+    title.innerText = sec === 'tricks' ? 'Gestor de Trucos' : 'Gestor de Conjuros';
+    this._renderAptManager();
+    modal.showModal();
+  },
+
+  _renderAptManager() {
+    const sec = this._aptMode;
+    const sel = this._aptSel[sec];
+    const spellKeys = Object.keys(this.DB.spells||{});
+    const allItems = spellKeys.filter(k => {
+      const s = this.DB.spells[k];
+      const isTrick = s.type==='trick'||(s.cost&&s.cost.toLowerCase().includes('adr'));
+      return sec==='tricks' ? isTrick : !isTrick;
+    });
+
+    const availList = document.getElementById('apt_available_list');
+    const selList   = document.getElementById('apt_selected_list');
+    const selEmpty  = document.getElementById('apt_selected_empty');
+    const selCount  = document.getElementById('apt_sel_count');
+    availList.innerHTML = ''; selList.innerHTML = '';
+
+    const makeCard = (k, isSelected) => {
+      const s = this.DB.spells[k];
+      const card = document.createElement('div');
+      card.style.cssText = `background:${isSelected?'rgba(74,158,202,.08)':'var(--raised)'};border:1px solid ${isSelected?'rgba(74,158,202,.4)':'var(--rim)'};border-radius:var(--r);padding:6px 9px;cursor:pointer;transition:all .15s`;
+      const topRow = document.createElement('div');
+      topRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:6px';
+      const nameSpan = document.createElement('span');
+      nameSpan.style.cssText = `font-family:var(--fd);font-size:.78rem;color:${isSelected?'var(--ice)':'var(--gold)'};font-weight:600`;
+      nameSpan.innerText = s.name||k;
+      const badge = document.createElement('span');
+      badge.style.cssText = `font-family:var(--fm);font-size:.6rem;padding:1px 7px;border-radius:10px;background:${isSelected?'rgba(74,158,202,.2)':'rgba(200,169,110,.1)'};color:${isSelected?'var(--ice)':'var(--muted)'};white-space:nowrap;flex-shrink:0`;
+      badge.innerText = isSelected ? '✓ Quitar' : '+ Añadir';
+      topRow.appendChild(nameSpan); topRow.appendChild(badge);
+      if (s.txt) {
+        const desc = document.createElement('div');
+        desc.style.cssText = 'font-size:.72rem;color:var(--muted);margin-top:3px;line-height:1.4';
+        desc.innerText = s.txt.length > 90 ? s.txt.slice(0,90)+'…' : s.txt;
+        card.appendChild(topRow); card.appendChild(desc);
+      } else { card.appendChild(topRow); }
+      card.onclick = () => {
+        if (isSelected) sel.delete(k); else sel.add(k);
+        this._renderAptManager();
+        this._renderAptSummary(sec);
+      };
+      card.onmouseenter = () => card.style.borderColor = isSelected?'var(--blood)':'var(--gold)';
+      card.onmouseleave = () => card.style.borderColor = isSelected?'rgba(74,158,202,.4)':'var(--rim)';
+      return card;
+    };
+
+    const notSel = allItems.filter(k=>!sel.has(k));
+    const isSel  = allItems.filter(k=> sel.has(k));
+
+    if (!allItems.length) {
+      const label = sec==='tricks'?'trucos':'conjuros';
+      availList.innerHTML = `<div class="apt-empty"><p>No hay ${label} en la base de datos.<br>Añádelos en el Editor de Reglas.</p><button class="btn btn-g" style="font-size:.68rem" onclick="document.getElementById('db_editor_modal').showModal()">⚙ Editor de Reglas</button></div>`;
+    } else {
+      notSel.forEach(k => availList.appendChild(makeCard(k, false)));
+      if (!notSel.length) { const d=document.createElement('p'); d.className='txt-it-c'; d.innerText='Todos añadidos.'; availList.appendChild(d); }
+    }
+
+    isSel.forEach(k => selList.appendChild(makeCard(k, true)));
+    selEmpty.style.display = isSel.length ? 'none' : 'block';
+    if (selCount) selCount.innerText = isSel.length;
+  },
+
+  closeAptManager() {
+    document.getElementById('apt_manager_modal').close();
+    this._renderAptSummary(this._aptMode);
   },
 
   /* ── DATABASE EDITOR ── */
@@ -2455,7 +2672,7 @@ const app = {
     const lc = document.getElementById('db_list_container');
     document.getElementById('db_form_container').style.display = 'none';
     const src = this.DB[cat] || {};
-    const labels = {descriptors:'Linajes',archetypes:'Arquetipos',backgrounds:'Trasfondos',talents:'Talentos',weapons:'Armas',armors:'Armaduras',shields:'Escudos',spells:'Poderes/Conjuros'};
+    const labels = {descriptors:'Linajes',archetypes:'Arquetipos',backgrounds:'Trasfondos',talents:'Talentos',weapons:'Armas',armors:'Armaduras',shields:'Escudos',spells:'Trucos / Conjuros'};
     const catLabel = labels[cat] || cat;
     lc.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="font-family:var(--fd);color:var(--gold);font-size:.86rem;text-transform:uppercase;letter-spacing:.08em">${catLabel}</h3><button class="btn btn-g" style="font-size:.7rem;padding:5px 9px" onclick="app.dbEditEntry('new')">+ Nuevo</button></div>`;
     if (cat === 'talents') {
@@ -2550,7 +2767,7 @@ const app = {
       <div style="margin-bottom:6px"><span class="dfl">Nombre</span><input type="text" id="db_name" value="${existing?.name||''}"></div>
       <div style="margin-bottom:6px"><span class="dfl">Descripción</span><textarea id="db_txt" style="min-height:60px">${existing?.txt||''}</textarea></div>
       <div class="g2" style="gap:6px;margin-bottom:6px">
-        <div><span class="dfl">Tipo</span><select id="db_stype"><option value="spell"${existing?.type==='spell'?' selected':''}>Conjuro</option><option value="power"${existing?.type==='power'?' selected':''}>Poder</option></select></div>
+        <div><span class="dfl">Tipo</span><select id="db_stype"><option value="spell"${existing?.type==='spell'?' selected':''}>Conjuro</option><option value="trick"${(existing?.type==='trick'||existing?.type==='power')?'selected':''}>Truco</option></select></div>
         <div><span class="dfl">Coste</span><input type="text" id="db_cost" value="${existing?.cost||''}" placeholder="ej: 2 Ing"></div>
       </div>`;
     } else if (isTalent) {
@@ -2753,7 +2970,9 @@ const app = {
       alignment: this.alignment,
       inventory: this.inventory,
       gold: this.gold,
-      lethality: this.lethality||1
+      lethality: this.lethality||1,
+      apt_tricks: [...(this._aptSel?.tricks||[])],
+      apt_spells: [...(this._aptSel?.spells||[])]
     };
     document.querySelectorAll('input[type=text]:not(.inm),input[type=number]:not(.isl):not(#gold_coins_edit)').forEach(el=>{if(el.id)data.inputs[el.id]=el.value});
     document.querySelectorAll('select:not(#inv_db_category):not(#inv_db_item):not(.ityp)').forEach(el=>{if(el.id)data.selects[el.id]=el.value});
@@ -2766,6 +2985,7 @@ const app = {
     this.inventory = data.inventory||[];
     this.gold = data.gold||0;
     this.alignment = data.alignment||'';
+    this._aptSel = { tricks: new Set(data.apt_tricks||[]), spells: new Set(data.apt_spells||[]) };
     if(data.lethality) this.setLethality(data.lethality);
     this.syncCombatOptions();
     for (const id in data.inputs) { const el=document.getElementById(id); if(el)el.value=data.inputs[id]; }
@@ -2803,8 +3023,15 @@ const app = {
     roster[name] = this.gatherCharData();
     try {
       localStorage.setItem('sands_roster', JSON.stringify(roster));
+      const now = new Date();
+      const ts = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+      const lbl = document.getElementById('last_saved_lbl');
+      if (lbl) { lbl.innerText = `guardado ${ts}`; lbl.classList.add('fresh'); setTimeout(()=>lbl.classList.remove('fresh'),2500); }
       this.toast('Personaje guardado','💾');
-    } catch { alert('¡Almacenamiento lleno!'); }
+    } catch {
+      this.toast('¡Almacenamiento lleno! Exporta tu personaje antes de perder datos.','⚠');
+      setTimeout(()=>this.exportJSON(), 800);
+    }
   },
 
   exportJSON() {
@@ -2839,7 +3066,7 @@ const app = {
     ['char_name','char_concept','char_notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     ['char_lvl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=1});
     ['char_xp','cur_pv','cur_adr','cur_ing','cur_carne'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0});
-    this.inventory=[]; this.gold=0; this.alignment='';
+    this.inventory=[]; this.gold=0; this.alignment=''; this._aptSel={tricks:new Set(),spells:new Set()};
     document.querySelectorAll('.aopt').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(c=>c.checked=false);
     document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el=>el.remove());
@@ -2966,7 +3193,7 @@ const app = {
     document.getElementById('char_lvl').value = 1;
     document.getElementById('char_xp').value = 0;
 
-    // 4. Selecciones aleatorias
+    // 4. Selecciones aleatorias (después de unlockApp que llena los selects)
     const randSelect = (id, db) => {
       const el = document.getElementById(id); if (!el) return;
       const keys = Object.keys(db||{});
@@ -2981,12 +3208,13 @@ const app = {
     this.alignment = ali;
     document.querySelectorAll('.aopt').forEach(b=>b.classList.toggle('active',b.innerText===ali));
 
-    // 6. updateOptions para construir filos y habilidades
+    // 6. updateOptions para construir filos y habilidades (ya tiene arq/desc/bg en los selects)
     this.updateOptions(true);
 
     // 7. Filo aleatorio (ahora los options ya existen)
     const filoSel = document.getElementById('sel_filo');
     if (filoSel.options.length > 1) filoSel.value = filoSel.options[Math.floor(Math.random()*(filoSel.options.length-1))+1].value;
+    this.calc(); // sync res_filo_val immediately
 
     // 8. Salvaciones aleatorias
     const saveCommon = ['DES','CON','SAB']; const saveUncommon = ['FUE','INT','CAR'];
