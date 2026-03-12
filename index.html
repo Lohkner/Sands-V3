@@ -75,6 +75,13 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .char-cs{font-family:var(--fm);font-size:.62rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .char-ca{display:flex;gap:4px;flex-shrink:0}
 .home-empty{text-align:center;padding:40px 20px;color:var(--muted);font-style:italic;font-size:.88rem}
+/* ══ SWIPE TO DELETE ══ */
+.char-card-wrap{position:relative;overflow:hidden;border-radius:var(--rl);margin-bottom:8px}
+.char-card-delete{position:absolute;right:0;top:0;bottom:0;width:70px;background:var(--blood);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-family:var(--fd);color:#fff;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transform:translateX(100%);transition:none;border-radius:0 var(--rl) var(--rl) 0;flex-direction:column;gap:3px}
+.char-card-delete .del-icon{font-size:1.2rem}
+.char-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .25s ease;position:relative;overflow:hidden;width:100%;margin-bottom:0}
+.char-card::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(200,169,110,.04),transparent);opacity:0;transition:opacity .2s}
+.char-card:hover{border-color:rgba(200,169,110,.4);box-shadow:0 0 0 1px var(--glow-g)}.char-card:hover::before{opacity:1}
 /* ══ APP SHELL ══ */
 
 .app-shell{display:flex;flex-direction:column;height:100dvh;max-width:720px;margin:0 auto;width:100%}
@@ -342,6 +349,7 @@ details>summary{cursor:pointer;font-family:var(--fm);font-size:.63rem;color:var(
 details>summary:hover{color:var(--dim)}details>summary::-webkit-details-marker{display:none}
 details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transition:transform .2s}details[open]>summary::before{content:'▾'}
 /* ══ RESPONSIVE ══ */
+.char-lvl-badge{display:inline-block;font-family:var(--fm);font-size:.58rem;color:var(--muted);background:var(--raised);border:1px solid var(--rim);border-radius:10px;padding:1px 6px;letter-spacing:.06em}
 @media(max-width:480px){
   .g6{grid-template-columns:repeat(3,1fr)}
   .tml{grid-template-columns:1fr;grid-template-rows:auto 1fr}
@@ -397,6 +405,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
       <button class="btn btn-g" onclick="document.getElementById('json_char_input').click()" style="width:100%;padding:11px 8px;font-size:.76rem">↑ Importar JSON</button>
     </div>
     <p class="roster-lbl">Héroes Guardados</p>
+    <p style="font-family:var(--fm);font-size:.58rem;color:var(--border);text-align:center;margin-bottom:8px;letter-spacing:.08em">← Desliza para eliminar</p>
     <div id="home-roster"></div>
     <div style="margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-g" style="font-size:.68rem" onclick="document.getElementById('json_rules_input').click()">↑ Importar Reglas</button>
@@ -648,8 +657,28 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 
         <!-- ══ P2: APTITUDES ══ -->
         <div class="page" id="page_2">
-          <div class="panel"><div class="ph"><span class="pt">Poderes</span></div><div id="powers_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:12px">Sin poderes. Añádelos en el Editor de Reglas.</p></div></div>
-          <div class="panel"><div class="ph"><span class="pt">Conjuros</span></div><div id="spells_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:12px">Sin conjuros. Añádelos en el Editor de Reglas.</p></div></div>
+          <div class="panel">
+            <div class="ph"><span class="pt">Trucos</span></div>
+            <div id="tricks_edit_view">
+              <div id="tricks_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:12px">Sin trucos. Añádelos en el Editor de Reglas.</p></div>
+              <div style="text-align:center;margin-top:8px"><button class="bcnf" style="width:auto;padding:7px 28px" onclick="app.confirmAptSection('tricks')">✓ Confirmar</button></div>
+            </div>
+            <div id="tricks_summary_view" style="display:none">
+              <div id="tricks_summary_list"></div>
+              <div style="text-align:center;margin-top:6px"><button class="bedit" onclick="app.editAptSection('tricks')">✏ Editar</button></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="ph"><span class="pt">Conjuros</span></div>
+            <div id="spells_edit_view">
+              <div id="spells_list"><p style="color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:12px">Sin conjuros. Añádelos en el Editor de Reglas.</p></div>
+              <div style="text-align:center;margin-top:8px"><button class="bcnf" style="width:auto;padding:7px 28px" onclick="app.confirmAptSection('spells')">✓ Confirmar</button></div>
+            </div>
+            <div id="spells_summary_view" style="display:none">
+              <div id="spells_summary_list"></div>
+              <div style="text-align:center;margin-top:6px"><button class="bedit" onclick="app.editAptSection('spells')">✏ Editar</button></div>
+            </div>
+          </div>
         </div><!-- /page 2 -->
 
         <!-- ══ P3: EQUIPO ══ -->
@@ -1309,8 +1338,6 @@ const app = {
     el.innerHTML = '';
     keys.forEach(name => {
       const data = roster[name];
-      const card = document.createElement('div');
-      card.className = 'char-card';
       const lvl = data.inputs?.char_lvl || '1';
       const arq = data.selects?.sel_arq ? (this.DB.archetypes?.[data.selects.sel_arq]?.name || data.selects.sel_arq) : '—';
       const desc = data.selects?.sel_desc ? (this.DB.descriptors?.[data.selects.sel_desc]?.name || '') : '';
@@ -1318,19 +1345,91 @@ const app = {
       const portHtml = hasPortrait
         ? `<img class="char-port" src="${data.portrait}" alt="">`
         : `<div class="char-port-ph">⚔</div>`;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'char-card-wrap';
+
+      const delBtn = document.createElement('div');
+      delBtn.className = 'char-card-delete';
+      delBtn.innerHTML = `<span class="del-icon">🗑</span><span>Borrar</span>`;
+      delBtn.onclick = (e) => { e.stopPropagation(); this.deleteChar(name); };
+
+      const card = document.createElement('div');
+      card.className = 'char-card';
       card.innerHTML = `
         ${portHtml}
         <div class="char-ci">
           <div class="char-cn">${name}</div>
           <div class="char-cs">${arq}${desc ? ' · '+desc : ''}</div>
           <div style="margin-top:3px"><span class="char-lvl-badge">Nivel ${lvl}</span></div>
-        </div>
-        <div class="char-ca">
-          <button class="bmini bl" onclick="event.stopPropagation();app.loadCharToApp('${name.replace(/'/g,"\\'")}')">Cargar</button>
-          <button class="bmini br" onclick="event.stopPropagation();app.deleteChar('${name.replace(/'/g,"\\'")}')">×</button>
         </div>`;
-      card.onclick = () => this.loadCharToApp(name);
-      el.appendChild(card);
+      card.onclick = () => { if (!card._swiped) this.loadCharToApp(name); };
+
+      // Swipe logic
+      let startX = 0, startY = 0, dx = 0, revealed = false, locked = false, moved = false;
+      const THRESHOLD = 55;
+
+      const onStart = (clientX, clientY) => {
+        startX = clientX; startY = clientY; dx = 0; moved = false; locked = false;
+        card.style.transition = 'none';
+        delBtn.style.transition = 'none';
+      };
+      const onMove = (clientX, clientY) => {
+        const ddx = clientX - startX;
+        const ddy = clientY - startY;
+        if (!locked) {
+          if (Math.abs(ddx) > Math.abs(ddy) && Math.abs(ddx) > 5) locked = true;
+          else if (Math.abs(ddy) > Math.abs(ddx) && Math.abs(ddy) > 5) return;
+          else return;
+        }
+        moved = true;
+        dx = revealed ? Math.min(0, ddx - THRESHOLD) : Math.min(0, ddx);
+        const translateX = revealed ? -THRESHOLD + dx : dx;
+        const clampedX = Math.max(-70, Math.min(0, translateX));
+        card.style.transform = `translateX(${clampedX}px)`;
+        delBtn.style.transform = `translateX(${100 + (clampedX / 70) * 100}%)`;
+      };
+      const onEnd = () => {
+        if (!locked && !moved) return;
+        const finalX = revealed ? -THRESHOLD + dx : dx;
+        if (finalX < -THRESHOLD * 0.6) {
+          // Reveal delete
+          card.style.transition = 'transform .25s ease';
+          delBtn.style.transition = 'transform .25s ease';
+          card.style.transform = 'translateX(-70px)';
+          delBtn.style.transform = 'translateX(0%)';
+          revealed = true;
+          card._swiped = true;
+        } else {
+          // Snap back
+          card.style.transition = 'transform .25s ease';
+          delBtn.style.transition = 'transform .25s ease';
+          card.style.transform = 'translateX(0)';
+          delBtn.style.transform = 'translateX(100%)';
+          revealed = false;
+          setTimeout(() => { card._swiped = false; }, 260);
+        }
+      };
+
+      card.addEventListener('touchstart', e => onStart(e.touches[0].clientX, e.touches[0].clientY), {passive:true});
+      card.addEventListener('touchmove', e => { onMove(e.touches[0].clientX, e.touches[0].clientY); if(locked) e.preventDefault(); }, {passive:false});
+      card.addEventListener('touchend', onEnd, {passive:true});
+
+      // Close swipe if user taps elsewhere
+      document.addEventListener('touchstart', (e) => {
+        if (revealed && !wrap.contains(e.target)) {
+          card.style.transition = 'transform .25s ease';
+          delBtn.style.transition = 'transform .25s ease';
+          card.style.transform = 'translateX(0)';
+          delBtn.style.transform = 'translateX(100%)';
+          revealed = false;
+          setTimeout(() => { card._swiped = false; }, 260);
+        }
+      }, {passive:true});
+
+      wrap.appendChild(delBtn);
+      wrap.appendChild(card);
+      el.appendChild(wrap);
     });
   },
 
@@ -1933,6 +2032,7 @@ const app = {
           <button class="btn btn-p" style="flex:1" onclick="app.saveCustomItem()">✓ Guardar</button>
         </div>
       </div>`;
+    overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
     document.body.appendChild(overlay);
   },
 
@@ -1941,14 +2041,15 @@ const app = {
     if (!name) { this.toast('Se requiere nombre', 'Error'); return; }
     const slots = parseInt(document.getElementById('ci_slots')?.value)||1;
     const type = document.getElementById('ci_type')?.value||'misc';
-    const item = {uid: this._editingCustomItem!==null?this.inventory[this._editingCustomItem].uid:Date.now(), name, slots, type};
-    if (this._editingCustomItem !== null) this.inventory[this._editingCustomItem] = item;
+    const isEdit = this._editingCustomItem !== null;
+    const item = {uid: isEdit?this.inventory[this._editingCustomItem].uid:Date.now(), name, slots, type};
+    if (isEdit) this.inventory[this._editingCustomItem] = item;
     else this.inventory.push(item);
     document.getElementById('custom_item_overlay')?.remove();
     this._editingCustomItem = null;
     this.renderInventory();
     this.syncCombatOptions();
-    this.toast(this._editingCustomItem!==null?'Actualizado':'Añadido', 'Inventario');
+    this.toast(isEdit?'Actualizado':'Añadido', 'Inventario');
   },
 
   removeInvItem(idx) { this.inventory.splice(idx,1); this.renderInventory(); this.syncCombatOptions(); },
@@ -2302,24 +2403,44 @@ const app = {
   },
 
   /* ── APTITUDES PAGE ── */
+  editAptSection(sec) {
+    document.getElementById(`${sec}_edit_view`).style.display = 'block';
+    document.getElementById(`${sec}_summary_view`).style.display = 'none';
+  },
+
+  confirmAptSection(sec) {
+    const listId = sec === 'tricks' ? 'tricks_list' : 'spells_list';
+    const sumId = sec === 'tricks' ? 'tricks_summary_list' : 'spells_summary_list';
+    const srcEl = document.getElementById(listId);
+    const sumEl = document.getElementById(sumId);
+    if (srcEl && sumEl) sumEl.innerHTML = srcEl.innerHTML;
+    document.getElementById(`${sec}_edit_view`).style.display = 'none';
+    document.getElementById(`${sec}_summary_view`).style.display = 'block';
+  },
+
   buildAptitudesPage() {
-    const powers = document.getElementById('powers_list');
+    const tricks = document.getElementById('tricks_list');
     const spells = document.getElementById('spells_list');
     const spellKeys = Object.keys(this.DB.spells||{});
     if (spellKeys.length) {
-      powers.innerHTML=''; spells.innerHTML='';
+      tricks.innerHTML=''; spells.innerHTML='';
       spellKeys.forEach(k => {
         const s = this.DB.spells[k];
-        const isPower = s.type==='power'||(s.cost&&s.cost.toLowerCase().includes('adr'));
-        const target = isPower ? powers : spells;
+        const isTrick = s.type==='trick'||(s.cost&&s.cost.toLowerCase().includes('adr'));
+        const target = isTrick ? tricks : spells;
         const card = document.createElement('div'); card.className='pc';
         card.innerHTML = `<div class="pch"><span class="pcn">${s.name||k}</span><span style="font-size:.62rem;font-family:var(--fm);color:var(--muted)">▾</span></div><div class="pcb">${s.txt||'Sin descripción.'}</div>`;
         card.onclick = () => card.classList.toggle('open');
         target.appendChild(card);
       });
-      if (!powers.children.length) powers.innerHTML='<p class="txt-it-c">Sin poderes.</p>';
+      if (!tricks.children.length) tricks.innerHTML='<p class="txt-it-c">Sin trucos.</p>';
       if (!spells.children.length) spells.innerHTML='<p class="txt-it-c">Sin conjuros.</p>';
     }
+    // Reset to edit mode so user sees content
+    document.getElementById('tricks_edit_view').style.display = 'block';
+    document.getElementById('tricks_summary_view').style.display = 'none';
+    document.getElementById('spells_edit_view').style.display = 'block';
+    document.getElementById('spells_summary_view').style.display = 'none';
   },
 
   /* ── DATABASE EDITOR ── */
@@ -2648,8 +2769,7 @@ const app = {
     if(data.lethality) this.setLethality(data.lethality);
     this.syncCombatOptions();
     for (const id in data.inputs) { const el=document.getElementById(id); if(el)el.value=data.inputs[id]; }
-    for (const id in data.selects) { const el=document.getElementById(id); if(el)el.value=data.selects[id]; }
-    // Portrait
+    // Portrait (selects applied after updateOptions below to fix sel_filo)
     if (data.portrait) {
       document.getElementById('char_img').src = data.portrait;
       document.getElementById('char_img_summary').src = data.portrait;
@@ -2658,7 +2778,11 @@ const app = {
     if (data.notes) document.getElementById('char_notes').value = data.notes;
     // Alignment
     if (data.alignment) document.querySelectorAll('.aopt').forEach(b=>b.classList.toggle('active',b.innerText===data.alignment));
+    // Apply identity selects FIRST so updateOptions can read them and build sel_filo options
+    ['sel_desc','sel_arq','sel_bg'].forEach(id=>{const el=document.getElementById(id);if(el&&data.selects[id])el.value=data.selects[id];});
     this.updateOptions(false);
+    // Now apply ALL selects (including sel_filo which now has its options populated)
+    for (const id in data.selects) { const el=document.getElementById(id); if(el)el.value=data.selects[id]; }
     document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(el=>el.checked=false);
     document.querySelectorAll('input[name="chk_talents_hidden"]').forEach(el=>el.remove());
     data.checks?.forEach(item=>{let el=document.getElementById(item.id)||document.querySelector(`input[name="${item.name}"][value="${item.value}"]`);if(el)el.checked=true});
