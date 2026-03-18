@@ -1732,18 +1732,18 @@ const app = {
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
 
-      // Direction lock: decide on first significant movement
+      // Direction lock: require clear horizontal intent before hijacking scroll
+      // dx must be > 12px AND at least 1.5× the vertical movement
       if (!locked) {
-        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+        if (Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 12) {
           locked = true; dragging = true;
-        } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {
-          locked = true; // vertical scroll — don't interfere
+        } else if (Math.abs(dy) > Math.abs(dx) * 1.2 && Math.abs(dy) > 12) {
+          locked = true; // vertical scroll — release entirely
         }
       }
 
       if (dragging) {
         e.preventDefault();
-        // Velocity: exponential moving average for smoothness
         const now = Date.now();
         const dt = now - lastT || 1;
         const instVel = (t.clientX - lastX) / dt;
@@ -1760,14 +1760,14 @@ const app = {
 
       const dx    = clientX - startX;
       const pW    = pageW();
-      const ratio = dx / pW;                       // how far across the page
-      const fast  = Math.abs(vel) > 0.3;           // fast flick threshold (px/ms)
+      const ratio = dx / pW;
+      const fast  = Math.abs(vel) > 0.5;   // raised: 0.3 → 0.5 px/ms
 
       let target = this.currentPage;
       if      (fast && vel < 0 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
       else if (fast && vel > 0 && this.currentPage > 0)                 target = this.currentPage - 1;
-      else if (ratio < -0.35 && this.currentPage < this.totalPages-1)   target = this.currentPage + 1;
-      else if (ratio >  0.35 && this.currentPage > 0)                   target = this.currentPage - 1;
+      else if (ratio < -0.42 && this.currentPage < this.totalPages-1)   target = this.currentPage + 1;  // raised: 0.35 → 0.42
+      else if (ratio >  0.42 && this.currentPage > 0)                   target = this.currentPage - 1;
 
       this.goToPage(target);
     };
@@ -1784,7 +1784,7 @@ const app = {
     });
     w.addEventListener('mousemove', e => {
       if (!mStart) return;
-      if (!mStart.dragging && Math.abs(e.clientX - mStart.x) > 6) mStart.dragging = true;
+      if (!mStart.dragging && Math.abs(e.clientX - mStart.x) > 12) mStart.dragging = true;
       if (mStart.dragging) {
         const now = Date.now(), dt = now - mStart.lastT || 1;
         mStart.vel = mStart.vel * 0.6 + ((e.clientX - mStart.lastX) / dt) * 0.4;
@@ -1798,12 +1798,12 @@ const app = {
       mStart = null;
       if (!was) return;
       const dx = clientX - x, pW = pageW(), ratio = dx / pW;
-      const fast = Math.abs(v) > 0.3;
+      const fast = Math.abs(v) > 0.5;
       let target = this.currentPage;
       if      (fast && v < 0 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
       else if (fast && v > 0 && this.currentPage > 0)                 target = this.currentPage - 1;
-      else if (ratio < -0.35 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
-      else if (ratio >  0.35 && this.currentPage > 0)                 target = this.currentPage - 1;
+      else if (ratio < -0.42 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
+      else if (ratio >  0.42 && this.currentPage > 0)                 target = this.currentPage - 1;
       this.goToPage(target);
     };
     w.addEventListener('mouseup',    e => endMouse(e.clientX));
