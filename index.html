@@ -101,7 +101,7 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 
 /* ══ PAGES ══ */
 .pages-wrapper{flex:1;overflow:hidden;position:relative;min-height:0;touch-action:pan-y}
-.pages-track{display:flex;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform}
+.pages-track{display:flex;height:100%;will-change:transform}
 .page{min-width:100%;width:100%;flex-shrink:0;height:100%;overflow-y:auto;overflow-x:hidden;padding:8px 12px 16px;display:flex;flex-direction:column;gap:10px}
 /* ══ BOTTOM NAV ══ */
 .bnav{height:calc(var(--nav) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--deep);border-top:1px solid var(--rim);display:flex;flex-shrink:0;z-index:10}
@@ -292,17 +292,123 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
 .dbitem:hover{border-color:var(--border)}
 .dfl{font-family:var(--fd);font-size:.63rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;display:block;margin:6px 0 2px}
 /* ══ CROP ══ */
-.crl{display:flex;height:100%}
-.crws{flex:1;background:#090909;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.crfr{width:171px;height:228px;flex-shrink:0;border:2px solid var(--blood);box-shadow:0 0 0 1000px rgba(0,0,0,.88);position:relative;overflow:hidden;touch-action:none;z-index:10;cursor:grab}
-.crfr:active{cursor:grabbing}
-.crimg{position:absolute;top:0;left:0;transform-origin:top left;pointer-events:none}
-.crsd{width:185px;flex-shrink:0;background:var(--deep);border-left:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:10px}
-.crsd p{font-size:.74rem;color:var(--muted);line-height:1.4}
-.crsd label{font-size:.63rem;color:var(--dim);font-family:var(--fd);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:3px}
-input[type=range]{width:100%;accent-color:var(--gold)}
-.bsave{background:linear-gradient(135deg,var(--crimson),var(--blood));color:#fff;border:none;padding:10px;cursor:pointer;border-radius:var(--r);font-family:var(--fd);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;transition:all .18s}
+/* Modal ocupa casi toda la pantalla en móvil */
+#crop_modal{max-width:min(520px,100vw);width:100%;height:100dvh;max-height:100dvh;border-radius:0;border:none}
+@media(min-width:480px){
+  #crop_modal{height:min(640px,92dvh);border-radius:var(--rl);border:1px solid var(--border)}
+}
+.crl{display:flex;flex-direction:column;height:100%}
+
+/* Workspace: ocupa TODO el espacio libre */
+.crws{
+  flex:1;min-height:0;
+  background:#08080b;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+  touch-action:none;cursor:grab;
+  user-select:none;-webkit-user-select:none;
+}
+.crws:active{cursor:grabbing}
+
+/* Frame: aspect 3:4 — usa container queries / fallback con % */
+.crfr{
+  position:absolute;
+  /* 3:4 ratio filling ~80% of the smaller dimension */
+  width:min(72vw, 72vh * 3/4, 260px);
+  aspect-ratio:3/4;
+  border:2px solid rgba(200,169,110,.95);
+  box-shadow:0 0 0 2000px rgba(0,0,0,.68),
+             inset 0 0 0 1px rgba(200,169,110,.15);
+  border-radius:3px;
+  pointer-events:none;
+  z-index:10;
+}
+/* Corner L-handles */
+.crfr::before,.crfr::after{
+  content:'';position:absolute;
+  width:18px;height:18px;
+  border-color:var(--gold);border-style:solid;
+}
+.crfr::before{top:-2px;left:-2px;border-width:3px 0 0 3px}
+.crfr::after{bottom:-2px;right:-2px;border-width:0 3px 3px 0}
+
+/* Image: centered in workspace */
+.crimg{
+  position:absolute;
+  transform-origin:center center;
+  pointer-events:none;
+  will-change:transform;
+  max-width:none;max-height:none;
+}
+
+/* Rule-of-thirds grid — positioned over the frame */
+.cr-grid{
+  position:absolute;
+  pointer-events:none;
+  opacity:0;transition:opacity .18s;
+  z-index:11;
+  /* Same size as .crfr — set by JS */
+}
+.crws.dragging .cr-grid{opacity:1}
+.cr-grid line{stroke:rgba(255,255,255,.18);stroke-width:1}
+
+/* Controls bar — safe area aware, always visible */
+.crsd{
+  flex-shrink:0;
+  background:var(--deep);
+  border-top:1px solid var(--border);
+  padding:10px 14px;
+  padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+  display:flex;flex-direction:column;gap:8px;
+}
+.cr-ctrl-row{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.cr-zoom-btn{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--raised);border:1px solid var(--rim);
+  color:var(--dim);font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s;line-height:1;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;
+}
+.cr-zoom-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.08)}
+.cr-zoom-btn:active{transform:scale(.88);background:rgba(200,169,110,.12)}
+input[type=range]{flex:1;accent-color:var(--gold);cursor:pointer;min-width:0;height:20px}
+.cr-zoom-lbl{font-family:var(--fm);font-size:.62rem;color:var(--muted);min-width:38px;text-align:right;flex-shrink:0}
+.cr-actions{display:flex;gap:6px;justify-content:center;flex:1;min-width:0}
+.cr-rot-btn{
+  height:36px;padding:0 10px;border-radius:8px;
+  background:var(--raised);border:1px solid var(--rim);
+  color:var(--dim);font-size:.72rem;font-family:var(--fd);
+  cursor:pointer;display:flex;align-items:center;gap:3px;
+  white-space:nowrap;transition:all .15s;flex-shrink:0;
+  touch-action:manipulation;
+}
+.cr-rot-btn:hover{border-color:rgba(74,158,202,.5);color:var(--ice);background:rgba(74,158,202,.08)}
+.cr-rot-btn:active{transform:scale(.94)}
+.cr-fit-btn{
+  height:36px;padding:0 10px;border-radius:8px;
+  background:var(--raised);border:1px solid var(--rim);
+  color:var(--dim);font-size:.72rem;font-family:var(--fd);
+  cursor:pointer;display:flex;align-items:center;gap:3px;
+  white-space:nowrap;transition:all .15s;flex-shrink:0;
+  touch-action:manipulation;
+}
+.cr-fit-btn:hover{border-color:var(--border);color:var(--text);background:var(--panel)}
+.cr-fit-btn:active{transform:scale(.94)}
+/* Apply — full-width row, tall touch target */
+.cr-apply-row{display:flex;justify-content:center}
+.bsave{
+  background:linear-gradient(135deg,var(--crimson),var(--blood));
+  color:#fff;border:none;
+  width:100%;max-width:320px;height:44px;
+  cursor:pointer;border-radius:var(--r);
+  font-family:var(--fd);font-size:.78rem;
+  letter-spacing:.08em;text-transform:uppercase;
+  transition:all .18s;white-space:nowrap;
+  touch-action:manipulation;
+}
 .bsave:hover{box-shadow:var(--gb)}
+.bsave:active{transform:scale(.97)}
 /* ══ TOAST ══ */
 #toast-ct{position:fixed;bottom:calc(var(--nav) + 12px);left:50%;transform:translateX(-50%);z-index:998;display:flex;flex-direction:column;gap:5px;pointer-events:none;align-items:center}
 .toast{background:var(--panel);color:var(--bright);padding:7px 14px;border-radius:var(--rl);border:1px solid var(--border);font-family:var(--fm);font-size:.74rem;box-shadow:var(--lg);display:flex;align-items:center;gap:7px;animation:slideUp .2s ease forwards;min-width:170px;max-width:320px;justify-content:center}
@@ -957,18 +1063,43 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 </dialog>
 
 <!-- ══ CROP MODAL ══ -->
-<dialog id="crop_modal" class="modal" style="max-width:min(700px,96vw);height:min(520px,90svh)">
-  <div class="mhd"><span class="mttl">Ajustar Retrato</span><button class="bcls" onclick="document.getElementById('crop_modal').close()">✕</button></div>
-  <div class="mbd crl" style="padding:0">
-    <div class="crws">
-      <div class="crfr" id="crop_frame"
-        onmousedown="app.startDrag(event)" ontouchstart="app.startDrag(event)">
-        <img class="crimg" id="crop_preview" src="" alt="">
+<dialog id="crop_modal" class="modal">
+  <div class="mhd">
+    <span class="mttl">✦ Ajustar Retrato</span>
+    <button class="bcls" onclick="app.cancelCrop()">✕</button>
+  </div>
+  <!-- Workspace: drag anywhere here -->
+  <div class="crws" id="crop_ws"
+    onmousedown="app.cropDragStart(event)"
+    ontouchstart="app.cropDragStart(event)">
+    <img class="crimg" id="crop_preview" src="" alt="" draggable="false">
+    <!-- Frame overlay — sized & positioned by JS -->
+    <div class="crfr" id="crop_frame"></div>
+    <!-- Rule-of-thirds grid — sized & positioned by JS -->
+    <div class="cr-grid" id="cr_grid">
+      <svg id="cr_grid_svg" overflow="visible"></svg>
+    </div>
+  </div>
+  <!-- Controls bar -->
+  <div class="crsd">
+    <!-- Zoom row -->
+    <div class="cr-ctrl-row">
+      <button class="cr-zoom-btn" onclick="app.cropZoomStep(-0.1)">−</button>
+      <input type="range" id="crop_zoom" min="0.05" max="8" step="0.005" value="1"
+        oninput="app.cropZoomSlider(this.value)">
+      <button class="cr-zoom-btn" onclick="app.cropZoomStep(0.1)">+</button>
+      <span class="cr-zoom-lbl" id="cr_zoom_lbl">100%</span>
+    </div>
+    <!-- Actions row -->
+    <div class="cr-ctrl-row">
+      <div class="cr-actions">
+        <button class="cr-rot-btn" onclick="app.cropRotate(-90)">↺ −90°</button>
+        <button class="cr-rot-btn" onclick="app.cropRotate(90)">↻ +90°</button>
+        <button class="cr-fit-btn" onclick="app.cropFit()">⊡ Fit</button>
       </div>
     </div>
-    <div class="crsd">
-      <p>Arrastra la imagen para posicionarla. Usa el deslizador para ajustar el zoom.</p>
-      <div><label>Zoom</label><input type="range" id="crop_zoom" min="0.1" max="3" step="0.01" value="1" oninput="app.updateCropView()"></div>
+    <!-- Apply — own row, centered, full touch target -->
+    <div class="cr-apply-row">
       <button class="bsave" onclick="app.applyCrop()">✓ Aplicar Retrato</button>
     </div>
   </div>
@@ -1344,7 +1475,7 @@ const app = {
   totalPages: 5,
   activeTalentCat: null,
   currentEditorCat: '',
-  cropState: {img:null,x:0,y:0,zoom:1,isDragging:false,lastX:0,lastY:0},
+  cropState: {img:null, x:0, y:0, zoom:1, rot:0, minZoom:.05, isDragging:false, lastX:0, lastY:0, pinch:null, velX:0, velY:0},
   _weaponDmgData: [{formula:'1',name:'Desarmado'},{formula:'1',name:'Desarmado'}],
   _swipe: {startX:0,startY:0,startT:0,active:false},
   _editingCustomItem: null,
@@ -1360,11 +1491,9 @@ const app = {
     this.buildAlignmentPicker();
     this.setupSwipe();
     this._initDiceSwipe();
-    // Setup crop drag listeners
-    window.addEventListener('mouseup', () => this.endDrag());
-    window.addEventListener('touchend', () => this.endDrag());
-    window.addEventListener('mousemove', e => this.doDrag(e));
-    window.addEventListener('touchmove', e => this.doDrag(e), {passive:false});
+    // Crop wheel zoom (registered once, guarded inside handler)
+    const ws = document.getElementById('crop_ws');
+    if (ws) ws.addEventListener('wheel', e => this._cropWheel(e), {passive:false});
   },
 
   /* ── SCREENS ── */
@@ -1556,66 +1685,125 @@ const app = {
   /* ── NAVIGATION ── */
   setupSwipe() {
     const w = document.getElementById('pages_wrapper');
-    let startX=0,startY=0,startT=0,active=false,locked=false;
+    const track = document.getElementById('pages_track');
+    let startX=0, startY=0, startT=0;
+    let lastX=0, lastT=0, vel=0;         // velocity tracking
+    let dragging=false, locked=false;
+
+    const pageW = () => w.clientWidth || window.innerWidth;
+
+    // Live position: follow finger with rubber-band at edges
+    const setLive = (rawDx) => {
+      const base = -this.currentPage * pageW();
+      let x = base + rawDx;
+      // Rubber-band resistance past edges
+      const atStart = this.currentPage === 0 && rawDx > 0;
+      const atEnd   = this.currentPage === this.totalPages - 1 && rawDx < 0;
+      if (atStart || atEnd) x = base + rawDx * 0.25;
+      track.style.transition = 'none';
+      track.style.transform = `translateX(${x}px)`;
+    };
 
     w.addEventListener('touchstart', e => {
       const t = e.touches[0];
-      startX=t.clientX; startY=t.clientY; startT=Date.now();
-      active=true; locked=false;
+      startX = lastX = t.clientX;
+      startY = t.clientY;
+      startT = lastT = Date.now();
+      dragging = false; locked = false; vel = 0;
+      track.style.transition = 'none';
     }, {passive:true});
 
     w.addEventListener('touchmove', e => {
-      if (!active) return;
       const t = e.touches[0];
-      const dx = Math.abs(t.clientX - startX);
-      const dy = Math.abs(t.clientY - startY);
-      if (!locked) {
-        if (dx > dy && dx > 8) { locked=true; }
-        else if (dy > dx && dy > 8) { active=false; return; }
-      }
-      if (locked) e.preventDefault();
-    }, {passive:false});
-
-    w.addEventListener('touchend', e => {
-      if (!active) return;
-      const t = e.changedTouches[0];
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
-      const dt = Date.now() - startT;
-      active=false; locked=false;
-      if (Math.abs(dx) > Math.abs(dy)*1.2 && Math.abs(dx) > 40 && dt < 450) {
-        if (dx < 0 && this.currentPage < this.totalPages-1) this.goToPage(this.currentPage+1);
-        else if (dx > 0 && this.currentPage > 0) this.goToPage(this.currentPage-1);
-      }
-    }, {passive:true});
 
-    // Desktop mouse drag
+      // Direction lock: decide on first significant movement
+      if (!locked) {
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+          locked = true; dragging = true;
+        } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {
+          locked = true; // vertical scroll — don't interfere
+        }
+      }
+
+      if (dragging) {
+        e.preventDefault();
+        // Velocity: exponential moving average for smoothness
+        const now = Date.now();
+        const dt = now - lastT || 1;
+        const instVel = (t.clientX - lastX) / dt;
+        vel = vel * 0.6 + instVel * 0.4;
+        lastX = t.clientX; lastT = now;
+
+        setLive(dx);
+      }
+    }, {passive:false});
+
+    const endSwipe = (clientX) => {
+      if (!dragging) { dragging=false; locked=false; vel=0; return; }
+      dragging = false; locked = false;
+
+      const dx    = clientX - startX;
+      const pW    = pageW();
+      const ratio = dx / pW;                       // how far across the page
+      const fast  = Math.abs(vel) > 0.3;           // fast flick threshold (px/ms)
+
+      let target = this.currentPage;
+      if      (fast && vel < 0 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
+      else if (fast && vel > 0 && this.currentPage > 0)                 target = this.currentPage - 1;
+      else if (ratio < -0.35 && this.currentPage < this.totalPages-1)   target = this.currentPage + 1;
+      else if (ratio >  0.35 && this.currentPage > 0)                   target = this.currentPage - 1;
+
+      this.goToPage(target);
+    };
+
+    w.addEventListener('touchend',    e => endSwipe(e.changedTouches[0].clientX), {passive:true});
+    w.addEventListener('touchcancel', e => this.goToPage(this.currentPage),        {passive:true});
+
+    // ── Desktop mouse drag ──
     let mStart = null;
     w.addEventListener('mousedown', e => {
       if (e.target.closest('input,select,textarea,button,label')) return;
-      mStart={x:e.clientX,t:Date.now()};
+      mStart = {x:e.clientX, t:Date.now(), lastX:e.clientX, lastT:Date.now(), vel:0, dragging:false};
+      track.style.transition = 'none';
     });
     w.addEventListener('mousemove', e => {
       if (!mStart) return;
-      if (Math.abs(e.clientX - mStart.x) > 5) mStart.dragging=true;
-    });
-    w.addEventListener('mouseup', e => {
-      if (!mStart) return;
-      const dx = e.clientX - mStart.x, dt = Date.now() - mStart.t;
-      const wasDragging = mStart.dragging;
-      mStart = null;
-      if (wasDragging && Math.abs(dx) > 55 && dt < 400) {
-        if (dx < 0 && this.currentPage < this.totalPages-1) this.goToPage(this.currentPage+1);
-        else if (dx > 0 && this.currentPage > 0) this.goToPage(this.currentPage-1);
+      if (!mStart.dragging && Math.abs(e.clientX - mStart.x) > 6) mStart.dragging = true;
+      if (mStart.dragging) {
+        const now = Date.now(), dt = now - mStart.lastT || 1;
+        mStart.vel = mStart.vel * 0.6 + ((e.clientX - mStart.lastX) / dt) * 0.4;
+        mStart.lastX = e.clientX; mStart.lastT = now;
+        setLive(e.clientX - mStart.x);
       }
     });
+    const endMouse = (clientX) => {
+      if (!mStart) return;
+      const {x, dragging: was, vel: v} = mStart;
+      mStart = null;
+      if (!was) return;
+      const dx = clientX - x, pW = pageW(), ratio = dx / pW;
+      const fast = Math.abs(v) > 0.3;
+      let target = this.currentPage;
+      if      (fast && v < 0 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
+      else if (fast && v > 0 && this.currentPage > 0)                 target = this.currentPage - 1;
+      else if (ratio < -0.35 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
+      else if (ratio >  0.35 && this.currentPage > 0)                 target = this.currentPage - 1;
+      this.goToPage(target);
+    };
+    w.addEventListener('mouseup',    e => endMouse(e.clientX));
+    w.addEventListener('mouseleave', e => endMouse(e.clientX));
   },
 
   goToPage(n) {
     this.currentPage = n;
     const w = document.getElementById('pages_wrapper');
+    const track = document.getElementById('pages_track');
     const pageW = w ? w.clientWidth : window.innerWidth;
-    document.getElementById('pages_track').style.transform = `translateX(-${n * pageW}px)`;
+    // Restore smooth spring transition for snap
+    track.style.transition = 'transform .32s cubic-bezier(.25,.46,.45,.94)';
+    track.style.transform  = `translateX(-${n * pageW}px)`;
     document.querySelectorAll('.nbtn').forEach((b,i) => b.classList.toggle('active', i===n));
     if (n === 4) this.buildDetailPage();
     if (n === 2) this.buildAptitudesPage();
@@ -2884,67 +3072,300 @@ const app = {
   },
 
   /* ── CROPPER ── */
+
+  // Returns the frame dimensions computed from the workspace size
+  _cropFrameSize() {
+    const ws = document.getElementById('crop_ws');
+    if (!ws) return {w:171, h:228};
+    const wsW = ws.clientWidth, wsH = ws.clientHeight;
+    // Fill 88% of the smaller dimension, keeping 3:4 ratio
+    const maxW = wsW * 0.88, maxH = wsH * 0.88;
+    let fw = maxW, fh = fw * (4/3);
+    if (fh > maxH) { fh = maxH; fw = fh * (3/4); }
+    return {w: Math.round(fw), h: Math.round(fh)};
+  },
+
+  // Position & size the frame element, and the grid overlay
+  _cropPositionFrame() {
+    const {w, h} = this._cropFrameSize();
+    const frame = document.getElementById('crop_frame');
+    if (frame) {
+      frame.style.width  = w + 'px';
+      frame.style.height = h + 'px';
+      frame.style.left   = '50%';
+      frame.style.top    = '50%';
+      frame.style.transform = 'translate(-50%,-50%)';
+    }
+    // Position the grid SVG over the frame
+    const grid = document.getElementById('cr_grid');
+    const svg  = document.getElementById('cr_grid_svg');
+    if (grid && svg) {
+      grid.style.cssText = `position:absolute;left:50%;top:50%;width:${w}px;height:${h}px;transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .18s;z-index:11`;
+      const t = (n) => `<line x1="${n}" y1="0" x2="${n}" y2="${h}" stroke="rgba(255,255,255,.2)" stroke-width="1"/>`;
+      const l = (n) => `<line x1="0" y1="${n}" x2="${w}" y2="${n}" stroke="rgba(255,255,255,.2)" stroke-width="1"/>`;
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svg.innerHTML = t(w/3) + t(w*2/3) + l(h/3) + l(h*2/3);
+    }
+  },
+
   startCrop(input) {
     if (!input.files?.[0]) return;
     const r = new FileReader();
     r.onload = e => {
-      app.cropState.img = new Image();
-      app.cropState.img.onload = function() {
-        const W=171,H=228;
-        const sc = Math.max(W/this.naturalWidth, H/this.naturalHeight);
-        app.cropState.zoom=sc; app.cropState.x=(W-this.naturalWidth*sc)/2; app.cropState.y=(H-this.naturalHeight*sc)/2;
-        const sl = document.getElementById('crop_zoom');
-        sl.min=sc*0.1; sl.max=sc*5; sl.step=0.01; sl.value=sc;
-        document.getElementById('crop_preview').src = app.cropState.img.src;
+      const img = new Image();
+      img.onerror = () => this.toast('Imagen inválida','Error');
+      img.onload = () => {
+        this.cropState.img = img;
+        this.cropState.rot = 0;
+        document.getElementById('crop_preview').src = img.src;
         document.getElementById('crop_modal').showModal();
-        app.updateCropView();
+        // Two frames: let modal render fully, then size frame & fit
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          this._cropPositionFrame();
+          this.cropFit();
+        }));
       };
-      app.cropState.img.onerror = () => app.toast('Imagen inválida','Error');
-      app.cropState.img.src = e.target.result;
+      img.src = e.target.result;
     };
-    r.readAsDataURL(input.files[0]); input.value='';
+    r.readAsDataURL(input.files[0]);
+    input.value = '';
   },
 
-  updateCropView() {
-    app.cropState.zoom = parseFloat(document.getElementById('crop_zoom').value);
+  // Fit image to fill the frame, centered
+  cropFit() {
+    const cs = this.cropState;
+    if (!cs.img) return;
+    this._cropPositionFrame();
+    const {w: FW, h: FH} = this._cropFrameSize();
+    const isRot90 = cs.rot % 180 !== 0;
+    const natW = isRot90 ? cs.img.naturalHeight : cs.img.naturalWidth;
+    const natH = isRot90 ? cs.img.naturalWidth  : cs.img.naturalHeight;
+    cs.zoom = Math.max(FW / natW, FH / natH);
+    cs.minZoom = cs.zoom * 0.25;
+    cs.x = 0; cs.y = 0;
+    this._cropApply();
+    this._cropUpdateSlider();
+  },
+
+  cropZoomStep(delta) {
+    const cs = this.cropState;
+    const prev = cs.zoom;
+    cs.zoom = Math.max(cs.minZoom || 0.05, Math.min(8, cs.zoom + delta));
+    const ratio = cs.zoom / prev;
+    cs.x *= ratio; cs.y *= ratio;
+    this._cropApply();
+    this._cropUpdateSlider();
+  },
+
+  cropZoomSlider(val) {
+    const cs = this.cropState;
+    const prev = cs.zoom;
+    cs.zoom = parseFloat(val);
+    const ratio = cs.zoom / prev;
+    cs.x *= ratio; cs.y *= ratio;
+    this._cropApply();
+    this._cropUpdateSlider();
+  },
+
+  cropRotate(deg) {
+    const cs = this.cropState;
+    cs.rot = (cs.rot + deg + 360) % 360;
+    cs.x = 0; cs.y = 0;
+    this.cropFit();
+  },
+
+  cancelCrop() {
+    document.getElementById('crop_modal').close();
+    this.cropState = {img:null, x:0, y:0, zoom:1, rot:0, minZoom:.05,
+      isDragging:false, lastX:0, lastY:0, pinch:null, velX:0, velY:0};
+  },
+
+  // ── Internal: apply transform ──
+  _cropApply() {
+    const cs = this.cropState;
+    if (!cs.img) return;
+    cs.x = this._cropClamp('x');
+    cs.y = this._cropClamp('y');
     const img = document.getElementById('crop_preview');
-    img.style.transform = `translate3d(${app.cropState.x}px,${app.cropState.y}px,0) scale(${app.cropState.zoom})`;
-    img.style.transformOrigin = '0 0';
+    img.style.transform = `translate(${cs.x}px,${cs.y}px) rotate(${cs.rot}deg) scale(${cs.zoom})`;
   },
 
-  startDrag(e) {
-    if (!document.getElementById('crop_modal').open) return;
-    app.cropState.isDragging=true;
-    const p = e.touches?.[0]||e;
-    app.cropState.lastX=p.clientX; app.cropState.lastY=p.clientY;
-    if (e.touches) e.preventDefault();
+  _cropClamp(axis) {
+    const cs = this.cropState;
+    const {w: FW, h: FH} = this._cropFrameSize();
+    const isRot90 = cs.rot % 180 !== 0;
+    const scaledW = (isRot90 ? cs.img.naturalHeight : cs.img.naturalWidth)  * cs.zoom;
+    const scaledH = (isRot90 ? cs.img.naturalWidth  : cs.img.naturalHeight) * cs.zoom;
+    if (axis === 'x') {
+      const half = Math.max(0, scaledW/2 - FW/2);
+      return Math.min(half, Math.max(-half, cs.x));
+    } else {
+      const half = Math.max(0, scaledH/2 - FH/2);
+      return Math.min(half, Math.max(-half, cs.y));
+    }
   },
-  doDrag(e) {
-    if (!app.cropState.isDragging) return;
-    const p = e.touches?.[0]||e;
-    app.cropState.x += p.clientX-app.cropState.lastX;
-    app.cropState.y += p.clientY-app.cropState.lastY;
-    app.cropState.lastX=p.clientX; app.cropState.lastY=p.clientY;
-    app.updateCropView();
-    if (e.touches) e.preventDefault();
+
+  _cropUpdateSlider() {
+    const cs = this.cropState;
+    const sl = document.getElementById('crop_zoom');
+    if (sl) { sl.min = cs.minZoom || 0.05; sl.value = cs.zoom; }
+    const lbl = document.getElementById('cr_zoom_lbl');
+    if (lbl) lbl.innerText = Math.round(cs.zoom * 100) + '%';
   },
-  endDrag() { app.cropState.isDragging=false; },
+
+  // ── Drag ──
+  cropDragStart(e) {
+    const cs = this.cropState;
+    if (!cs.img) return;
+    e.preventDefault();
+    const ws = document.getElementById('crop_ws');
+    ws.classList.add('dragging');
+
+    // ── unified pointer state ──
+    let rafPending = false;
+    const scheduleApply = () => {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => { rafPending = false; this._cropApply(); });
+    };
+
+    const getTouches = (ev) => ev.touches ? Array.from(ev.touches) : null;
+    const pinchDist  = (t) => Math.hypot(t[1].clientX-t[0].clientX, t[1].clientY-t[0].clientY);
+    const pinchMid   = (t) => ({ x:(t[0].clientX+t[1].clientX)/2, y:(t[0].clientY+t[1].clientY)/2 });
+
+    // State
+    let mode      = 'idle'; // 'drag' | 'pinch'
+    let lastX     = 0, lastY = 0;
+    let pinchRef  = null;   // {dist, zoom, midX, midY, imgX, imgY}
+    cs.velX = 0; cs.velY = 0; cs._lastTime = Date.now();
+
+    // Init from first event
+    const touches = getTouches(e);
+    if (touches?.length >= 2) {
+      mode = 'pinch';
+      pinchRef = { dist: pinchDist(touches), zoom: cs.zoom, midX: pinchMid(touches).x, midY: pinchMid(touches).y, imgX: cs.x, imgY: cs.y };
+    } else {
+      mode = 'drag';
+      const p = touches?.[0] || e;
+      lastX = p.clientX; lastY = p.clientY;
+    }
+
+    const onMove = (ev) => {
+      ev.preventDefault();
+      const ts = getTouches(ev);
+
+      // Transition drag→pinch when second finger lands
+      if (ts?.length >= 2 && mode === 'drag') {
+        mode = 'pinch';
+        pinchRef = { dist: pinchDist(ts), zoom: cs.zoom, midX: pinchMid(ts).x, midY: pinchMid(ts).y, imgX: cs.x, imgY: cs.y };
+        cs.velX = 0; cs.velY = 0;
+        return;
+      }
+
+      // Transition pinch→drag when one finger lifts
+      if (ts?.length === 1 && mode === 'pinch') {
+        mode = 'drag';
+        pinchRef = null;
+        lastX = ts[0].clientX; lastY = ts[0].clientY;
+        cs.velX = 0; cs.velY = 0;
+        return;
+      }
+
+      if (mode === 'pinch' && ts?.length >= 2) {
+        const dist  = pinchDist(ts);
+        const ratio = dist / pinchRef.dist;
+        const newZoom = Math.max(cs.minZoom||.05, Math.min(8, pinchRef.zoom * ratio));
+
+        // Zoom towards pinch midpoint
+        const mid = pinchMid(ts);
+        const dMidX = mid.x - pinchRef.midX;
+        const dMidY = mid.y - pinchRef.midY;
+        cs.zoom = newZoom;
+        // Re-anchor position so pinch center stays fixed
+        cs.x = pinchRef.imgX * ratio + dMidX;
+        cs.y = pinchRef.imgY * ratio + dMidY;
+        scheduleApply();
+        this._cropUpdateSlider();
+
+      } else if (mode === 'drag') {
+        const pt = ts?.[0] || ev;
+        const now = Date.now(), dt = Math.max(now - (cs._lastTime||now), 1);
+        const ddx = pt.clientX - lastX, ddy = pt.clientY - lastY;
+        cs.velX = cs.velX * 0.55 + (ddx / dt) * 0.45;
+        cs.velY = cs.velY * 0.55 + (ddy / dt) * 0.45;
+        lastX = pt.clientX; lastY = pt.clientY; cs._lastTime = now;
+        cs.x += ddx; cs.y += ddy;
+        scheduleApply();
+      }
+    };
+
+    const onEnd = (ev) => {
+      const ts = getTouches(ev);
+      // Still have one finger — back to drag
+      if (ts?.length === 1 && mode === 'pinch') {
+        mode = 'drag';
+        pinchRef = null;
+        lastX = ts[0].clientX; lastY = ts[0].clientY;
+        cs.velX = 0; cs.velY = 0;
+        return;
+      }
+      // All fingers up
+      if (!ts?.length || ts.length === 0) {
+        mode = 'idle';
+        ws.classList.remove('dragging');
+        this._cropInertia();
+        window.removeEventListener('mousemove',  onMove);
+        window.removeEventListener('touchmove',  onMove);
+        window.removeEventListener('mouseup',    onEnd);
+        window.removeEventListener('touchend',   onEnd);
+      }
+    };
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('touchmove', onMove, {passive:false});
+    window.addEventListener('mouseup',   onEnd);
+    window.addEventListener('touchend',  onEnd);
+  },
+
+  _cropInertia() {
+    const cs = this.cropState;
+    let vx = cs.velX * 80, vy = cs.velY * 80;
+    const step = () => {
+      if (Math.abs(vx) < 0.3 && Math.abs(vy) < 0.3) return;
+      cs.x += vx; cs.y += vy;
+      vx *= 0.88; vy *= 0.88;
+      this._cropApply();
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  },
+
+  _cropWheel(e) {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.07 : 0.07;
+    this.cropZoomStep(delta);
+  },
 
   applyCrop() {
-    if (!app.cropState.img) return;
+    const cs = this.cropState;
+    if (!cs.img) return;
+    const {w: FW, h: FH} = this._cropFrameSize();
+    const SC = 2; // 2× for retina
     const canvas = document.createElement('canvas');
-    canvas.width=342; canvas.height=456;
+    canvas.width = FW * SC; canvas.height = FH * SC;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle='#111'; ctx.fillRect(0,0,342,456);
-    ctx.translate(app.cropState.x*2, app.cropState.y*2);
-    ctx.scale(app.cropState.zoom*2, app.cropState.zoom*2);
-    ctx.drawImage(app.cropState.img,0,0);
-    const src = canvas.toDataURL('image/jpeg',.92);
-    // Set BOTH images immediately
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.translate(canvas.width/2, canvas.height/2);
+    ctx.rotate(cs.rot * Math.PI / 180);
+    ctx.scale(cs.zoom * SC, cs.zoom * SC);
+    ctx.translate(cs.x / cs.zoom, cs.y / cs.zoom);
+    ctx.drawImage(cs.img, -cs.img.naturalWidth/2, -cs.img.naturalHeight/2);
+    const src = canvas.toDataURL('image/jpeg', .92);
     document.getElementById('char_img').src = src;
     document.getElementById('char_img_summary').src = src;
     document.getElementById('crop_modal').close();
-    this.toast('Retrato actualizado');
+    this.toast('Retrato actualizado', '✦');
   },
 
   /* ── RULES IMPORT ── */
