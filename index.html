@@ -270,6 +270,8 @@ input[type=radio]:checked::after{transform:scale(1)}
 /* ══ MODALS ══ */
 dialog.modal{background:var(--deep);color:var(--text);border:1px solid var(--border);border-radius:var(--rl);width:min(96vw,920px);padding:0;box-shadow:0 24px 80px rgba(0,0,0,.85);position:fixed;inset:0;margin:auto;max-height:90svh;display:none;flex-direction:column;z-index:200;overflow:hidden}
 dialog.modal[open]{display:flex;animation:popIn .22s cubic-bezier(.18,.89,.32,1.28) forwards}
+/* crop_modal overrides the global max-height */
+#crop_modal{max-height:none}
 dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
 @keyframes popIn{from{opacity:0;transform:scale(.95) translateY(16px)}to{opacity:1;transform:none}}
 .mhd{background:var(--surface);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -292,16 +294,40 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
 .dbitem:hover{border-color:var(--border)}
 .dfl{font-family:var(--fd);font-size:.63rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;display:block;margin:6px 0 2px}
 /* ══ CROP ══ */
-/* Modal ocupa casi toda la pantalla en móvil */
-#crop_modal{max-width:min(520px,100vw);width:100%;height:100dvh;max-height:100dvh;border-radius:0;border:none}
-@media(min-width:480px){
-  #crop_modal{height:min(640px,92dvh);border-radius:var(--rl);border:1px solid var(--border)}
+/* Override base dialog constraints — crop needs full viewport on mobile */
+#crop_modal{
+  max-width:min(520px,100vw);
+  width:100%;
+  /* Full screen on mobile */
+  height:100dvh;
+  max-height:100dvh;
+  border-radius:0;
+  border:none;
+  inset:0;
+  margin:0;
 }
-.crl{display:flex;flex-direction:column;height:100%}
-
-/* Workspace: ocupa TODO el espacio libre */
+@media(min-width:480px){
+  #crop_modal{
+    height:min(640px,92dvh);
+    max-height:min(640px,92dvh);
+    border-radius:var(--rl);
+    border:1px solid var(--border);
+    inset:0;
+    margin:auto;
+  }
+}
+/* The flex column that fills the dialog — must match dialog height exactly */
+#crop_modal .crl{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+}
+/* Workspace: takes ALL remaining space after header + controls */
 .crws{
-  flex:1;min-height:0;
+  flex:1 1 0;
+  min-height:0;
   background:#08080b;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;position:relative;
@@ -310,20 +336,16 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
 }
 .crws:active{cursor:grabbing}
 
-/* Frame: aspect 3:4 — usa container queries / fallback con % */
+/* Frame overlay — sized & centered by JS */
 .crfr{
   position:absolute;
-  /* 3:4 ratio filling ~80% of the smaller dimension */
-  width:min(72vw, 72vh * 3/4, 260px);
-  aspect-ratio:3/4;
   border:2px solid rgba(200,169,110,.95);
   box-shadow:0 0 0 2000px rgba(0,0,0,.68),
-             inset 0 0 0 1px rgba(200,169,110,.15);
+             inset 0 0 0 1px rgba(200,169,110,.12);
   border-radius:3px;
   pointer-events:none;
   z-index:10;
 }
-/* Corner L-handles */
 .crfr::before,.crfr::after{
   content:'';position:absolute;
   width:18px;height:18px;
@@ -332,7 +354,7 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
 .crfr::before{top:-2px;left:-2px;border-width:3px 0 0 3px}
 .crfr::after{bottom:-2px;right:-2px;border-width:0 3px 3px 0}
 
-/* Image: centered in workspace */
+/* Image */
 .crimg{
   position:absolute;
   transform-origin:center center;
@@ -341,74 +363,75 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
   max-width:none;max-height:none;
 }
 
-/* Rule-of-thirds grid — positioned over the frame */
+/* Rule-of-thirds grid */
 .cr-grid{
   position:absolute;
   pointer-events:none;
   opacity:0;transition:opacity .18s;
   z-index:11;
-  /* Same size as .crfr — set by JS */
 }
 .crws.dragging .cr-grid{opacity:1}
-.cr-grid line{stroke:rgba(255,255,255,.18);stroke-width:1}
 
-/* Controls bar — safe area aware, always visible */
+/* Controls bar — fixed height, never scrolls, safe-area aware */
 .crsd{
-  flex-shrink:0;
+  flex:0 0 auto;
   background:var(--deep);
   border-top:1px solid var(--border);
   padding:10px 14px;
-  padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+  padding-bottom:max(10px, env(safe-area-inset-bottom, 10px));
   display:flex;flex-direction:column;gap:8px;
+  overflow:visible;
 }
-.cr-ctrl-row{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.cr-ctrl-row{display:flex;align-items:center;gap:6px}
 .cr-zoom-btn{
-  width:36px;height:36px;border-radius:8px;
+  width:40px;height:40px;border-radius:8px;
   background:var(--raised);border:1px solid var(--rim);
-  color:var(--dim);font-size:1.2rem;cursor:pointer;
+  color:var(--dim);font-size:1.3rem;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:all .15s;line-height:1;
   -webkit-user-select:none;user-select:none;touch-action:manipulation;
 }
 .cr-zoom-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.08)}
-.cr-zoom-btn:active{transform:scale(.88);background:rgba(200,169,110,.12)}
-input[type=range]{flex:1;accent-color:var(--gold);cursor:pointer;min-width:0;height:20px}
+.cr-zoom-btn:active{transform:scale(.88)}
+input[type=range]{flex:1;accent-color:var(--gold);cursor:pointer;min-width:0;height:22px}
 .cr-zoom-lbl{font-family:var(--fm);font-size:.62rem;color:var(--muted);min-width:38px;text-align:right;flex-shrink:0}
-.cr-actions{display:flex;gap:6px;justify-content:center;flex:1;min-width:0}
+.cr-actions{display:flex;gap:6px;justify-content:center;width:100%}
 .cr-rot-btn{
-  height:36px;padding:0 10px;border-radius:8px;
+  flex:1;max-width:110px;height:40px;padding:0 8px;border-radius:8px;
   background:var(--raised);border:1px solid var(--rim);
   color:var(--dim);font-size:.72rem;font-family:var(--fd);
-  cursor:pointer;display:flex;align-items:center;gap:3px;
-  white-space:nowrap;transition:all .15s;flex-shrink:0;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;
+  white-space:nowrap;transition:all .15s;
   touch-action:manipulation;
 }
 .cr-rot-btn:hover{border-color:rgba(74,158,202,.5);color:var(--ice);background:rgba(74,158,202,.08)}
 .cr-rot-btn:active{transform:scale(.94)}
 .cr-fit-btn{
-  height:36px;padding:0 10px;border-radius:8px;
+  flex:1;max-width:110px;height:40px;padding:0 8px;border-radius:8px;
   background:var(--raised);border:1px solid var(--rim);
   color:var(--dim);font-size:.72rem;font-family:var(--fd);
-  cursor:pointer;display:flex;align-items:center;gap:3px;
-  white-space:nowrap;transition:all .15s;flex-shrink:0;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;
+  white-space:nowrap;transition:all .15s;
   touch-action:manipulation;
 }
 .cr-fit-btn:hover{border-color:var(--border);color:var(--text);background:var(--panel)}
 .cr-fit-btn:active{transform:scale(.94)}
-/* Apply — full-width row, tall touch target */
-.cr-apply-row{display:flex;justify-content:center}
+/* Apply row — full width, prominent */
+.cr-apply-row{display:flex}
 .bsave{
+  flex:1;
   background:linear-gradient(135deg,var(--crimson),var(--blood));
   color:#fff;border:none;
-  width:100%;max-width:320px;height:44px;
+  height:48px;
   cursor:pointer;border-radius:var(--r);
-  font-family:var(--fd);font-size:.78rem;
-  letter-spacing:.08em;text-transform:uppercase;
+  font-family:var(--fd);font-size:.82rem;
+  letter-spacing:.09em;text-transform:uppercase;
   transition:all .18s;white-space:nowrap;
   touch-action:manipulation;
+  box-shadow:0 2px 12px rgba(125,28,42,.4);
 }
 .bsave:hover{box-shadow:var(--gb)}
-.bsave:active{transform:scale(.97)}
+.bsave:active{transform:scale(.98);opacity:.9}
 /* ══ TOAST ══ */
 #toast-ct{position:fixed;bottom:calc(var(--nav) + 12px);left:50%;transform:translateX(-50%);z-index:998;display:flex;flex-direction:column;gap:5px;pointer-events:none;align-items:center}
 .toast{background:var(--panel);color:var(--bright);padding:7px 14px;border-radius:var(--rl);border:1px solid var(--border);font-family:var(--fm);font-size:.74rem;box-shadow:var(--lg);display:flex;align-items:center;gap:7px;animation:slideUp .2s ease forwards;min-width:170px;max-width:320px;justify-content:center}
@@ -481,11 +504,9 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
   .tml{grid-template-columns:1fr;grid-template-rows:auto 1fr}
   .tms{border-right:none;border-bottom:1px solid var(--border);flex-direction:row;flex-wrap:wrap;gap:4px;padding:6px}
   .catbtn{width:auto;padding:4px 8px;font-size:.7rem}
-  dialog.modal{width:100vw;height:100dvh;max-height:100dvh;border-radius:0;border:none;inset:0;margin:0}
+  dialog.modal:not(#crop_modal){width:100vw;height:100dvh;max-height:100dvh;border-radius:0;border:none;inset:0;margin:0}
   .dbl{grid-template-columns:1fr;grid-template-rows:auto 1fr}
   .dbs{border-right:none;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:4px}
-  .crl{flex-direction:column}
-  .crsd{width:100%;flex-direction:row;align-items:center;justify-content:space-between;padding:8px 10px;border-left:none;border-top:1px solid var(--border);gap:8px}
 }
 @media(max-width:400px){.g6{grid-template-columns:repeat(2,1fr)}.saves-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
@@ -1064,43 +1085,36 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 
 <!-- ══ CROP MODAL ══ -->
 <dialog id="crop_modal" class="modal">
-  <div class="mhd">
-    <span class="mttl">✦ Ajustar Retrato</span>
-    <button class="bcls" onclick="app.cancelCrop()">✕</button>
-  </div>
-  <!-- Workspace: drag anywhere here -->
-  <div class="crws" id="crop_ws"
-    onmousedown="app.cropDragStart(event)"
-    ontouchstart="app.cropDragStart(event)">
-    <img class="crimg" id="crop_preview" src="" alt="" draggable="false">
-    <!-- Frame overlay — sized & positioned by JS -->
-    <div class="crfr" id="crop_frame"></div>
-    <!-- Rule-of-thirds grid — sized & positioned by JS -->
-    <div class="cr-grid" id="cr_grid">
-      <svg id="cr_grid_svg" overflow="visible"></svg>
+  <div class="crl">
+    <div class="mhd">
+      <span class="mttl">✦ Ajustar Retrato</span>
+      <button class="bcls" onclick="app.cancelCrop()">✕</button>
     </div>
-  </div>
-  <!-- Controls bar -->
-  <div class="crsd">
-    <!-- Zoom row -->
-    <div class="cr-ctrl-row">
-      <button class="cr-zoom-btn" onclick="app.cropZoomStep(-0.1)">−</button>
-      <input type="range" id="crop_zoom" min="0.05" max="8" step="0.005" value="1"
-        oninput="app.cropZoomSlider(this.value)">
-      <button class="cr-zoom-btn" onclick="app.cropZoomStep(0.1)">+</button>
-      <span class="cr-zoom-lbl" id="cr_zoom_lbl">100%</span>
+    <div class="crws" id="crop_ws"
+      onmousedown="app.cropDragStart(event)"
+      ontouchstart="app.cropDragStart(event)">
+      <img class="crimg" id="crop_preview" src="" alt="" draggable="false">
+      <div class="crfr" id="crop_frame"></div>
+      <div class="cr-grid" id="cr_grid"><svg id="cr_grid_svg" overflow="visible"></svg></div>
     </div>
-    <!-- Actions row -->
-    <div class="cr-ctrl-row">
-      <div class="cr-actions">
-        <button class="cr-rot-btn" onclick="app.cropRotate(-90)">↺ −90°</button>
-        <button class="cr-rot-btn" onclick="app.cropRotate(90)">↻ +90°</button>
-        <button class="cr-fit-btn" onclick="app.cropFit()">⊡ Fit</button>
+    <div class="crsd">
+      <div class="cr-ctrl-row">
+        <button class="cr-zoom-btn" onclick="app.cropZoomStep(-0.1)">−</button>
+        <input type="range" id="crop_zoom" min="0.05" max="8" step="0.005" value="1"
+          oninput="app.cropZoomSlider(this.value)">
+        <button class="cr-zoom-btn" onclick="app.cropZoomStep(0.1)">+</button>
+        <span class="cr-zoom-lbl" id="cr_zoom_lbl">100%</span>
       </div>
-    </div>
-    <!-- Apply — own row, centered, full touch target -->
-    <div class="cr-apply-row">
-      <button class="bsave" onclick="app.applyCrop()">✓ Aplicar Retrato</button>
+      <div class="cr-ctrl-row">
+        <div class="cr-actions">
+          <button class="cr-rot-btn" onclick="app.cropRotate(-90)">↺ −90°</button>
+          <button class="cr-rot-btn" onclick="app.cropRotate(90)">↻ +90°</button>
+          <button class="cr-fit-btn" onclick="app.cropFit()">⊡ Fit</button>
+        </div>
+      </div>
+      <div class="cr-apply-row">
+        <button class="bsave" onclick="app.applyCrop()">✓ Aplicar Retrato</button>
+      </div>
     </div>
   </div>
 </dialog>
