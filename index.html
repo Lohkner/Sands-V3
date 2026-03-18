@@ -24,12 +24,10 @@
 .fs-btn:hover{border-color:var(--border);color:var(--text)}
 .sc{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center}
 .sc-lbl{font-family:var(--fd);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;font-weight:600;opacity:.92}
-.sc-val{font-family:var(--fd);font-size:.92rem;font-weight:700}
-.mb4{margin-bottom:4px}.mb5{margin-bottom:5px}.mb6{margin-bottom:6px}.mb8{margin-bottom:8px}
-.mt4{margin-top:4px}.mt6{margin-top:6px}.mt8{margin-top:8px}
+
+.mb4{margin-bottom:4px}.mb5{margin-bottom:5px}
+.mt4{margin-top:4px}
 .g3c{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-.g3c-6{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.txt-it{color:var(--muted);font-size:.8rem;font-style:italic}
 .txt-it-c{color:var(--muted);font-size:.8rem;font-style:italic;text-align:center;padding:8px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,15 +63,12 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .home-body{max-width:480px;margin:0 auto;padding:0 16px}
 .home-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px}
 .roster-lbl{font-family:var(--fd);font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.15em;margin-bottom:10px;padding-left:2px}
-.char-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.char-card::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(200,169,110,.04),transparent);opacity:0;transition:opacity .2s}
-.char-card:hover{border-color:rgba(200,169,110,.4);box-shadow:0 0 0 1px var(--glow-g)}.char-card:hover::before{opacity:1}.char-card:active{transform:scale(.99)}
+
 .char-port{width:44px;height:58px;border-radius:3px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);background:var(--raised)}
 .char-port-ph{width:44px;height:58px;border-radius:3px;flex-shrink:0;border:1px solid var(--rim);background:var(--raised);display:flex;align-items:center;justify-content:center;color:var(--border);font-size:1.3rem}
 .char-ci{flex:1;min-width:0}
 .char-cn{font-family:var(--fd);font-size:.88rem;color:var(--bright);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .char-cs{font-family:var(--fm);font-size:.62rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.char-ca{display:flex;gap:4px;flex-shrink:0}
 .home-empty{text-align:center;padding:40px 20px;color:var(--muted);font-style:italic;font-size:.88rem}
 /* ══ SWIPE TO DELETE ══ */
 .char-card-wrap{position:relative;overflow:hidden;border-radius:var(--rl);margin-bottom:8px}
@@ -106,7 +101,7 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 
 /* ══ PAGES ══ */
 .pages-wrapper{flex:1;overflow:hidden;position:relative;min-height:0;touch-action:pan-y}
-.pages-track{display:flex;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform}
+.pages-track{display:flex;height:100%;will-change:transform}
 .page{min-width:100%;width:100%;flex-shrink:0;height:100%;overflow-y:auto;overflow-x:hidden;padding:8px 12px 16px;display:flex;flex-direction:column;gap:10px}
 /* ══ BOTTOM NAV ══ */
 .bnav{height:calc(var(--nav) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--deep);border-top:1px solid var(--rim);display:flex;flex-shrink:0;z-index:10}
@@ -119,9 +114,9 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .panel-accent{border-color:rgba(200,169,110,.35);box-shadow:var(--md),inset 0 0 40px rgba(200,169,110,.03)}
 .ph{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--rim)}
 .pt{font-family:var(--fd);font-size:.82rem;font-weight:600;color:var(--gold);letter-spacing:.07em;text-transform:uppercase}
-.snum{font-family:var(--fm);font-size:.58rem;color:var(--muted);background:var(--raised);border:1px solid var(--rim);padding:1px 5px;border-radius:3px}
 /* ══ PORTRAIT ══ */
-.portrait-wrap{position:relative;display:block;width:100%;height:228px;min-height:228px;overflow:hidden;border-radius:var(--rl) var(--rl) 0 0;border-bottom:1px solid var(--border)}
+.port-hint{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.78) 0%,transparent 55%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;opacity:0;transition:opacity .25s;pointer-events:none}
+.port-hint span{font-family:var(--fm);font-size:.58rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase}
 .port-card{position:relative;width:308px;max-width:100%;height:422px;overflow:hidden;border-radius:var(--rl);border:1px solid rgba(200,169,110,.35);flex-shrink:0;box-shadow:0 4px 24px rgba(0,0,0,.5)}
 .port-card img{display:block;width:100%;height:100%;object-fit:cover;background:var(--raised)}
 .port-card-edit{position:relative;width:308px;max-width:100%;height:422px;overflow:hidden;border-radius:var(--rl);border:1px dashed rgba(200,169,110,.5);flex-shrink:0;cursor:pointer;transition:border-color .2s}
@@ -129,13 +124,7 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 .port-card-edit:hover .port-hint{opacity:1}
 .port-card-edit:hover img{transform:scale(1.03)}
 .port-card-edit img{display:block;width:100%;height:100%;object-fit:cover;background:var(--raised);transition:transform .3s ease}
-.portrait-wrap img{display:block;width:100%;height:228px;min-height:228px;object-fit:cover;background:var(--raised)}
-.portrait-wrap.editable{cursor:pointer}
-.portrait-wrap.editable:hover img{transform:scale(1.04)}
-.portrait-wrap.editable:hover .port-hint{opacity:1}
-.port-hint{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.78) 0%,transparent 55%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;opacity:0;transition:opacity .25s;pointer-events:none}
-.port-hint span{font-family:var(--fm);font-size:.58rem;color:var(--gold);letter-spacing:.22em;text-transform:uppercase}
-.port-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,transparent 55%);padding:32px 14px 14px;pointer-events:none}
+
 .port-identity{width:308px;max-width:100%;text-align:center;padding:10px 0 4px}
 .port-name{font-family:var(--fd);font-size:1.1rem;color:var(--goldb);letter-spacing:.05em}
 .port-divider{width:55%;margin:8px auto 7px;height:1px;background:linear-gradient(90deg,transparent,rgba(200,169,110,.55) 15%,var(--gold) 50%,rgba(200,169,110,.55) 85%,transparent)}
@@ -178,21 +167,32 @@ input[type=radio]:checked::after{transform:scale(1)}
 .flbl{font-family:var(--fd);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:2px 4px 1px;border-bottom:1px solid var(--rim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .flbl.r{color:var(--blood)}.flbl.b{color:var(--ice)}.flbl.g{color:var(--gold)}.flbl.gr{color:var(--sage)}
 .fval{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:600;font-size:.95rem;color:var(--bright);padding:3px 4px;-webkit-user-select:none;user-select:none}
-.pvw{display:flex;align-items:center;gap:1px;font-family:var(--fd);font-weight:700;font-size:1.1rem}
-.pvw .sl{color:var(--blood);font-size:.8rem;margin:0 1px}.pvw .mv{color:var(--blood)}
-.rw{display:flex;align-items:center;gap:1px;font-family:var(--fm);font-weight:600;font-size:.88rem}
-.rr,.rr input,.rr .sl,.rr .mv{color:var(--blood)!important}.rb,.rb input,.rb .sl,.rb .mv{color:var(--ice)!important}.rg,.rg input,.rg .sl,.rg .mv{color:var(--sage)!important}
+
 .fin{border:none!important;background:transparent!important;text-align:center;font-family:inherit;font-size:inherit;font-weight:inherit;color:inherit;padding:0;box-shadow:none!important}
 .fin:focus{outline:none;background:rgba(255,255,255,.07)!important;border-radius:2px!important}
 .lbar{height:3px;background:var(--rim);border-radius:2px;overflow:hidden;margin-top:3px}
 .lfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--goldb));width:0%;transition:width .4s ease}
+/* ══ RESOURCE BOXES ══ */
+.res-box{border-radius:var(--r);padding:4px 3px;text-align:center}
+.res-box-pv{background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35)}
+.res-box-adr{background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3)}
+.res-box-ing{background:rgba(74,158,202,.08);border:1px solid rgba(74,158,202,.3)}
+.res-lbl{font-family:var(--fd);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-weight:700;opacity:.95}
+.res-lbl-pv{color:var(--blood)}.res-lbl-adr{color:var(--sage)}.res-lbl-ing{color:var(--ice)}
+.res-ctrl{display:flex;align-items:center;justify-content:center;gap:3px;font-weight:700;font-size:1rem}
+.res-ctrl-pv{font-family:var(--fd);color:var(--blood)}.res-ctrl-adr,.res-ctrl-ing{font-family:var(--fm);font-weight:600;color:var(--sage)}
+.res-ctrl-ing{color:var(--ice)}
+.res-fin{color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem}
+.res-max{font-family:var(--fm);font-size:.58rem;margin-top:1px}
+.res-max-pv{color:rgba(176,48,64,.7)}.res-max-adr{color:rgba(76,175,125,.6)}.res-max-ing{color:rgba(74,158,202,.6)}
+/* ══ SC BOX VARIANTS ══ */
+.sc-clickable{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center;cursor:pointer}
 /* ══ ATTACKS ══ */
 .atk-card{background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:6px 8px;margin-top:4px}
 .atk-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .atk-nm{font-family:var(--fd);font-size:.78rem;color:var(--gold);font-weight:600}
 .atk-btns{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .abtn{border:none;border-radius:var(--r);cursor:pointer;font-family:var(--fd);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:7px 8px;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:1px;-webkit-user-select:none;user-select:none}.abtn:active{transform:scale(.95);opacity:.85}
-.abtn:active{transform:scale(.96)}
 .abtn-a{background:linear-gradient(135deg,var(--crimson),var(--blood));color:#fff;box-shadow:0 2px 8px rgba(125,28,42,.4)}.abtn-a:hover{box-shadow:var(--gb)}
 .abtn-d{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.35);color:var(--goldb)}.abtn-d:hover{background:rgba(200,169,110,.2);border-color:var(--gold)}
 .asub{font-size:.58rem;font-weight:400;opacity:.8}.aval{font-size:.9rem}
@@ -292,23 +292,44 @@ dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
 .dbitem:hover{border-color:var(--border)}
 .dfl{font-family:var(--fd);font-size:.63rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;display:block;margin:6px 0 2px}
 /* ══ CROP ══ */
-.crl{display:flex;height:100%}
-.crws{flex:1;background:#090909;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.crfr{width:171px;height:228px;flex-shrink:0;border:2px solid var(--blood);box-shadow:0 0 0 1000px rgba(0,0,0,.88);position:relative;overflow:hidden;touch-action:none;z-index:10;cursor:grab}
-.crfr:active{cursor:grabbing}
-.crimg{position:absolute;top:0;left:0;transform-origin:top left;pointer-events:none}
-.crsd{width:185px;flex-shrink:0;background:var(--deep);border-left:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:10px}
-.crsd p{font-size:.74rem;color:var(--muted);line-height:1.4}
-.crsd label{font-size:.63rem;color:var(--dim);font-family:var(--fd);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:3px}
-input[type=range]{width:100%;accent-color:var(--gold)}
-.bsave{background:linear-gradient(135deg,var(--crimson),var(--blood));color:#fff;border:none;padding:10px;cursor:pointer;border-radius:var(--r);font-family:var(--fd);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;transition:all .18s}
+.crl{display:flex;flex-direction:column;height:100%}
+/* Canvas workspace — full width, fills available height */
+.crws{flex:1;background:#0a0a0d;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;touch-action:none;cursor:grab;min-height:0}
+.crws:active{cursor:grabbing}
+/* The frame overlay — pointer-events:none so drags go to the workspace */
+.crfr{position:absolute;width:171px;height:228px;border:2px solid rgba(200,169,110,.9);box-shadow:0 0 0 2000px rgba(0,0,0,.72),0 0 0 2px rgba(200,169,110,.2);border-radius:4px;pointer-events:none;z-index:10}
+/* Corner handles for visual polish */
+.crfr::before,.crfr::after{content:'';position:absolute;width:16px;height:16px;border-color:var(--gold);border-style:solid}
+.crfr::before{top:-2px;left:-2px;border-width:2px 0 0 2px}
+.crfr::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0}
+/* The image inside the workspace (not clipped — visible behind overlay) */
+.crimg{position:absolute;transform-origin:center center;pointer-events:none;will-change:transform}
+/* Rule-of-thirds grid (shown on drag) */
+.cr-grid{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9}
+.crws.dragging .cr-grid{opacity:1}
+.cr-grid svg{width:100%;height:100%}
+/* Bottom controls bar */
+.crsd{flex-shrink:0;background:var(--deep);border-top:1px solid var(--border);padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.cr-ctrl-row{display:flex;align-items:center;gap:8px}
+.cr-zoom-btn{width:28px;height:28px;border-radius:6px;background:var(--raised);border:1px solid var(--rim);color:var(--dim);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1}
+.cr-zoom-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.08)}
+.cr-zoom-btn:active{transform:scale(.9)}
+.cr-rot-btn{height:28px;padding:0 10px;border-radius:6px;background:var(--raised);border:1px solid var(--rim);color:var(--dim);font-size:.72rem;font-family:var(--fd);cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all .15s;letter-spacing:.04em}
+.cr-rot-btn:hover{border-color:rgba(74,158,202,.5);color:var(--ice);background:rgba(74,158,202,.08)}
+.cr-rot-btn:active{transform:scale(.96)}
+.cr-fit-btn{height:28px;padding:0 10px;border-radius:6px;background:var(--raised);border:1px solid var(--rim);color:var(--dim);font-size:.72rem;font-family:var(--fd);cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all .15s;letter-spacing:.04em}
+.cr-fit-btn:hover{border-color:var(--border);color:var(--text);background:var(--panel)}
+.cr-fit-btn:active{transform:scale(.96)}
+input[type=range]{flex:1;accent-color:var(--gold);height:3px;cursor:pointer}
+.cr-zoom-lbl{font-family:var(--fm);font-size:.6rem;color:var(--muted);min-width:34px;text-align:right}
+.bsave{background:linear-gradient(135deg,var(--crimson),var(--blood));color:#fff;border:none;padding:9px 16px;cursor:pointer;border-radius:var(--r);font-family:var(--fd);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;transition:all .18s;flex-shrink:0}
 .bsave:hover{box-shadow:var(--gb)}
+.bsave:active{transform:scale(.97)}
 /* ══ TOAST ══ */
-/* ══ SIMPLE TOASTS (info, errors, etc.) ══ */
 #toast-ct{position:fixed;bottom:calc(var(--nav) + 12px);left:50%;transform:translateX(-50%);z-index:998;display:flex;flex-direction:column;gap:5px;pointer-events:none;align-items:center}
 .toast{background:var(--panel);color:var(--bright);padding:7px 14px;border-radius:var(--rl);border:1px solid var(--border);font-family:var(--fm);font-size:.74rem;box-shadow:var(--lg);display:flex;align-items:center;gap:7px;animation:slideUp .2s ease forwards;min-width:170px;max-width:320px;justify-content:center}
 .toast.crit{border-color:var(--blood);background:rgba(125,28,42,.35)}
-.tdie{font-size:1.2rem;font-weight:700;color:var(--gold)}.tdie.cd{color:var(--ember)}
+
 .tinf{display:flex;flex-direction:column}.tlbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
 @keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
 /* ══ DICE ROLL OVERLAY ══ */
@@ -337,7 +358,6 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 .dice-total{font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--goldb);text-shadow:0 0 12px rgba(200,169,110,.4)}
 .dice-total.crit{color:var(--goldb);text-shadow:0 0 20px rgba(232,201,126,.8)}
 .dice-total.fail{color:var(--blood)}
-.dice-mod-txt{font-family:var(--fm);font-size:.78rem;color:var(--muted)}
 .dice-deco-line{width:70%;height:1px;background:linear-gradient(90deg,transparent,rgba(200,169,110,.35) 50%,transparent);margin:2px 0}
 .dice-badge{font-family:var(--fd);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 10px;border-radius:20px;margin-top:2px}
 .dice-badge.crit{background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.4);color:var(--goldb)}
@@ -361,7 +381,10 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 .res-btn-pv{border-color:rgba(176,48,64,.45);color:var(--blood)}.res-btn-pv:hover{background:rgba(176,48,64,.2);border-color:var(--blood)}
 .res-btn-adr{border-color:rgba(76,175,125,.45);color:var(--sage)}.res-btn-adr:hover{background:rgba(76,175,125,.2);border-color:var(--sage)}
 .res-btn-ing{border-color:rgba(74,158,202,.45);color:var(--ice)}.res-btn-ing:hover{background:rgba(74,158,202,.2);border-color:var(--ice)}
-/* ══ LAST SAVED ══ */
+/* ══ UTILITY BADGES ══ */
+.pill-badge{display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.66rem;color:var(--muted);margin-left:auto;background:var(--raised);border:1px solid var(--rim);border-radius:20px;padding:2px 9px}
+.leth-sub{font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px}
+
 .last-saved{font-family:var(--fm);font-size:.52rem;color:var(--border);letter-spacing:.04em;transition:color .5s;text-align:center;margin-top:1px}
 .last-saved.fresh{color:var(--sage)!important}
 /* ══ TALENT CATEGORY DOTS ══ */
@@ -550,33 +573,33 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           <div class="panel" style="padding:8px">
             <div class="ph" style="margin-bottom:7px"><span class="pt">Estado</span></div>
             <!-- Reservas principales -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px" class="mb5">
-              <div style="background:rgba(176,48,64,.1);border:1px solid rgba(176,48,64,.35);border-radius:var(--r);padding:4px 3px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.62rem;color:var(--blood);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-weight:700;opacity:.95">PV</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fd);font-weight:700;font-size:1rem;color:var(--blood)">
+            <div class="g3c mb5" style="gap:5px">
+              <div class="res-box res-box-pv">
+                <div class="res-lbl res-lbl-pv">PV</div>
+                <div class="res-ctrl res-ctrl-pv">
                   <button class="res-btn res-btn-pv" onclick="app.adjustRes('cur_pv','max_pv',-1)">−</button>
-                  <input type="text" inputmode="numeric" id="cur_pv" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
+                  <input type="text" inputmode="numeric" id="cur_pv" value="0" class="fin res-fin">
                   <button class="res-btn res-btn-pv" onclick="app.adjustRes('cur_pv','max_pv',1)">+</button>
                 </div>
-                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(176,48,64,.7);margin-top:1px">/ <span id="max_pv">0</span></div>
+                <div class="res-max res-max-pv">/ <span id="max_pv">0</span></div>
               </div>
-              <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:var(--r);padding:4px 3px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.62rem;color:var(--sage);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-weight:700;opacity:.95">Adrenalina</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--sage)">
+              <div class="res-box res-box-adr">
+                <div class="res-lbl res-lbl-adr">Adrenalina</div>
+                <div class="res-ctrl res-ctrl-adr">
                   <button class="res-btn res-btn-adr" onclick="app.adjustRes('cur_adr','max_adr',-1)">−</button>
-                  <input type="text" inputmode="numeric" id="cur_adr" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
+                  <input type="text" inputmode="numeric" id="cur_adr" value="0" class="fin res-fin">
                   <button class="res-btn res-btn-adr" onclick="app.adjustRes('cur_adr','max_adr',1)">+</button>
                 </div>
-                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(76,175,125,.6);margin-top:1px">/ <span id="max_adr">0</span></div>
+                <div class="res-max res-max-adr">/ <span id="max_adr">0</span></div>
               </div>
-              <div style="background:rgba(74,158,202,.08);border:1px solid rgba(74,158,202,.3);border-radius:var(--r);padding:4px 3px;text-align:center">
-                <div style="font-family:var(--fd);font-size:.62rem;color:var(--ice);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-weight:700;opacity:.95">Ingenio</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:3px;font-family:var(--fm);font-weight:600;font-size:1rem;color:var(--ice)">
+              <div class="res-box res-box-ing">
+                <div class="res-lbl res-lbl-ing">Ingenio</div>
+                <div class="res-ctrl res-ctrl-ing">
                   <button class="res-btn res-btn-ing" onclick="app.adjustRes('cur_ing','max_ing',-1)">−</button>
-                  <input type="text" inputmode="numeric" id="cur_ing" value="0" class="fin" style="color:var(--bright);width:5ch;max-width:5ch;text-align:center;font-size:.88rem">
+                  <input type="text" inputmode="numeric" id="cur_ing" value="0" class="fin res-fin">
                   <button class="res-btn res-btn-ing" onclick="app.adjustRes('cur_ing','max_ing',1)">+</button>
                 </div>
-                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(74,158,202,.6);margin-top:1px">/ <span id="max_ing">0</span></div>
+                <div class="res-max res-max-ing">/ <span id="max_ing">0</span></div>
               </div>
             </div>
             <!-- Stats secundarios row 1 -->
@@ -586,7 +609,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
                 <div style="font-family:var(--fd);font-size:.95rem;color:var(--gold);font-weight:700"><span id="res_ca">10</span></div>
                 <div style="font-family:var(--fm);font-size:.42rem;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="res_ca_armor">—</div>
               </div>
-              <div style="background:var(--raised);border:1px solid var(--rim);border-radius:var(--r);padding:4px;text-align:center;cursor:pointer" onclick="app.rollCheck('Iniciativa',parseInt(document.getElementById('res_ini').innerText))">
+              <div class="sc-clickable" onclick="app.rollCheck('Iniciativa',parseInt(document.getElementById('res_ini').innerText))">
                 <div class="sc-lbl" style="color:var(--muted)">Ini</div>
                 <div style="font-family:var(--fd);font-size:.95rem;color:var(--bright);font-weight:700"><span id="res_ini">+0</span></div>
               </div>
@@ -698,7 +721,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           <div class="panel">
             <div class="ph">
               <span class="pt">Talentos</span>
-              <div style="display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.66rem;color:var(--muted);margin-left:auto;background:var(--raised);border:1px solid var(--rim);border-radius:20px;padding:2px 9px">
+              <div class="pill-badge">
                 <span id="talent_count_main" style="color:var(--gold);font-weight:700">0</span><span style="color:var(--rim)">/3</span>
               </div>
             </div>
@@ -728,7 +751,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           <div class="panel">
             <div class="ph">
               <span class="pt">Trucos</span>
-              <div style="display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.66rem;color:var(--muted);margin-left:auto;background:var(--raised);border:1px solid var(--rim);border-radius:20px;padding:2px 9px">
+              <div class="pill-badge">
                 <span id="tricks_count" style="color:var(--ice);font-weight:700">0</span>
               </div>
             </div>
@@ -744,7 +767,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
           <div class="panel">
             <div class="ph">
               <span class="pt">Conjuros</span>
-              <div style="display:inline-flex;align-items:center;gap:3px;font-family:var(--fm);font-size:.66rem;color:var(--muted);margin-left:auto;background:var(--raised);border:1px solid var(--rim);border-radius:20px;padding:2px 9px">
+              <div class="pill-badge">
                 <span id="spells_count" style="color:var(--ice);font-weight:700">0</span>
               </div>
             </div>
@@ -862,18 +885,18 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
             <!-- Edit view -->
             <div id="campana_edit" style="display:none;margin-top:6px">
               <span class="fl">Nivel de Letalidad</span>
-              <div class="g3c-6 mt4">
+              <div class="g3 mt4">
                 <button class="leth-btn active" id="leth_1" onclick="app.setLethality(1)">
                   <div style="font-family:var(--fd);font-size:.65rem;color:var(--sage);font-weight:600">Letalidad 1</div>
-                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px">+1 PV/nivel</div>
+                  <div class="leth-sub">+1 PV/nivel</div>
                 </button>
                 <button class="leth-btn" id="leth_2" onclick="app.setLethality(2)">
                   <div style="font-family:var(--fd);font-size:.65rem;color:var(--gold);font-weight:600">Letalidad 2</div>
-                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px">+2 PV/nivel</div>
+                  <div class="leth-sub">+2 PV/nivel</div>
                 </button>
                 <button class="leth-btn" id="leth_3" onclick="app.setLethality(3)">
                   <div style="font-family:var(--fd);font-size:.65rem;color:var(--blood);font-weight:600">Letalidad 3</div>
-                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--muted);margin-top:2px">+3 PV/nivel</div>
+                  <div class="leth-sub">+3 PV/nivel</div>
                 </button>
               </div>
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--muted);margin-top:5px;font-style:italic;line-height:1.4">PV adicionales a partir del Nivel 2. No afectan al Nivel 1.</div>
@@ -956,19 +979,44 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
 </dialog>
 
 <!-- ══ CROP MODAL ══ -->
-<dialog id="crop_modal" class="modal" style="max-width:min(700px,96vw);height:min(520px,90svh)">
-  <div class="mhd"><span class="mttl">Ajustar Retrato</span><button class="bcls" onclick="document.getElementById('crop_modal').close()">✕</button></div>
-  <div class="mbd crl" style="padding:0">
-    <div class="crws">
-      <div class="crfr" id="crop_frame"
-        onmousedown="app.startDrag(event)" ontouchstart="app.startDrag(event)">
-        <img class="crimg" id="crop_preview" src="" alt="">
-      </div>
+<dialog id="crop_modal" class="modal" style="max-width:min(520px,96vw);height:min(580px,92svh)">
+  <div class="mhd">
+    <span class="mttl">✦ Ajustar Retrato</span>
+    <button class="bcls" onclick="app.cancelCrop()">✕</button>
+  </div>
+  <!-- Workspace: drag anywhere here -->
+  <div class="crws" id="crop_ws"
+    onmousedown="app.cropDragStart(event)"
+    ontouchstart="app.cropDragStart(event)">
+    <img class="crimg" id="crop_preview" src="" alt="" draggable="false">
+    <!-- Frame overlay — visual only -->
+    <div class="crfr" id="crop_frame"></div>
+    <!-- Rule-of-thirds grid -->
+    <div class="cr-grid" id="cr_grid">
+      <svg viewBox="0 0 171 228" preserveAspectRatio="none">
+        <line x1="57" y1="0" x2="57" y2="228" stroke="rgba(255,255,255,.15)" stroke-width=".5"/>
+        <line x1="114" y1="0" x2="114" y2="228" stroke="rgba(255,255,255,.15)" stroke-width=".5"/>
+        <line x1="0" y1="76" x2="171" y2="76" stroke="rgba(255,255,255,.15)" stroke-width=".5"/>
+        <line x1="0" y1="152" x2="171" y2="152" stroke="rgba(255,255,255,.15)" stroke-width=".5"/>
+      </svg>
     </div>
-    <div class="crsd">
-      <p>Arrastra la imagen para posicionarla. Usa el deslizador para ajustar el zoom.</p>
-      <div><label>Zoom</label><input type="range" id="crop_zoom" min="0.1" max="3" step="0.01" value="1" oninput="app.updateCropView()"></div>
-      <button class="bsave" onclick="app.applyCrop()">✓ Aplicar Retrato</button>
+  </div>
+  <!-- Controls bar -->
+  <div class="crsd">
+    <!-- Row 1: zoom -->
+    <div class="cr-ctrl-row">
+      <button class="cr-zoom-btn" onclick="app.cropZoomStep(-0.08)" title="Reducir">−</button>
+      <input type="range" id="crop_zoom" min="0.05" max="5" step="0.005" value="1"
+        oninput="app.cropZoomSlider(this.value)">
+      <button class="cr-zoom-btn" onclick="app.cropZoomStep(0.08)" title="Ampliar">+</button>
+      <span class="cr-zoom-lbl" id="cr_zoom_lbl">100%</span>
+    </div>
+    <!-- Row 2: actions + apply -->
+    <div class="cr-ctrl-row">
+      <button class="cr-rot-btn" onclick="app.cropRotate(-90)" title="Rotar 90° izq">↺ −90°</button>
+      <button class="cr-rot-btn" onclick="app.cropRotate(90)" title="Rotar 90° der">↻ +90°</button>
+      <button class="cr-fit-btn" onclick="app.cropFit()" title="Ajustar al frame">⊡ Encuadrar</button>
+      <button class="bsave" onclick="app.applyCrop()" style="margin-left:auto">✓ Aplicar</button>
     </div>
   </div>
 </dialog>
@@ -1343,7 +1391,7 @@ const app = {
   totalPages: 5,
   activeTalentCat: null,
   currentEditorCat: '',
-  cropState: {img:null,x:0,y:0,zoom:1,isDragging:false,lastX:0,lastY:0},
+  cropState: {img:null, x:0, y:0, zoom:1, rot:0, minZoom:.05, isDragging:false, lastX:0, lastY:0, pinch:null, velX:0, velY:0},
   _weaponDmgData: [{formula:'1',name:'Desarmado'},{formula:'1',name:'Desarmado'}],
   _swipe: {startX:0,startY:0,startT:0,active:false},
   _editingCustomItem: null,
@@ -1359,11 +1407,9 @@ const app = {
     this.buildAlignmentPicker();
     this.setupSwipe();
     this._initDiceSwipe();
-    // Setup crop drag listeners
-    window.addEventListener('mouseup', () => this.endDrag());
-    window.addEventListener('touchend', () => this.endDrag());
-    window.addEventListener('mousemove', e => this.doDrag(e));
-    window.addEventListener('touchmove', e => this.doDrag(e), {passive:false});
+    // Crop wheel zoom (registered once, guarded inside handler)
+    const ws = document.getElementById('crop_ws');
+    if (ws) ws.addEventListener('wheel', e => this._cropWheel(e), {passive:false});
   },
 
   /* ── SCREENS ── */
@@ -1512,17 +1558,24 @@ const app = {
     });
   },
 
-  deleteChar(name) {
+  /* ── CONFIRM HELPER ── */
+  _confirm(title, body, confirmLabel, onConfirm) {
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
     overlay.innerHTML = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:20px;max-width:300px;width:100%;text-align:center">
-      <div style="font-family:var(--fd);color:var(--gold);font-size:.9rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">¿Eliminar personaje?</div>
-      <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">"${name}" será eliminado permanentemente.</div>
+      <div style="font-family:var(--fd);color:var(--gold);font-size:.9rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">${title}</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">${body}</div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-g" style="flex:1" onclick="this.closest('[style*=fixed]').remove()">Cancelar</button>
-        <button class="btn btn-p" style="flex:1" onclick="app._doDeleteChar('${name.replace(/'/g,"\'")}');this.closest('[style*=fixed]').remove()">✓ Eliminar</button>
+        <button id="_conf_cancel" class="btn btn-g" style="flex:1">Cancelar</button>
+        <button id="_conf_ok" class="btn btn-p" style="flex:1">${confirmLabel}</button>
       </div></div>`;
     document.body.appendChild(overlay);
+    overlay.querySelector('#_conf_cancel').onclick = () => overlay.remove();
+    overlay.querySelector('#_conf_ok').onclick = () => { overlay.remove(); onConfirm(); };
+  },
+
+  deleteChar(name) {
+    this._confirm('¿Eliminar personaje?', `"${name}" será eliminado permanentemente.`, '✓ Eliminar', () => this._doDeleteChar(name));
   },
 
   _doDeleteChar(name) {
@@ -1548,66 +1601,125 @@ const app = {
   /* ── NAVIGATION ── */
   setupSwipe() {
     const w = document.getElementById('pages_wrapper');
-    let startX=0,startY=0,startT=0,active=false,locked=false;
+    const track = document.getElementById('pages_track');
+    let startX=0, startY=0, startT=0;
+    let lastX=0, lastT=0, vel=0;         // velocity tracking
+    let dragging=false, locked=false;
+
+    const pageW = () => w.clientWidth || window.innerWidth;
+
+    // Live position: follow finger with rubber-band at edges
+    const setLive = (rawDx) => {
+      const base = -this.currentPage * pageW();
+      let x = base + rawDx;
+      // Rubber-band resistance past edges
+      const atStart = this.currentPage === 0 && rawDx > 0;
+      const atEnd   = this.currentPage === this.totalPages - 1 && rawDx < 0;
+      if (atStart || atEnd) x = base + rawDx * 0.25;
+      track.style.transition = 'none';
+      track.style.transform = `translateX(${x}px)`;
+    };
 
     w.addEventListener('touchstart', e => {
       const t = e.touches[0];
-      startX=t.clientX; startY=t.clientY; startT=Date.now();
-      active=true; locked=false;
+      startX = lastX = t.clientX;
+      startY = t.clientY;
+      startT = lastT = Date.now();
+      dragging = false; locked = false; vel = 0;
+      track.style.transition = 'none';
     }, {passive:true});
 
     w.addEventListener('touchmove', e => {
-      if (!active) return;
       const t = e.touches[0];
-      const dx = Math.abs(t.clientX - startX);
-      const dy = Math.abs(t.clientY - startY);
-      if (!locked) {
-        if (dx > dy && dx > 8) { locked=true; }
-        else if (dy > dx && dy > 8) { active=false; return; }
-      }
-      if (locked) e.preventDefault();
-    }, {passive:false});
-
-    w.addEventListener('touchend', e => {
-      if (!active) return;
-      const t = e.changedTouches[0];
       const dx = t.clientX - startX;
       const dy = t.clientY - startY;
-      const dt = Date.now() - startT;
-      active=false; locked=false;
-      if (Math.abs(dx) > Math.abs(dy)*1.2 && Math.abs(dx) > 40 && dt < 450) {
-        if (dx < 0 && this.currentPage < this.totalPages-1) this.goToPage(this.currentPage+1);
-        else if (dx > 0 && this.currentPage > 0) this.goToPage(this.currentPage-1);
-      }
-    }, {passive:true});
 
-    // Desktop mouse drag
+      // Direction lock: decide on first significant movement
+      if (!locked) {
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+          locked = true; dragging = true;
+        } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {
+          locked = true; // vertical scroll — don't interfere
+        }
+      }
+
+      if (dragging) {
+        e.preventDefault();
+        // Velocity: exponential moving average for smoothness
+        const now = Date.now();
+        const dt = now - lastT || 1;
+        const instVel = (t.clientX - lastX) / dt;
+        vel = vel * 0.6 + instVel * 0.4;
+        lastX = t.clientX; lastT = now;
+
+        setLive(dx);
+      }
+    }, {passive:false});
+
+    const endSwipe = (clientX) => {
+      if (!dragging) { dragging=false; locked=false; vel=0; return; }
+      dragging = false; locked = false;
+
+      const dx    = clientX - startX;
+      const pW    = pageW();
+      const ratio = dx / pW;                       // how far across the page
+      const fast  = Math.abs(vel) > 0.3;           // fast flick threshold (px/ms)
+
+      let target = this.currentPage;
+      if      (fast && vel < 0 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
+      else if (fast && vel > 0 && this.currentPage > 0)                 target = this.currentPage - 1;
+      else if (ratio < -0.35 && this.currentPage < this.totalPages-1)   target = this.currentPage + 1;
+      else if (ratio >  0.35 && this.currentPage > 0)                   target = this.currentPage - 1;
+
+      this.goToPage(target);
+    };
+
+    w.addEventListener('touchend',    e => endSwipe(e.changedTouches[0].clientX), {passive:true});
+    w.addEventListener('touchcancel', e => this.goToPage(this.currentPage),        {passive:true});
+
+    // ── Desktop mouse drag ──
     let mStart = null;
     w.addEventListener('mousedown', e => {
       if (e.target.closest('input,select,textarea,button,label')) return;
-      mStart={x:e.clientX,t:Date.now()};
+      mStart = {x:e.clientX, t:Date.now(), lastX:e.clientX, lastT:Date.now(), vel:0, dragging:false};
+      track.style.transition = 'none';
     });
     w.addEventListener('mousemove', e => {
       if (!mStart) return;
-      if (Math.abs(e.clientX - mStart.x) > 5) mStart.dragging=true;
-    });
-    w.addEventListener('mouseup', e => {
-      if (!mStart) return;
-      const dx = e.clientX - mStart.x, dt = Date.now() - mStart.t;
-      const wasDragging = mStart.dragging;
-      mStart = null;
-      if (wasDragging && Math.abs(dx) > 55 && dt < 400) {
-        if (dx < 0 && this.currentPage < this.totalPages-1) this.goToPage(this.currentPage+1);
-        else if (dx > 0 && this.currentPage > 0) this.goToPage(this.currentPage-1);
+      if (!mStart.dragging && Math.abs(e.clientX - mStart.x) > 6) mStart.dragging = true;
+      if (mStart.dragging) {
+        const now = Date.now(), dt = now - mStart.lastT || 1;
+        mStart.vel = mStart.vel * 0.6 + ((e.clientX - mStart.lastX) / dt) * 0.4;
+        mStart.lastX = e.clientX; mStart.lastT = now;
+        setLive(e.clientX - mStart.x);
       }
     });
+    const endMouse = (clientX) => {
+      if (!mStart) return;
+      const {x, dragging: was, vel: v} = mStart;
+      mStart = null;
+      if (!was) return;
+      const dx = clientX - x, pW = pageW(), ratio = dx / pW;
+      const fast = Math.abs(v) > 0.3;
+      let target = this.currentPage;
+      if      (fast && v < 0 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
+      else if (fast && v > 0 && this.currentPage > 0)                 target = this.currentPage - 1;
+      else if (ratio < -0.35 && this.currentPage < this.totalPages-1) target = this.currentPage + 1;
+      else if (ratio >  0.35 && this.currentPage > 0)                 target = this.currentPage - 1;
+      this.goToPage(target);
+    };
+    w.addEventListener('mouseup',    e => endMouse(e.clientX));
+    w.addEventListener('mouseleave', e => endMouse(e.clientX));
   },
 
   goToPage(n) {
     this.currentPage = n;
     const w = document.getElementById('pages_wrapper');
+    const track = document.getElementById('pages_track');
     const pageW = w ? w.clientWidth : window.innerWidth;
-    document.getElementById('pages_track').style.transform = `translateX(-${n * pageW}px)`;
+    // Restore smooth spring transition for snap
+    track.style.transition = 'transform .32s cubic-bezier(.25,.46,.45,.94)';
+    track.style.transform  = `translateX(-${n * pageW}px)`;
     document.querySelectorAll('.nbtn').forEach((b,i) => b.classList.toggle('active', i===n));
     if (n === 4) this.buildDetailPage();
     if (n === 2) this.buildAptitudesPage();
@@ -2004,7 +2116,6 @@ const app = {
   },
 
   _calcWeapon(wid, uid, attr, dmgAttr, mods, prof, arq) {
-    const $ = id => document.getElementById(id);
     const n = wid === 'w1' ? 1 : 2;
     const weapon = this._getInventoryItem(uid);
     const wData = weapon ? (weapon.dbData || this.DB.weapons?.[weapon.dbKey]) : this.DB.weapons?.[uid];
@@ -2041,8 +2152,8 @@ const app = {
 
     // Requirements
     let alert = '';
-    if (wData.req_FUE > 0 && (parseInt($('base_FUE')?.value)||8) < wData.req_FUE) alert = `⚠ Requiere FUE ${wData.req_FUE}`;
-    if (wData.req_DES > 0 && (parseInt($('base_DES')?.value)||8) < wData.req_DES) alert += `${alert?' · ':''}⚠ Requiere DES ${wData.req_DES}`;
+    if (wData.req_FUE > 0 && (parseInt(document.getElementById('base_FUE')?.value)||8) < wData.req_FUE) alert = `⚠ Requiere FUE ${wData.req_FUE}`;
+    if (wData.req_DES > 0 && (parseInt(document.getElementById('base_DES')?.value)||8) < wData.req_DES) alert += `${alert?' · ':''}⚠ Requiere DES ${wData.req_DES}`;
     if (alertEl) alertEl.innerText = alert;
   },
 
@@ -2446,16 +2557,7 @@ const app = {
   },
 
   clearTalents() {
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
-    overlay.innerHTML = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:20px;max-width:300px;width:100%;text-align:center">
-      <div style="font-family:var(--fd);color:var(--gold);font-size:.9rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">¿Limpiar talentos?</div>
-      <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">Se eliminarán todos los talentos seleccionados.</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-g" style="flex:1" onclick="this.closest('[style*=fixed]').remove()">Cancelar</button>
-        <button class="btn btn-p" style="flex:1" onclick="app._doCleanTalents();this.closest('[style*=fixed]').remove()">✓ Limpiar</button>
-      </div></div>`;
-    document.body.appendChild(overlay);
+    this._confirm('¿Limpiar talentos?', 'Se eliminarán todos los talentos seleccionados.', '✓ Limpiar', () => this._doCleanTalents());
   },
 
   _doCleanTalents() {
@@ -2890,63 +2992,217 @@ const app = {
     if (!input.files?.[0]) return;
     const r = new FileReader();
     r.onload = e => {
-      app.cropState.img = new Image();
-      app.cropState.img.onload = function() {
-        const W=171,H=228;
-        const sc = Math.max(W/this.naturalWidth, H/this.naturalHeight);
-        app.cropState.zoom=sc; app.cropState.x=(W-this.naturalWidth*sc)/2; app.cropState.y=(H-this.naturalHeight*sc)/2;
-        const sl = document.getElementById('crop_zoom');
-        sl.min=sc*0.1; sl.max=sc*5; sl.step=0.01; sl.value=sc;
-        document.getElementById('crop_preview').src = app.cropState.img.src;
+      const img = new Image();
+      img.onerror = () => this.toast('Imagen inválida','Error');
+      img.onload = () => {
+        this.cropState.img = img;
+        this.cropState.rot = 0;
+        document.getElementById('crop_preview').src = img.src;
         document.getElementById('crop_modal').showModal();
-        app.updateCropView();
+        // Wait one frame so the modal is rendered and we can read dimensions
+        requestAnimationFrame(() => { requestAnimationFrame(() => this.cropFit()); });
       };
-      app.cropState.img.onerror = () => app.toast('Imagen inválida','Error');
-      app.cropState.img.src = e.target.result;
+      img.src = e.target.result;
     };
-    r.readAsDataURL(input.files[0]); input.value='';
+    r.readAsDataURL(input.files[0]);
+    input.value = '';
   },
 
-  updateCropView() {
-    app.cropState.zoom = parseFloat(document.getElementById('crop_zoom').value);
+  // Fit image to fill the frame, centered
+  cropFit() {
+    const cs = this.cropState;
+    if (!cs.img) return;
+    const FW = 171, FH = 228;
+    // Effective dimensions after rotation
+    const isRot90 = cs.rot % 180 !== 0;
+    const natW = isRot90 ? cs.img.naturalHeight : cs.img.naturalWidth;
+    const natH = isRot90 ? cs.img.naturalWidth  : cs.img.naturalHeight;
+    // Scale to cover the frame
+    cs.zoom = Math.max(FW / natW, FH / natH);
+    cs.x = 0; cs.y = 0;
+    this._cropApply();
+    this._cropUpdateSlider();
+  },
+
+  cropZoomStep(delta) {
+    const cs = this.cropState;
+    const prev = cs.zoom;
+    cs.zoom = Math.max(cs.minZoom, Math.min(8, cs.zoom + delta));
+    // Scale around center of frame
+    const ratio = cs.zoom / prev;
+    cs.x *= ratio; cs.y *= ratio;
+    this._cropApply();
+    this._cropUpdateSlider();
+  },
+
+  cropZoomSlider(val) {
+    const cs = this.cropState;
+    const prev = cs.zoom;
+    cs.zoom = parseFloat(val);
+    const ratio = cs.zoom / prev;
+    cs.x *= ratio; cs.y *= ratio;
+    this._cropApply();
+    this._cropUpdateSlider();
+  },
+
+  cropRotate(deg) {
+    const cs = this.cropState;
+    cs.rot = (cs.rot + deg + 360) % 360;
+    cs.x = 0; cs.y = 0; // reset position on rotate
+    this.cropFit();
+  },
+
+  cancelCrop() {
+    document.getElementById('crop_modal').close();
+    this.cropState = {img:null, x:0, y:0, zoom:1, rot:0, minZoom:.05,
+      isDragging:false, lastX:0, lastY:0, pinch:null};
+  },
+
+  // ── Internal: apply transform ──
+  _cropApply() {
+    const cs = this.cropState;
+    if (!cs.img) return;
+    cs.x = this._cropClamp('x');
+    cs.y = this._cropClamp('y');
     const img = document.getElementById('crop_preview');
-    img.style.transform = `translate3d(${app.cropState.x}px,${app.cropState.y}px,0) scale(${app.cropState.zoom})`;
-    img.style.transformOrigin = '0 0';
+    img.style.transform = `translate(${cs.x}px,${cs.y}px) rotate(${cs.rot}deg) scale(${cs.zoom})`;
   },
 
-  startDrag(e) {
-    if (!document.getElementById('crop_modal').open) return;
-    app.cropState.isDragging=true;
-    const p = e.touches?.[0]||e;
-    app.cropState.lastX=p.clientX; app.cropState.lastY=p.clientY;
-    if (e.touches) e.preventDefault();
+  // Keep image inside frame bounds (can't pull the image away from the frame)
+  _cropClamp(axis) {
+    const cs = this.cropState;
+    const FW = 171, FH = 228;
+    const isRot90 = cs.rot % 180 !== 0;
+    const scaledW = (isRot90 ? cs.img.naturalHeight : cs.img.naturalWidth)  * cs.zoom;
+    const scaledH = (isRot90 ? cs.img.naturalWidth  : cs.img.naturalHeight) * cs.zoom;
+
+    if (axis === 'x') {
+      const maxX =  scaledW / 2 - FW / 2;
+      const minX = -scaledW / 2 + FW / 2;
+      return Math.min(maxX, Math.max(minX, cs.x));
+    } else {
+      const maxY =  scaledH / 2 - FH / 2;
+      const minY = -scaledH / 2 + FH / 2;
+      return Math.min(maxY, Math.max(minY, cs.y));
+    }
   },
-  doDrag(e) {
-    if (!app.cropState.isDragging) return;
-    const p = e.touches?.[0]||e;
-    app.cropState.x += p.clientX-app.cropState.lastX;
-    app.cropState.y += p.clientY-app.cropState.lastY;
-    app.cropState.lastX=p.clientX; app.cropState.lastY=p.clientY;
-    app.updateCropView();
-    if (e.touches) e.preventDefault();
+
+  _cropUpdateSlider() {
+    const cs = this.cropState;
+    const sl = document.getElementById('crop_zoom');
+    if (sl) { sl.min = cs.minZoom; sl.value = cs.zoom; }
+    const lbl = document.getElementById('cr_zoom_lbl');
+    if (lbl) lbl.innerText = Math.round(cs.zoom * 100) + '%';
   },
-  endDrag() { app.cropState.isDragging=false; },
+
+  // ── Drag (mouse + touch unified) ──
+  cropDragStart(e) {
+    const cs = this.cropState;
+    if (!cs.img) return;
+    e.preventDefault();
+
+    const ws = document.getElementById('crop_ws');
+    ws.classList.add('dragging');
+
+    // Pinch-to-zoom
+    if (e.touches?.length === 2) {
+      const dx = e.touches[1].clientX - e.touches[0].clientX;
+      const dy = e.touches[1].clientY - e.touches[0].clientY;
+      cs.pinch = { dist: Math.hypot(dx, dy), zoom: cs.zoom };
+      return;
+    }
+
+    cs.isDragging = true;
+    const p = e.touches?.[0] || e;
+    cs.lastX = p.clientX; cs.lastY = p.clientY;
+    // Velocity for inertia
+    cs.velX = 0; cs.velY = 0; cs._lastTime = Date.now();
+
+    const onMove = (ev) => {
+      if (ev.touches?.length === 2) {
+        // Pinch
+        const dx = ev.touches[1].clientX - ev.touches[0].clientX;
+        const dy = ev.touches[1].clientY - ev.touches[0].clientY;
+        const dist = Math.hypot(dx, dy);
+        if (cs.pinch) {
+          const ratio = dist / cs.pinch.dist;
+          cs.zoom = Math.max(cs.minZoom, Math.min(8, cs.pinch.zoom * ratio));
+          this._cropApply();
+          this._cropUpdateSlider();
+        }
+        return;
+      }
+      if (!cs.isDragging) return;
+      ev.preventDefault();
+      const pt = ev.touches?.[0] || ev;
+      const now = Date.now(), dt = now - (cs._lastTime||now) || 1;
+      const ddx = pt.clientX - cs.lastX, ddy = pt.clientY - cs.lastY;
+      cs.velX = cs.velX * 0.6 + (ddx / dt) * 0.4;
+      cs.velY = cs.velY * 0.6 + (ddy / dt) * 0.4;
+      cs.lastX = pt.clientX; cs.lastY = pt.clientY; cs._lastTime = now;
+      cs.x += ddx; cs.y += ddy;
+      this._cropApply();
+    };
+
+    const onEnd = () => {
+      cs.isDragging = false; cs.pinch = null;
+      ws.classList.remove('dragging');
+      // Inertia glide
+      this._cropInertia();
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('mouseup',   onEnd);
+      window.removeEventListener('touchend',  onEnd);
+    };
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('touchmove', onMove, {passive:false});
+    window.addEventListener('mouseup',   onEnd);
+    window.addEventListener('touchend',  onEnd);
+  },
+
+  // Inertia: keep sliding after finger lift, decelerating
+  _cropInertia() {
+    const cs = this.cropState;
+    let vx = cs.velX * 80, vy = cs.velY * 80; // scale velocity to px
+    const step = () => {
+      if (Math.abs(vx) < 0.3 && Math.abs(vy) < 0.3) return;
+      cs.x += vx; cs.y += vy;
+      vx *= 0.88; vy *= 0.88;
+      this._cropApply();
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  },
+
+  // ── Wheel zoom ──
+  _cropWheel(e) {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.06 : 0.06;
+    this.cropZoomStep(delta);
+  },
 
   applyCrop() {
-    if (!app.cropState.img) return;
+    const cs = this.cropState;
+    if (!cs.img) return;
+    // Render at 2× for retina quality (342×456)
+    const FW=171, FH=228, SC=2;
     const canvas = document.createElement('canvas');
-    canvas.width=342; canvas.height=456;
+    canvas.width = FW * SC; canvas.height = FH * SC;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle='#111'; ctx.fillRect(0,0,342,456);
-    ctx.translate(app.cropState.x*2, app.cropState.y*2);
-    ctx.scale(app.cropState.zoom*2, app.cropState.zoom*2);
-    ctx.drawImage(app.cropState.img,0,0);
-    const src = canvas.toDataURL('image/jpeg',.92);
-    // Set BOTH images immediately
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Center of canvas
+    ctx.translate(canvas.width/2, canvas.height/2);
+    ctx.rotate(cs.rot * Math.PI / 180);
+    ctx.scale(cs.zoom * SC, cs.zoom * SC);
+    ctx.translate(cs.x / cs.zoom, cs.y / cs.zoom);
+    ctx.drawImage(cs.img, -cs.img.naturalWidth/2, -cs.img.naturalHeight/2);
+    const src = canvas.toDataURL('image/jpeg', .92);
     document.getElementById('char_img').src = src;
     document.getElementById('char_img_summary').src = src;
     document.getElementById('crop_modal').close();
-    this.toast('Retrato actualizado');
+    this.toast('Retrato actualizado', '✦');
   },
 
   /* ── RULES IMPORT ── */
@@ -3069,7 +3325,7 @@ const app = {
   clearCharData() {
     ['base_FUE','base_DES','base_CON','base_INT','base_SAB','base_CAR'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=8});
     ['char_name','char_concept','char_notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    ['char_lvl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=1});
+    const lvlEl=document.getElementById('char_lvl');if(lvlEl)lvlEl.value=1;
     ['char_xp','cur_pv','cur_adr','cur_ing','cur_carne'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0});
     this.inventory=[]; this.gold=0; this.alignment=''; this._aptSel={tricks:new Set(),spells:new Set()};
     document.querySelectorAll('.aopt').forEach(b=>b.classList.remove('active'));
@@ -3154,27 +3410,13 @@ const app = {
   },
 
   confirmClear() {
-    // Use custom confirm overlay instead of native confirm() which can be blocked
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
-    overlay.innerHTML = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:20px;max-width:300px;width:100%;text-align:center">
-      <div style="font-family:var(--fd);color:var(--gold);font-size:.9rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">¿Resetear hoja?</div>
-      <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">Se borrarán todos los datos del personaje actual.</div>
-      <div style="display:flex;gap:8px">
-        <button id="_cancel_reset" class="btn btn-g" style="flex:1">Cancelar</button>
-        <button id="_confirm_reset" class="btn btn-p" style="flex:1">✓ Resetear</button>
-      </div>
-    </div>`;
-    document.body.appendChild(overlay);
-    document.getElementById('_cancel_reset').onclick = () => overlay.remove();
-    document.getElementById('_confirm_reset').onclick = () => {
-      overlay.remove();
+    this._confirm('¿Resetear hoja?', 'Se borrarán todos los datos del personaje actual.', '✓ Resetear', () => {
       this.clearCharData();
       if (this.DB.descriptors) this.unlockApp();
       this.editSection('personal');
       ['identity','stats','saves','skills','combat','equipment'].forEach(s=>this.editSection(s));
       this.toast('Hoja reseteada');
-    };
+    });
   },
 
   /* ── RANDOMIZE ── */
@@ -3186,8 +3428,8 @@ const app = {
     // 1. Stats (3d6 cada uno)
     const STATS = ['FUE','DES','CON','INT','SAB','CAR'];
     STATS.forEach(s => {
-      const roll = [1,2,3].reduce(sum=>{return sum+Math.floor(Math.random()*6)+1},0);
-      const el = document.getElementById('base_'+s); if(el)el.value=roll;
+      const roll = [0,1,2].reduce(sum => sum + Math.floor(Math.random()*6)+1, 0);
+      const el = document.getElementById('base_'+s); if(el) el.value = roll;
     });
 
     // 2. Nombre aleatorio
