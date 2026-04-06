@@ -7,6 +7,13 @@
 <title>S&amp;S Companion</title>
 <link rel="icon" type="image/webp" href="Bind_Pact_Weapon.webp">
 <link rel="apple-touch-icon" href="Bind_Pact_Weapon.webp">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="S&amp;S Companion">
+<meta name="application-name" content="S&amp;S Companion">
+<meta name="msapplication-TileColor" content="#07060a">
 <style>html,body{background:#07060a!important;color:#d8cce8}
 #ss-loader{position:fixed;inset:0;z-index:9999;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .5s ease;background-image:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(125,28,42,.18) 0%,transparent 70%)}
 #ss-loader.fade-out{opacity:0;pointer-events:none}
@@ -102,7 +109,7 @@ body{font-family:var(--fb);background:var(--void);color:var(--text);height:100dv
 /* ══ PAGES ══ */
 .pages-wrapper{flex:1;overflow:hidden;position:relative;min-height:0;touch-action:pan-y}
 .pages-track{display:flex;height:100%;will-change:transform}
-.page{min-width:100%;width:100%;flex-shrink:0;height:100%;overflow-y:auto;overflow-x:hidden;padding:8px 12px 16px;display:flex;flex-direction:column;gap:10px}
+.page{min-width:100%;width:100%;flex-shrink:0;height:100%;min-height:100%;overflow-y:auto;overflow-x:hidden;padding:8px 12px 16px;display:flex;flex-direction:column;gap:10px}
 /* ══ BOTTOM NAV ══ */
 .bnav{height:calc(var(--nav) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--deep);border-top:1px solid var(--rim);display:flex;flex-shrink:0;z-index:10}
 .nbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:none;cursor:pointer;color:var(--muted);transition:color .2s;padding:4px 2px;position:relative;font-family:var(--fd)}
@@ -1880,6 +1887,19 @@ const app = {
     const sv = document.getElementById(`${sec}_summary_view`);
     if (ev) ev.style.display = 'none';
     if (sv) sv.style.display = 'block';
+
+    // combat y equipment viven en page_3. Al colapsar el edit_view, el scrollTop
+    // puede quedar apuntando a zona vacía, dejando pantalla negra.
+    if (sec === 'combat' || sec === 'equipment') {
+      requestAnimationFrame(() => {
+        const page = document.getElementById('page_3');
+        if (!page) return;
+        // Si el scroll superó el alto real del contenido, volver al top
+        if (page.scrollTop > page.scrollHeight - page.clientHeight + 1) {
+          page.scrollTop = 0;
+        }
+      });
+    }
   },
 
   _buildStatsSummary() {
@@ -3740,6 +3760,13 @@ const app = {
 };
 
 window.onload = () => app.init();
+
+  // ── Service Worker (PWA offline support)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
 
   // ── Loader dismiss
   (function(){
