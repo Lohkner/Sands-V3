@@ -1638,22 +1638,28 @@ const app = {
       card.addEventListener('touchmove', e => { onMove(e.touches[0].clientX, e.touches[0].clientY); if(locked) e.preventDefault(); }, {passive:false});
       card.addEventListener('touchend', onEnd, {passive:true});
 
-      // Close swipe if user taps elsewhere
-      document.addEventListener('touchstart', (e) => {
-        if (revealed && !wrap.contains(e.target)) {
-          card.style.transition = 'transform .25s ease';
-          delBtn.style.transition = 'transform .25s ease';
-          card.style.transform = 'translateX(0)';
-          delBtn.style.transform = 'translateX(100%)';
-          revealed = false;
-          setTimeout(() => { card._swiped = false; }, 260);
-        }
-      }, {passive:true});
-
       wrap.appendChild(delBtn);
       wrap.appendChild(card);
       el.appendChild(wrap);
     });
+
+    // Single delegated listener to close any open swipe when tapping outside
+    // (replaces the per-card global listeners that caused a memory leak)
+    el._swipeCloseHandler && document.removeEventListener('touchstart', el._swipeCloseHandler);
+    el._swipeCloseHandler = (e) => {
+      el.querySelectorAll('.char-card').forEach(c => {
+        if (c._swiped && !c.closest('.char-card-wrap').contains(e.target)) {
+          const w = c.closest('.char-card-wrap');
+          const db = w?.querySelector('.char-card-delete');
+          c.style.transition = 'transform .25s ease';
+          if (db) db.style.transition = 'transform .25s ease';
+          c.style.transform = 'translateX(0)';
+          if (db) db.style.transform = 'translateX(100%)';
+          setTimeout(() => { c._swiped = false; }, 260);
+        }
+      });
+    };
+    document.addEventListener('touchstart', el._swipeCloseHandler, {passive:true});
   },
 
   /* ── CONFIRM HELPER ── */
@@ -2607,7 +2613,7 @@ const app = {
     document.getElementById('talent_modal').showModal();
     const firstKey = Object.keys(this.DB.talents)[0];
     if (this.activeTalentCat) {
-      const btn = Array.from(document.querySelectorAll('#tm_categories .catbtn')).find(b=>b.innerText.toLowerCase()===this.activeTalentCat);
+      const btn = document.querySelector(`#tm_categories .catbtn[data-cat="${this.activeTalentCat}"]`);
       this.showTalentCategory(this.activeTalentCat, btn);
     } else if (firstKey) {
       this.showTalentCategory(firstKey, document.querySelector('#tm_categories .catbtn'));
@@ -2642,7 +2648,7 @@ const app = {
     const card = chk.closest('.tc');
     if (chk.checked) {
       const count = document.querySelectorAll('input[name="chk_talents_hidden"]').length;
-      if (count >= 3) { alert('Solo puedes elegir 3 talentos.'); chk.checked=false; return; }
+      if (count >= 3) { this.toast('Solo puedes elegir 3 talentos.', '⚠'); chk.checked=false; return; }
       if (!hidden) {
         hidden = document.createElement('input'); hidden.type='hidden'; hidden.name='chk_talents_hidden';
         hidden.value=name; hidden.setAttribute('data-desc',chk.getAttribute('data-desc'));
@@ -2952,8 +2958,8 @@ const app = {
       <div style="margin-bottom:6px"><span class="dfl">Descripción</span><textarea id="db_txt" style="min-height:56px">${existing?.txt||''}</textarea></div>
       <div class="g3" style="gap:6px;margin-bottom:6px">
         <div><span class="dfl">PV Base</span><input type="number" id="db_pv" value="${existing?.pv||8}"></div>
-        <div><span class="dfl">Adrenalina</span><input type="number" id="db_adr" value="${existing?.adr||2}"></div>
-        <div><span class="dfl">Ingenio</span><input type="number" id="db_ing" value="${existing?.ing||0}"></div>
+        <div><span class="dfl">Adrenalina</span><input type="number" id="db_adr" value="${existing?.adr_bonus??existing?.adr??2}"></div>
+        <div><span class="dfl">Ingenio</span><input type="number" id="db_ing" value="${existing?.ing_bonus??existing?.ing??0}"></div>
       </div>
       <div style="margin-bottom:6px"><span class="dfl">Filos (separados por coma)</span><input type="text" id="db_edges" value="${(existing?.edges||[]).join(', ')}"></div>
       <div style="margin-bottom:6px"><span class="dfl">Habilidades (separadas por coma)</span><input type="text" id="db_skills" value="${(existing?.skills||[]).join(', ')}"></div>`;
@@ -3043,9 +3049,9 @@ const app = {
       } else if (cat==='archetypes') {
         entry.txt=document.getElementById('db_txt')?.value;
         entry.pv=parseInt(document.getElementById('db_pv')?.value)||8;
-        entry.adr=parseInt(document.getElementById('db_adr')?.value)||2;
-        entry.ing=parseInt(document.getElementById('db_ing')?.value)||0;
-        entry.speed=9;
+        entry.adr_bonus=parseInt(document.getElementById('db_adr')?.value)||2;
+        entry.ing_bonus=parseInt(document.getElementById('db_ing')?.value)||0;
+        entry.speed=30;
         entry.prof=2;
         entry.edges=(document.getElementById('db_edges')?.value||'').split(',').map(s=>s.trim()).filter(Boolean);
         entry.skills=(document.getElementById('db_skills')?.value||'').split(',').map(s=>s.trim()).filter(Boolean);
@@ -3086,18 +3092,22 @@ const app = {
   },
 
   dbDeleteEntry(key) {
-    if (!confirm(`¿Eliminar "${key}"?`)) return;
     const cat = this.currentEditorCat;
-    if (cat === 'talents' && key.includes('|')) {
-      const [sub,idx] = key.split('|');
-      this.DB.talents[sub]?.splice(parseInt(idx),1);
-    } else if (this.DB[cat]?.[key]) {
-      delete this.DB[cat][key];
-    }
-    this.saveRulesToLocal();
-    this.dbEditCategory(cat);
-    this.unlockApp();
-    this.toast('Eliminado','DB');
+    const label = key.includes('|') ? key.split('|')[0]+' (talento)' : key;
+    const dialog = document.getElementById('db_editor_modal');
+    const container = (dialog && dialog.open) ? dialog : document.body;
+    this._confirmInContainer(container, `¿Eliminar "${label}"?`, 'Esta entrada se eliminará de la base de datos.', '✓ Eliminar', () => {
+      if (cat === 'talents' && key.includes('|')) {
+        const [sub,idx] = key.split('|');
+        this.DB.talents[sub]?.splice(parseInt(idx),1);
+      } else if (this.DB[cat]?.[key]) {
+        delete this.DB[cat][key];
+      }
+      this.saveRulesToLocal();
+      this.dbEditCategory(cat);
+      this.unlockApp();
+      this.toast('Eliminado','DB');
+    });
   },
 
   saveRulesToLocal() { try{localStorage.setItem('sands_rules',JSON.stringify(this.DB))}catch{} },
@@ -3480,7 +3490,15 @@ const app = {
     const name = document.getElementById('char_name').value.trim();
     if (!name) { this.toast('¡Se requiere nombre!','Error'); return; }
     const roster = JSON.parse(localStorage.getItem('sands_roster')||'{}');
-    if (roster[name] && !confirm(`¿Sobreescribir "${name}"?`)) return;
+    if (roster[name]) {
+      this._confirm(`¿Sobreescribir "${name}"?`, 'El personaje ya existe y será reemplazado.', '✓ Sobreescribir', () => this._doSaveChar(name));
+    } else {
+      this._doSaveChar(name);
+    }
+  },
+
+  _doSaveChar(name) {
+    const roster = JSON.parse(localStorage.getItem('sands_roster')||'{}');
     roster[name] = this.gatherCharData();
     try {
       localStorage.setItem('sands_roster', JSON.stringify(roster));
