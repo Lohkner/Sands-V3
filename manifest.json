@@ -1,16 +1,22 @@
 {
-  "name": "Stars & Sorcery Sheet",
-  "short_name": "Stars&Sorcery",
-  "start_url": "index.html", 
+  "name": "Stars & Sorcery Companion",
+  "short_name": "S&S Companion",
+  "description": "Hoja de personaje interactiva para Stars & Sorcery",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f3e5ce",
-  "theme_color": "#8b0000",
+  "orientation": "portrait",
+  "background_color": "#07060a",
+  "theme_color": "#07060a",
+  "lang": "es",
   "icons": [
     {
       "src": "Bind_Pact_Weapon.webp",
-      "sizes": "512x512",
+      "sizes": "any",
       "type": "image/webp",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["games", "utilities"],
+  "prefer_related_applications": false
 }
