@@ -2655,7 +2655,30 @@ const app = {
   },
 
   clearTalents() {
-    this._confirm('¿Limpiar talentos?', 'Se eliminarán todos los talentos seleccionados.', '✓ Limpiar', () => this._doCleanTalents());
+    // El <dialog> talent_modal se renderiza en el top layer del navegador,
+    // por lo que cualquier overlay creado en document.body queda por debajo.
+    // La solución es inyectar el overlay de confirmación dentro del propio dialog.
+    const dialog = document.getElementById('talent_modal');
+    const container = (dialog && dialog.open) ? dialog : document.body;
+    this._confirmInContainer(container, '¿Limpiar talentos?', 'Se eliminarán todos los talentos seleccionados.', '✓ Limpiar', () => this._doCleanTalents());
+  },
+
+  _confirmInContainer(container, title, body, confirmLabel, onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;border-radius:inherit';
+    overlay.innerHTML = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:20px;max-width:300px;width:100%;text-align:center;position:relative;z-index:10000">
+      <div style="font-family:var(--fd);color:var(--gold);font-size:.9rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">${title}</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">${body}</div>
+      <div style="display:flex;gap:8px">
+        <button id="_conf_cancel" class="btn btn-g" style="flex:1">Cancelar</button>
+        <button id="_conf_ok" class="btn btn-p" style="flex:1">${confirmLabel}</button>
+      </div></div>`;
+    // El container (dialog) necesita position:relative para que el overlay absoluto lo cubra
+    const prevPosition = container.style.position;
+    if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
+    container.appendChild(overlay);
+    overlay.querySelector('#_conf_cancel').onclick = () => { overlay.remove(); container.style.position = prevPosition; };
+    overlay.querySelector('#_conf_ok').onclick = () => { overlay.remove(); container.style.position = prevPosition; onConfirm(); };
   },
 
   _doCleanTalents() {
