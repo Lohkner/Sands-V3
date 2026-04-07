@@ -633,7 +633,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
                 <div style="margin-bottom:6px"><span class="fl">Nombre</span><input type="text" id="char_name" placeholder="ej. Valerius el Audaz" style="font-family:var(--fd);font-size:.92rem;font-weight:600"></div>
                 <div class="g2" style="gap:5px;margin-bottom:6px">
                   <div><span class="fl">Nivel</span><input type="number" id="char_lvl" value="1" min="1" max="10" onchange="app.calc()"></div>
-                  <div><span class="fl">XP</span><input type="number" id="char_xp" value="0" min="0"></div>
+                  <div><span class="fl">XP <span id="xp_next_lbl" style="font-size:.58rem;color:var(--muted);font-style:normal;letter-spacing:0;text-transform:none"></span></span><input type="number" id="char_xp" value="0" min="0" oninput="app.updateXpHint()"></div>
                 </div>
                 <div style="margin-bottom:6px"><span class="fl">Alineamiento</span><div class="asel" id="align_sel"></div></div>
                 <div style="margin-bottom:4px"><span class="fl">Biografía</span><textarea id="char_concept" placeholder="Bio del personaje…" style="min-height:44px;font-size:.8rem"></textarea></div>
@@ -721,7 +721,7 @@ details>summary::before{content:'▸';color:var(--gold);font-size:.56rem;transit
                 <div style="font-family:var(--fd);font-size:.95rem;color:var(--gold);font-weight:700"><span id="res_ca">10</span></div>
                 <div style="font-family:var(--fm);font-size:.42rem;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="res_ca_armor">—</div>
               </div>
-              <div class="sc-clickable" onclick="app.rollCheck('Iniciativa',parseInt(document.getElementById('res_ini').innerText))">
+              <div class="sc-clickable" onclick="app.rollCheck('Iniciativa', parseInt(document.getElementById('res_ini').innerText) || 0)">
                 <div class="sc-lbl" style="color:var(--muted)">Ini</div>
                 <div style="font-family:var(--fd);font-size:.95rem;color:var(--bright);font-weight:700"><span id="res_ini">+0</span></div>
               </div>
@@ -1512,9 +1512,11 @@ const app = {
     this.buildAlignmentPicker();
     this.setupSwipe();
     this._initDiceSwipe();
+    this._setupEscapeKey();
     // Crop wheel zoom (registered once, guarded inside handler)
     const ws = document.getElementById('crop_ws');
     if (ws) ws.addEventListener('wheel', e => this._cropWheel(e), {passive:false});
+    this._restoreFontSize();
   },
 
   /* ── SCREENS ── */
@@ -1524,8 +1526,25 @@ const app = {
   },
 
   goHome() {
-    this.renderHome();
-    this.showScreen('home');
+    const name = document.getElementById('char_name')?.value?.trim();
+    if (name) {
+      // Check if there is a saved version to compare against
+      const roster = JSON.parse(localStorage.getItem('sands_roster') || '{}');
+      if (roster[name]) {
+        // Character exists — go home directly (already saved at some point)
+        this.renderHome();
+        this.showScreen('home');
+      } else {
+        // New unsaved character — warn
+        this._confirm('¿Salir sin guardar?', `"${this._esc(name)}" no ha sido guardado. Se perderán los datos.`, '✓ Salir', () => {
+          this.renderHome();
+          this.showScreen('home');
+        });
+      }
+    } else {
+      this.renderHome();
+      this.showScreen('home');
+    }
   },
 
   newChar() {
@@ -1533,7 +1552,7 @@ const app = {
     this.showScreen('app');
     this.unlockApp();
     this.goToPage(0);
-    // Open all sections in edit mode
+    // Abrir todas las secciones en edición para flujo de creación
     this.editSection('personal');
     this.editSection('identity');
     this.editSection('stats');
@@ -1541,6 +1560,11 @@ const app = {
     this.editSection('skills');
     this.editSection('combat');
     this.editSection('equipment');
+    // Enfocar el campo nombre automáticamente
+    requestAnimationFrame(() => {
+      const nameInput = document.getElementById('char_name');
+      if (nameInput) nameInput.focus();
+    });
   },
 
   loadCharToApp(name) {
@@ -1556,6 +1580,10 @@ const app = {
   },
 
   /* ── HOME ROSTER ── */
+  _esc(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  },
+
   renderHome() {
     const el = document.getElementById('home-roster');
     const roster = JSON.parse(localStorage.getItem('sands_roster') || '{}');
@@ -1589,9 +1617,9 @@ const app = {
       card.innerHTML = `
         ${portHtml}
         <div class="char-ci">
-          <div class="char-cn">${name}</div>
-          <div class="char-cs">${desc||'—'} · ${arq}${bg ? ' · '+bg : ''}</div>
-          <div style="margin-top:3px"><span class="char-lvl-badge">Nivel ${lvl}</span></div>
+          <div class="char-cn">${this._esc(name)}</div>
+          <div class="char-cs">${this._esc(desc||'—')} · ${this._esc(arq)}${bg ? ' · '+this._esc(bg) : ''}</div>
+          <div style="margin-top:3px"><span class="char-lvl-badge">Nivel ${this._esc(lvl)}</span></div>
         </div>`;
       card.onclick = () => { if (!card._swiped) this.loadCharToApp(name); };
 
@@ -1834,6 +1862,10 @@ const app = {
     document.querySelectorAll('.nbtn').forEach((b,i) => b.classList.toggle('active', i===n));
     if (n === 4) this.buildDetailPage();
     if (n === 2) this.buildAptitudesPage();
+    // Resetear scroll de la página destino para evitar fondo negro
+    // si en una visita anterior el usuario había scrolleado hacia abajo.
+    const destPage = document.getElementById('page_' + n);
+    if (destPage) destPage.scrollTop = 0;
   },
 
   /* ── SECTION TOGGLES ── */
@@ -1847,6 +1879,13 @@ const app = {
       if (ev) ev.style.display = 'block';
       if (sv) sv.style.display = 'none';
       if (sec === 'equipment') { this.updateDbSelect(); this.renderInventory(); }
+      // Scroll al panel en page_3 para que sea visible al expandirse
+      if (sec === 'combat' || sec === 'equipment') {
+        requestAnimationFrame(() => {
+          const panel = ev?.closest('.panel');
+          if (panel) panel.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      }
     }
   },
 
@@ -1916,9 +1955,21 @@ const app = {
       box.innerHTML = `<div class="lbl">${s}</div><div class="mod">${modStr}</div><div class="val">${raw}</div>`;
       c.appendChild(box);
     });
-    // Also update the live display in edit view
+    // Also update the live display in edit view (rebuilt independently to avoid stale onclick handlers)
     const live = document.getElementById('stats_boxes_display');
-    if (live) live.innerHTML = c.innerHTML;
+    if (live) {
+      live.innerHTML = '';
+      STATS.forEach(s => {
+        const raw2 = parseInt(document.getElementById('base_'+s).value)||8;
+        const mod2 = this.getMod(raw2);
+        const modStr2 = (mod2>=0?'+':'')+mod2;
+        const box2 = document.createElement('div');
+        box2.className = 'sbox';
+        box2.onclick = () => this.rollCheck(s, mod2);
+        box2.innerHTML = `<div class="lbl">${s}</div><div class="mod">${modStr2}</div><div class="val">${raw2}</div>`;
+        live.appendChild(box2);
+      });
+    }
   },
 
   _buildSavesSummary() {
@@ -1966,7 +2017,7 @@ const app = {
     const armor = this._getInventoryItem(armorKey) || this.DB.armors?.[armorKey];
     const shield = this._getInventoryItem(shieldKey) || this.DB.shields?.[shieldKey];
     document.getElementById('sum_armor_name').innerText = armor?.name || 'Sin Armadura';
-    document.getElementById('sum_armor_type').innerText = armor?.type ? {none:'Normal',light:'Ligera',medium:'Media',heavy:'Pesada'}[armor.type]||armor.type : 'Normal';
+    document.getElementById('sum_armor_type').innerText = armor?.type ? ({none:'Sin armadura',light:'Ligera',medium:'Media',heavy:'Pesada'}[armor.type]||armor.type) : 'Sin armadura';
     document.getElementById('sum_shield').innerText = shield?.name || 'Sin Escudo';
     // Weapon summaries
     const w1atk = document.getElementById('w1_atk_val')?.innerText || '—';
@@ -2002,12 +2053,33 @@ const app = {
   },
 
   getMod(val) {
-    if (val<=3) return -3; if (val<=6) return -2; if (val<=9) return -1;
-    if (val<=12) return 0; if (val<=14) return 1; if (val<=16) return 2; return 3;
+    // Fórmula estándar: floor((val - 10) / 2), con techo a la tabla S&S (−3 a +4)
+    const raw = Math.floor((val - 10) / 2);
+    return Math.max(-3, Math.min(4, raw));
   },
 
   getStatVal(stat) {
     return parseInt(document.getElementById('base_'+stat)?.value) || 8;
+  },
+
+  // Tabla de XP necesario para subir al siguiente nivel (acumulativo)
+  _XP_TABLE: [0, 1000, 3000, 6000, 10000, 15000, 21000, 28000, 36000, 45000],
+
+  updateXpHint() {
+    const lvl  = parseInt(document.getElementById('char_lvl')?.value) || 1;
+    const xp   = parseInt(document.getElementById('char_xp')?.value)  || 0;
+    const lbl  = document.getElementById('xp_next_lbl');
+    if (!lbl) return;
+    if (lvl >= 10) { lbl.innerText = '(máx nivel)'; lbl.style.color = 'var(--gold)'; return; }
+    const need = this._XP_TABLE[lvl] || 0;
+    const left = need - xp;
+    if (left <= 0) {
+      lbl.innerText = '¡Sube de nivel!';
+      lbl.style.color = 'var(--sage)';
+    } else {
+      lbl.innerText = `(faltan ${left.toLocaleString('es')})`;
+      lbl.style.color = 'var(--muted)';
+    }
   },
 
   buildAlignmentPicker() {
@@ -2085,9 +2157,17 @@ const app = {
   },
 
   checkLimit(name, limit) {
-    const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+    const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`));
     if (checked.length > limit) {
-      checked[checked.length-1].checked = false;
+      const removed = checked[checked.length-1];
+      removed.checked = false;
+      // Parpadeo visual en la label del checkbox removido
+      const lbl = removed.closest('label');
+      if (lbl) {
+        lbl.style.transition = 'background .1s';
+        lbl.style.background = 'rgba(176,48,64,.18)';
+        setTimeout(() => { lbl.style.background = ''; }, 400);
+      }
       this.toast(`Máximo ${limit} habilidades`, 'Límite');
     }
   },
@@ -2113,6 +2193,7 @@ const app = {
     const arqKey = $('sel_arq').value;
     const arq = this.DB.archetypes?.[arqKey];
     const lvl = parseInt($('char_lvl')?.value)||1;
+    this.updateXpHint();
     const prof = lvl >= 9 ? 5 : lvl >= 7 ? 4 : lvl >= 5 ? 3 : 2;
 
     // Resources — fórmulas según tabla de Arquetipos (Cap.II Paso 3)
@@ -2610,6 +2691,8 @@ const app = {
   toast(msg, lbl='Info') { this.toastHtml(`<div class="tinf"><span class="tlbl">${lbl}</span><span>${msg}</span></div>`); },
   toastHtml(html, cls='') {
     const c = document.getElementById('toast-ct');
+    // Cap at 3 simultaneous toasts to avoid stacking spam
+    while (c.children.length >= 3) c.removeChild(c.firstChild);
     const t = document.createElement('div'); t.className=`toast ${cls}`; t.innerHTML=html;
     c.appendChild(t);
     setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300)},3000);
@@ -3398,6 +3481,7 @@ const app = {
     const cs = this.cropState;
     let vx = cs.velX * 80, vy = cs.velY * 80;
     const step = () => {
+      if (!cs.img) return; // guard: crop cancelled mid-inertia
       if (Math.abs(vx) < 0.3 && Math.abs(vy) < 0.3) return;
       cs.x += vx; cs.y += vy;
       vx *= 0.88; vy *= 0.88;
@@ -3417,9 +3501,11 @@ const app = {
     const cs = this.cropState;
     if (!cs.img) return;
     const {w: FW, h: FH} = this._cropFrameSize();
-    const SC = 2; // 2× for retina
+    // Cap at 600×800px max to keep portrait size reasonable in localStorage
+    const MAX_W = 600;
+    const SC = Math.min(2, MAX_W / FW);
     const canvas = document.createElement('canvas');
-    canvas.width = FW * SC; canvas.height = FH * SC;
+    canvas.width = Math.round(FW * SC); canvas.height = Math.round(FH * SC);
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -3432,6 +3518,9 @@ const app = {
     document.getElementById('char_img').src = src;
     document.getElementById('char_img_summary').src = src;
     document.getElementById('crop_modal').close();
+    // Reset crop state so next image starts clean
+    this.cropState = {img:null, x:0, y:0, zoom:1, rot:0, minZoom:.05,
+      isDragging:false, lastX:0, lastY:0, pinch:null, velX:0, velY:0};
     this.toast('Retrato actualizado', '✦');
   },
 
@@ -3511,7 +3600,7 @@ const app = {
     if (!name) { this.toast('¡Se requiere nombre!','Error'); return; }
     const roster = JSON.parse(localStorage.getItem('sands_roster')||'{}');
     if (roster[name]) {
-      this._confirm(`¿Sobreescribir "${name}"?`, 'El personaje ya existe y será reemplazado.', '✓ Sobreescribir', () => this._doSaveChar(name));
+      this._confirm('¿Sobreescribir personaje?', `El personaje "${this._esc(name)}" ya existe y será reemplazado.`, '✓ Sobreescribir', () => this._doSaveChar(name));
     } else {
       this._doSaveChar(name);
     }
@@ -3546,13 +3635,14 @@ const app = {
     r.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
+        if (typeof data !== 'object' || !data.inputs) throw new Error('Formato inválido');
         this.clearCharData();
         this.showScreen('app');
         this.unlockApp();
         this.applyCharData(data);
         this.goToPage(0);
         this.toast('Personaje importado');
-      } catch { this.toast('JSON inválido','Error'); }
+      } catch(err) { this.toast(err.message || 'JSON inválido','Error'); }
     };
     r.readAsText(input.files[0]); input.value='';
   },
@@ -3580,6 +3670,10 @@ const app = {
     const wd2 = document.getElementById('w2_dmg_attr'); if(wd2)wd2.value='FUE';
     this.showTalentSummary(); this.updateTalentCount();
     this.renderInventory();
+    // Reset lethality to default
+    this.setLethality(1);
+    // Reset active talent category so next open starts fresh
+    this.activeTalentCat = null;
   },
 
 
@@ -3629,6 +3723,21 @@ const app = {
     document.getElementById('campana_edit_btn').style.display = '';
   },
 
+  _setupEscapeKey() {
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      // Close sdial menu (and fire the same close path toggleDial uses)
+      const menu = document.getElementById('sdial_menu');
+      const btn  = document.querySelector('.sdial-btn');
+      if (menu?.classList.contains('open')) {
+        menu.classList.remove('open');
+        btn?.classList.remove('open');
+        // Dispatch a synthetic click outside sdial so the _close listener self-removes
+        document.dispatchEvent(new MouseEvent('click', {bubbles:true}));
+      }
+    });
+  },
+
   toggleDial() {
     const menu = document.getElementById('sdial_menu');
     const btn  = document.querySelector('.sdial-btn');
@@ -3666,7 +3775,7 @@ const app = {
     // 1. Stats (3d6 cada uno)
     const STATS = ['FUE','DES','CON','INT','SAB','CAR'];
     STATS.forEach(s => {
-      const roll = [0,1,2].reduce(sum => sum + Math.floor(Math.random()*6)+1, 0);
+      const roll = [0,1,2].reduce((sum, _) => sum + Math.floor(Math.random()*6)+1, 0);
       const el = document.getElementById('base_'+s); if(el) el.value = roll;
     });
 
@@ -3713,7 +3822,8 @@ const app = {
       const boxes = Array.from(document.querySelectorAll(`input[name="${name}"]`));
       boxes.sort(()=>Math.random()-.5).slice(0,lim).forEach(b=>b.checked=true);
     };
-    randCheck('chk_arq', 2);
+    const arqLimitRand = this.DB.archetypes?.[document.getElementById('sel_arq').value]?.skills_count || 2;
+    randCheck('chk_arq', arqLimitRand);
     randCheck('chk_bg', 2);
 
     // 10. Talentos aleatorios (3)
