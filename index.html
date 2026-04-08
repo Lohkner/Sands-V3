@@ -1576,7 +1576,7 @@ const app = {
     this.unlockApp();
     this.applyCharData(data);
     this.goToPage(0);
-    this.toast(`Cargado: ${name}`);
+    this.toast(`Cargado: ${this._esc(name)}`);
   },
 
   /* ── HOME ROSTER ── */
@@ -1714,7 +1714,7 @@ const app = {
   },
 
   deleteChar(name) {
-    this._confirm('¿Eliminar personaje?', `"${name}" será eliminado permanentemente.`, '✓ Eliminar', () => this._doDeleteChar(name));
+    this._confirm('¿Eliminar personaje?', `"${this._esc(name)}" será eliminado permanentemente.`, '✓ Eliminar', () => this._doDeleteChar(name));
   },
 
   _doDeleteChar(name) {
@@ -1722,7 +1722,7 @@ const app = {
     delete r[name];
     localStorage.setItem('sands_roster', JSON.stringify(r));
     this.renderHome();
-    this.toast(`"${name}" eliminado`);
+    this.toast(`"${this._esc(name)}" eliminado`);
   },
 
   /* ── UNLOCK / SETUP APP ── */
@@ -2552,7 +2552,6 @@ const app = {
     const isCrit = d20===20, isFail = d20===1;
     const modStr = (mod>=0?'+':'')+mod;
     const detailTxt = `d20: ${d20}  ${modStr !== '+0' ? `(${modStr})` : ''}`;
-    const totalTxt = `${total>=0?'+':''}${total}`;
     this.showDiceRoll({
       label,
       die: 20,
@@ -2740,7 +2739,23 @@ const app = {
     talents.forEach(t => {
       const sel = !!document.querySelector(`input[name="chk_talents_hidden"][value="${t.name}"]`);
       const card = document.createElement('div'); card.className=`tc${sel?' sel':''}`;
-      card.innerHTML = `<input type="checkbox" value="${t.name}" ${t.id?`data-id="${t.id}"`:''}  data-desc="${t.desc||''}" ${sel?'checked':''} onchange="app.toggleTalent(this,'${t.name}','${t.id||''}')"><div><h4>${t.name}</h4><p>${t.desc||''}</p>${t.grades?.map(g=>`<span style="font-family:var(--fm);font-size:.63rem;color:var(--blood);display:block;margin-top:3px">G${g.g}: ${g.d}</span>`).join('')||''}</div>`;
+      // Build talent card via DOM to avoid XSS from DB content
+      const chkEl = document.createElement('input');
+      chkEl.type = 'checkbox'; chkEl.value = t.name;
+      if (t.id) chkEl.setAttribute('data-id', t.id);
+      chkEl.setAttribute('data-desc', t.desc||'');
+      if (sel) chkEl.checked = true;
+      chkEl.addEventListener('change', () => app.toggleTalent(chkEl, t.name, t.id||''));
+      const infoDiv = document.createElement('div');
+      const h4 = document.createElement('h4'); h4.textContent = t.name; infoDiv.appendChild(h4);
+      const p = document.createElement('p'); p.textContent = t.desc||''; infoDiv.appendChild(p);
+      (t.grades||[]).forEach(g => {
+        const sp = document.createElement('span');
+        sp.style.cssText = 'font-family:var(--fm);font-size:.63rem;color:var(--blood);display:block;margin-top:3px';
+        sp.textContent = `G${g.g}: ${g.d}`;
+        infoDiv.appendChild(sp);
+      });
+      card.appendChild(chkEl); card.appendChild(infoDiv);
       card.onclick = e => { if(e.target.type==='checkbox')return; const chk=card.querySelector('input');chk.checked=!chk.checked;this.toggleTalent(chk,t.name,t.id||''); };
       list.appendChild(card);
     });
