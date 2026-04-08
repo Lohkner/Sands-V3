@@ -3692,16 +3692,20 @@ const app = {
   },
 
 
-  /* ── FONT SIZE ── */
+  /* ── FONT SIZE ══
+     Todos los tamaños del CSS usan rem, que escalan desde el font-size de <html>.
+     Cambiando document.documentElement.style.fontSize toda la interfaz responde. */
   setFontSize(size) {
-    const map = {small:'13px', normal:'15px', large:'17px', xlarge:'19px'};
-    const px = map[size]||'15px';
-    document.documentElement.style.setProperty('--fs-base', px);
-    document.body.style.fontSize = px;
+    // Normal = 16px (1rem base estándar del navegador).
+    // Las opciones desplazan ±2px desde esa base.
+    const map = {small:'13px', normal:'16px', large:'18px', xlarge:'20px'};
+    const px = map[size] || '16px';
+    // Cambiar el font-size del <html> escala todos los rem de la UI de golpe
+    document.documentElement.style.fontSize = px;
     localStorage.setItem('ss_font_size', size);
     ['small','normal','large','xlarge'].forEach(s=>{
-      const el=document.getElementById('fs_'+s);
-      if(el) el.classList.toggle('active', s===size);
+      const el = document.getElementById('fs_'+s);
+      if (el) el.classList.toggle('active', s===size);
     });
   },
 
